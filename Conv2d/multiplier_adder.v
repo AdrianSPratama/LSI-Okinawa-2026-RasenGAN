@@ -2,8 +2,7 @@ module multiplier_adder # (
     parameter PIXEL_WIDTH = 16,
     parameter KERNEL_WIDTH = 16,
     parameter RESULT_WIDTH = 48
-)
-(
+) (
     input wire signed [PIXEL_WIDTH-1:0] x00, x01, x02,
     input wire signed [PIXEL_WIDTH-1:0] x10, x11, x12,
     input wire signed [PIXEL_WIDTH-1:0] x20, x21, x22,

@@ -71,21 +71,21 @@ module reg_output #(parameter length = 12, number_of_row = 64)
                         memory[2] <= data_in6; // pojok atas ketiga
                 
                         memory[offset_addr] <= data_in7; // pojok kiri satu
-                        memory[(offset_addr*2)] <= data_in8; // pojok kiri kedua
+                        memory[((offset_addr<<1))] <= data_in8; // pojok kiri kedua
 
 
                         memory[addr_output + offset_addr] <= data_in1;
                         memory[addr_output + offset_addr + 1] <= data_in2;
-                        memory[addr_output + offset_addr*2] <= data_in3;
-                        memory[addr_output + offset_addr*2 + 1] <= data_in4;
+                        memory[addr_output + (offset_addr<<1)] <= data_in3;
+                        memory[addr_output + (offset_addr<<1) + 1] <= data_in4;
 
                     end
 
                     4'b0001 : begin
                         memory[addr_output + offset_addr] <= data_in1;
                         memory[addr_output + offset_addr + 1] <= data_in2;
-                        memory[addr_output + offset_addr*2] <= data_in3;
-                        memory[addr_output + offset_addr*2 + 1] <= data_in4;
+                        memory[addr_output + (offset_addr<<1)] <= data_in3;
+                        memory[addr_output + (offset_addr<<1) + 1] <= data_in4;
 
                         memory[addr_output] <= data_in5;
                         memory[addr_output + 1] <= data_in6;

@@ -7,13 +7,13 @@
         output wire [length-1:0] q
     );
         // int result 8 integer (tapi ambil 4 integer saja) 12 frac (tapi ambil 8 frac saja) 
-        wire [(length*2)-1:0] temp1, temp2;
+        wire [(length)-1:0] temp1, temp2;
         
-        assign temp1 = (a * (12'b000011000000) + b * (12'b000001000000));    
-        assign temp2 = (a * (12'b000001000000) + b * (12'b000011000000));   
+        assign temp1 = ((a >> 1) + (a>>2) + (b>>2));    
+        assign temp2 = ((b >> 2) + (b >> 1) + (a >> 2));   
 
-        assign p = temp1[ (length*2) - 5 : frac ];
-        assign q = temp2[ (length*2) - 5 : frac ];
+        assign p = temp1;
+        assign q = temp2;
 
     endmodule;
 

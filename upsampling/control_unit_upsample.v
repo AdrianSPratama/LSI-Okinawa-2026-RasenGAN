@@ -98,7 +98,7 @@ module control_unit_upsample(
         en_counter <= 1'b1;
 
         addr_input <= counter;
-        addr_output <= counter * 2 + 1;
+        addr_output <= (counter << 1 ) + 1;
 
         case (counter[1:0]) 
             2'b00 : begin
@@ -130,7 +130,7 @@ module control_unit_upsample(
         en_counter <= 1'b1;
 
         addr_input <= counter;
-        addr_output <= counter * 2 + offset_addr + 1;
+        addr_output <= (counter << 1) + offset_addr + 1;
 
         case (counter[1:0]) 
             2'b00 : begin
@@ -162,7 +162,7 @@ module control_unit_upsample(
         en_counter <= 1'b1;
 
         addr_input <= counter;
-        addr_output <= counter * 2 + offset_addr + 1;
+        addr_output <= (counter << 1) + offset_addr + 1;
 
         case (counter[1:0]) 
             2'b00 : begin

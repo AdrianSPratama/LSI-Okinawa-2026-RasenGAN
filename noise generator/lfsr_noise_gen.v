@@ -3,21 +3,20 @@
 module lfsr_noise_gen #(
     parameter DATA_WIDTH = 16,
     parameter FRAC_WIDTH = 13,
-    parameter SEED = 32'hACE1_2345 // Nilai awal acak 
+    parameter SEED = 64'hACE1_2345_DEAD_BEEF // Nilai awal acak 
 )(
     input wire clk,
     input wire rst_n,
     input wire enable,
-    output wire signed [DATA_WIDTH-1:0] noise_out,
+    output wire [DATA_WIDTH-1:0] noise_out,
     output reg valid_out
 );
 
-    // LFSR 32-bit  Feedback Galois
-    // Polynomial: x^32 + x^22 + x^2 + x^1 + 1
-    // Taps position untuk Galois: 32, 22, 2, 1
-    reg [31:0] r_lfsr;
+    reg [DATA_WIDTH-1:0] r_lfsr;
     
     wire feedback;
+
+    localparam [DATA_WIDTH-1:0] GALOIS_MASK = 64'hD800_0000_0000_0000;
 
     
     always @(posedge clk or negedge rst_n) begin
@@ -29,7 +28,7 @@ module lfsr_noise_gen #(
             // Galois LFSR Implementation
             
             if (r_lfsr[0] == 1'b1) begin
-                r_lfsr <= (r_lfsr >> 1) ^ 32'h80200003; 
+                r_lfsr <= (r_lfsr >> 1) ^ GALOIS_MASK; 
             end else begin
                 r_lfsr <= (r_lfsr >> 1);
             end
@@ -38,10 +37,6 @@ module lfsr_noise_gen #(
         end
     end
     
-    
-    wire signed [DATA_WIDTH-1:0] raw_slice;
-    assign raw_slice = r_lfsr[15:0]; 
-    
-    assign noise_out = raw_slice >>> 1;
+    assign noise_out = r_lfsr;
 
 endmodule

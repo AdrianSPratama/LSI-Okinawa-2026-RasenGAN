@@ -1,7 +1,7 @@
 `include "lfsr_noise_gen.v"
 
 module noise_matrix_filler #(
-    parameter DATA_WIDTH = 16,
+    parameter DATA_WIDTH = 64,
     parameter ADDR_WIDTH = 14 
 )(
     input wire clk,
@@ -26,8 +26,7 @@ module noise_matrix_filler #(
     
     // Generator Noise
     lfsr_noise_gen #(
-        .DATA_WIDTH(16), 
-        .FRAC_WIDTH(13)
+        .DATA_WIDTH(64)
     ) noise_inst (
         .clk(clk),
         .rst_n(rst_n),

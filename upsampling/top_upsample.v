@@ -3,16 +3,17 @@
 `include "reg_input.v"
 `include "reg_output.v"
 
-module top_upsample #(parameter number_of_row = 4, length = 12, frac = 8)
+module top_upsample #(parameter number_of_row = 8, length = 16)
 
 (
     input wire clk,
     input wire rst,
     input wire start,
-
+    input wire [2:0] mode,
+    input wire [2:0] size_upsample,
     input wire [length*number_of_row*number_of_row-1:0] din,
     output wire done,
-    output wire [length*64-1:0] dout
+    output wire [length*256-1:0] dout
 );
 
 
@@ -56,14 +57,15 @@ module top_upsample #(parameter number_of_row = 4, length = 12, frac = 8)
      
     wire en_write_in;
     wire en_write_out;
-    wire [5:0] addr_input;
-    wire [5:0] addr_output;
+    wire [13:0] addr_input;
+    wire [13:0] addr_output;
 
     control_unit_upsample control_unit_inst (
         .clk(clk),
         .rst(rst),
         .start(start),
         .done(done),
+        .size_upsample(size_upsample),
 
         .write_mode(write_mode),
         .en_write_in(en_write_in),
@@ -73,14 +75,14 @@ module top_upsample #(parameter number_of_row = 4, length = 12, frac = 8)
     );
 
     reg_input #(
-        .length(length),
-        .number_of_row(number_of_row*number_of_row)
+        .length(length)
     ) reg_input_inst (
         .clk(clk),
         .rst(rst),
         .addr_input(addr_input),
         .en_write_in(en_write_in),
         .din(din),
+        .size_upsample(size_upsample),
 
         .dout1(a),
         .dout2(b),
@@ -91,13 +93,14 @@ module top_upsample #(parameter number_of_row = 4, length = 12, frac = 8)
 
     reg_output #(
         .length(length),
-        .number_of_row(64)
+        .number_of_row(256)
     ) reg_output_inst (
         .clk(clk),
         .rst(rst),
         .en_write_out(en_write_out),
         .write_mode(write_mode),
         .addr_output(addr_output),
+        .size_upsample(size_upsample),
 
         .data_in1(out1),
         .data_in2(out2),

@@ -1,7 +1,7 @@
 `include "upsample_1x2.v"
 `include "upsample_2x2.v"
 
-module multi_upsample #(parameter length = 12, number_of_row = 4)
+module multi_upsample #(parameter length = 16)
 (
     input wire [length-1:0] a,
     input wire [length-1:0] b,

@@ -1,4 +1,4 @@
-    module upsample_1x2 #(parameter length = 12, frac = 8)
+    module upsample_1x2 #(parameter length =16)
 
     (
         input wire [length-1:0] a,

@@ -29,142 +29,99 @@ module cu_adain #(
     localparam CALC_NORM = 3'b110;
 
     reg [$clog2(N_MAX)-1:0] cnt_col, cnt_row;
-    reg [2:0] l_cnt; // Counter latensi (flush pipeline)
-    
+    reg [3:0] l_cnt; 
     wire last_pixel = (cnt_col == N - 1 && cnt_row == N - 1);
     
-    // Pipeline shift registers untuk delay sinyal kontrol (MAC latency 3 cycles)
-    reg [3:0] pipe_in_en;
-    reg [3:0] pipe_rst;
+    reg [3:0] pipe_in_en, pipe_first_px;
 
     always @(posedge clk) begin
         if (rst) begin
             state <= IDLE;
-            {cnt_col, cnt_row, l_cnt} <= 0;
-            done <= 2'b00;
-            {pipe_in_en, pipe_rst} <= 0;
+            {cnt_col, cnt_row, l_cnt, done} <= 0;
+            {pipe_in_en, pipe_first_px} <= 0;
         end else begin
-            pipe_in_en <= {pipe_in_en[2:0], input_mac_en};
-            pipe_rst   <= {pipe_rst[2:0], rst_acc};
+            pipe_in_en    <= {pipe_in_en[2:0], input_mac_en};
+            pipe_first_px <= {pipe_first_px[2:0], (cnt_col == 0 && cnt_row == 0 && input_mac_en)};
 
             case (state)
                 IDLE: begin
-                    {cnt_col, cnt_row, l_cnt} <= 0;
-                    case (start)
-                        2'b01   : begin
-                            state <= CALC_MEAN;
-                        end
-                        2'b10   : begin
-                            state <= CALC_VAR;
-                        end
-                        2'b11   : begin
-                            state <= CALC_NORM;
-                        end
-                        default : begin
-                            state <= IDLE
-                        end
-                    endcase
+                    {cnt_col, cnt_row, l_cnt, done} <= 0;
+                    if (start == 2'b01)      state <= CALC_MEAN;
+                    else if (start == 2'b10) state <= CALC_VAR;
+                    else if (start == 2'b11) state <= CALC_NORM;
                 end
 
-                CALC_MEAN: begin
-                    if (last_pixel) begin
+                CALC_MEAN, CALC_VAR: begin
+                    if (input_mac_en) begin
+                        if (last_pixel) l_cnt <= 1;
+                        else begin
+                            if (cnt_col == N - 1) begin cnt_col <= 0; cnt_row <= cnt_row + 1; end
+                            else cnt_col <= cnt_col + 1;
+                        end
+                    end else if (l_cnt > 0) begin
                         if (l_cnt == 3) begin 
-                            l_cnt <= 0; 
-                            done <= 2'b01; 
-                            state <= IDLE;
-                        end else begin
-                            l_cnt <= l_cnt + 1;
-                        end
-                    end else begin
-                        if (cnt_col == N - 1) begin 
-                            cnt_col <= 0; 
-                            cnt_row <= cnt_row + 1; 
-                        end else begin 
-                            cnt_col <= cnt_col + 1;
-                        end
+                            if (state == CALC_MEAN) done <= 2'b01;
+                            state <= (state == CALC_VAR) ? CALC_ISIG : IDLE;
+                            l_cnt <= 0;
+                        end else l_cnt <= l_cnt + 1;
                     end
                 end
 
-                CALC_VAR: begin
-                    if (last_pixel) begin
+                // --- PERBAIKAN TAHAP NORMALISASI ---
+                CALC_NORM: begin
+                    // Trigger done 3: Harus muncul tepat 1 clock sebelum data keluar.
+                    // Data keluar di T5. Maka done 3 harus tinggi di T4.
+                    // Untuk tinggi di T4, assignment dilakukan di T3 (saat pipe_in_en[1] == 1).
+                    if (pipe_in_en[1] && !pipe_in_en[2]) begin
+                        done <= 2'b11;
+                    end
+
+                    if (input_mac_en) begin
+                        if (last_pixel) l_cnt <= 1;
+                        else begin
+                            if (cnt_col == N - 1) begin cnt_col <= 0; cnt_row <= cnt_row + 1; end
+                            else cnt_col <= cnt_col + 1;
+                        end
+                    end else if (l_cnt > 0) begin
                         if (l_cnt == 3) begin 
-                            l_cnt <= 0; 
-                            state <= CALC_ISIG; 
-                        end else begin
-                            l_cnt <= l_cnt + 1;
-                        end
-                    end else begin
-                        if (cnt_col == N - 1) begin 
-                            cnt_col <= 0; 
-                            cnt_row <= cnt_row + 1; 
-                        end else begin
-                            cnt_col <= cnt_col + 1;
-                        end
+                            state <= IDLE;
+                            l_cnt <= 0;
+                        end else l_cnt <= l_cnt + 1;
                     end
                 end
 
                 CALC_ISIG: begin
-                    if (l_cnt == 5) begin 
-                        l_cnt <= 0; 
-                        state <= CALC_B1; 
-                    end else begin 
-                        l_cnt <= l_cnt + 1;
+                    if (l_cnt == 4) begin l_cnt <= 0; state <= CALC_B1; end
+                    else l_cnt <= l_cnt + 1;
                 end
 
-                CALC_B1: begin
-                    if (l_cnt == 3) begin 
-                        l_cnt <= 0; 
-                        state <= CALC_B0; 
-                    end else begin
-                        l_cnt <= l_cnt + 1;
-                    end
-                end
-
-                CALC_B0: begin
+                CALC_B1, CALC_B0: begin
                     if (l_cnt == 3) begin
-                        l_cnt   <= 0; 
-                        done    <= 2'b10; 
-                        state   <= IDLE;
-                    end else begin 
-                        l_cnt   <= l_cnt + 1;
-                    end
-                end
-
-                CALC_NORM: begin
-                    if (last_pixel) begin
-                        if (l_cnt == 3) begin
-                            l_cnt <= 0; 
-                            done <= 2'b11; 
-                            state <= IDLE;
-                        end else l_cnt <= l_cnt + 1;
-                    end else begin
-                        if (cnt_col == N - 1) begin 
-                            cnt_col <= 0; 
-                            cnt_row <= cnt_row + 1; 
-                        end else cnt_col <= cnt_col + 1;
-                    end
+                        l_cnt <= 0;
+                        if (state == CALC_B1) state <= CALC_B0;
+                        else begin done <= 2'b10; state <= IDLE; end
+                    end else l_cnt <= l_cnt + 1;
                 end
             endcase
         end
     end
 
-    // Logika Sinyal Aktif
+    // Logika Sinyal Kontrol (Tetap Sama)
     always @(*) begin
         {input_mac_en, rst_acc, mean_en, variance_en, inv_sigma_en, B1_en, B0_en, out_en} = 0;
         case (state)
             CALC_MEAN, CALC_VAR, CALC_NORM: begin
-                input_mac_en = !last_pixel || (l_cnt == 0);
-                rst_acc = (state == CALC_NORM) ? pipe_in_en[0] : (cnt_col == 0 && cnt_row == 0 && l_cnt == 0);
-                
-                if (state == CALC_MEAN) mean_en     = (last_pixel && l_cnt == 3);
-                if (state == CALC_VAR)  variance_en = (last_pixel && l_cnt == 3);
-                if (state == CALC_NORM) out_en      = pipe_in_en[2]; // Delay 3 siklus
+                input_mac_en = (state != IDLE && l_cnt == 0);
+                rst_acc = (state == CALC_NORM) ? pipe_in_en[1] : pipe_first_px[1];
+                if (state == CALC_MEAN) mean_en     = (l_cnt == 3);
+                if (state == CALC_VAR)  variance_en = (l_cnt == 3);
+                if (state == CALC_NORM) out_en      = pipe_in_en[2]; 
             end
             CALC_ISIG: begin
-                input_mac_en = (l_cnt == 1); rst_acc = (l_cnt == 2); inv_sigma_en = (l_cnt == 5);
+                input_mac_en = (l_cnt == 1); rst_acc = (l_cnt == 3); inv_sigma_en = (l_cnt == 4);
             end
             CALC_B1, CALC_B0: begin
-                input_mac_en = (l_cnt == 0); rst_acc = (l_cnt == 1);
+                input_mac_en = (l_cnt == 0); rst_acc = (l_cnt == 2);
                 if (state == CALC_B1) B1_en = (l_cnt == 3); else B0_en = (l_cnt == 3);
             end
         endcase

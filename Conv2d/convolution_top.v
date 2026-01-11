@@ -1,3 +1,4 @@
+// NOTE(TO DO): Belum dikasih bagian add noise dan LeakyReLu 
 module convolution_top (
     input  wire        clk,
     input  wire        aresetn,
@@ -19,6 +20,13 @@ module convolution_top (
     // Kernel BRAM control output
     output wire enb_kernel_BRAM, // kernel BRAM outside this module
     output wire [7:0] kernel_BRAM_counter_out, // kernel BRAM counter inside this module
+
+    // Bias BRAM input (Bias BRAM outside this module)
+    input wire [47:0] bias_BRAM_douta,
+
+    // Bias BRAM controls
+    output wire ena_bias_BRAM_addr_counter,
+    output wire rsta_bias_BRAM_addr_counter,
 
     // Slave AXI-Stream Interfacew
     input  wire [15:0] s_axis_tdata,
@@ -182,8 +190,8 @@ convolution_top_CU CU (
 
     // Bias controls
     .add_bias(add_bias),
-    .ena_bias_BRAM_addr_counter,
-    .rsta_bias_BRAM_addr_counter,
+    .ena_bias_BRAM_addr_counter(ena_bias_BRAM_addr_counter),
+    .rsta_bias_BRAM_addr_counter(rsta_bias_BRAM_addr_counter),
 
     // Output BRAM controls port a
     .ena_output_BRAM(ena_output_BRAM),
@@ -193,19 +201,19 @@ convolution_top_CU CU (
 
     // Output BRAM controls port b
     .enb_output_BRAM(enb_output_BRAM),
-    .enb_output_BRAM_addr_counter,
-    .rstb_output_BRAM_addr_counter,
+    .enb_output_BRAM_addr_counter(enb_output_BRAM_addr_counter),
+    .rstb_output_BRAM_addr_counter(rstb_output_BRAM_addr_counter),
 
     // Col and row counters
-    .en_in_row_counter,
-    .en_in_col_counter,
-    .rst_in_row_counter,
-    .rst_in_col_counter,
+    .en_in_row_counter(en_in_row_counter),
+    .en_in_col_counter(en_in_col_counter),
+    .rst_in_row_counter(rst_in_row_counter),
+    .rst_in_col_counter(rst_in_col_counter),
 
     // AXI-Stream Output controls
-    .s_axis_tready,
-    .m_axis_tvalid,
-    .m_axis_tlast
+    .s_axis_tready(s_axis_tready),
+    .m_axis_tvalid(m_axis_tvalid),
+    .m_axis_tlast(m_axis_tlast)
 );
 
 // Line buffers part
@@ -327,6 +335,7 @@ window_reg_3x3 #(
 );
 
 // Convolution PE Part
+wire signed [47:0] output_BRAM_doutb;
 // Instantiate PE with buffers
 pe_with_buffers CONV_ENGINE (
     // Data signals
@@ -339,6 +348,9 @@ pe_with_buffers CONV_ENGINE (
     .x20(out_window_22),
     .x21(out_window_21),
     .x22(out_window_20),
+    .kernel_flat(kernel_BRAM_doutb),
+    .bias(bias_BRAM_douta),
+    .BRAM_doutb(output_BRAM_doutb),
 
     // Control signals
     .clk(clk),
@@ -351,10 +363,11 @@ pe_with_buffers CONV_ENGINE (
     // Output BRAM controls
     .ena_output_BRAM(ena_output_BRAM),
     .wea_output_BRAM(wea_output_BRAM),
-    .enb_output_BRAM(enb_output_BRAM),
+    .enb_output_BRAM(enb_output_BRAM)
 );
 
+// Note: buat sekarang simulasi dulu bagian konvolusi tanpa add noise
 // Assign output wires
-
+assign m_axis_tdata = {{16{output_BRAM_doutb[47]}}, output_BRAM_doutb};
 
 endmodule

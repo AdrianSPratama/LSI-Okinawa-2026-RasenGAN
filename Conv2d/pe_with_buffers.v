@@ -19,6 +19,7 @@ module pe_with_buffers #(
     input wire [13:0] addrb_output_BRAM, // Address for read port B
     input wire add_bias,
 
+    // Output BRAM controls
     input wire ena_output_BRAM,
     input wire wea_output_BRAM,
     input wire enb_output_BRAM // Write port b not used

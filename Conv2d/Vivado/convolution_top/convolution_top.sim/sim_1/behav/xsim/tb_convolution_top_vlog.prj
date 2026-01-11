@@ -1,0 +1,16 @@
+# compile verilog/system verilog design source files
+verilog xil_defaultlib  --include "../../../../../../../../../../../../../Xilinx/2025.1.1/Vivado/data/rsb/busdef" \
+"../../../../../../convolution_top.v" \
+"../../../../../../convolution_top_CU.v" \
+"../../../../../../counter.v" \
+"../../../../../../multiplier_adder.v" \
+"../../../../../../pe_with_buffers.v" \
+"../../../../../../true_dual_port_bram.v" \
+"../../../../../../window_reg_3x3.v" \
+"../../../../../../tb_convolution_top.v" \
+
+# compile glbl module
+verilog xil_defaultlib "glbl.v"
+
+# Do not sort compile order
+nosort

@@ -1,17 +1,5 @@
 INFO: [VRFC 10-2263] Analyzing Verilog file "E:/ITB/Spesialisasi IC Design/VLSI/LSI Contest Okinawa 2026/Source Code/LSI-Okinawa-2026-RasenGAN/Conv2d/convolution_top.v" into library xil_defaultlib
 INFO: [VRFC 10-311] analyzing module convolution_top
-WARNING: [VRFC 10-2938] 'rstb_kernel_BRAM_addr_counter' is already implicitly declared on line 50 [E:/ITB/Spesialisasi IC Design/VLSI/LSI Contest Okinawa 2026/Source Code/LSI-Okinawa-2026-RasenGAN/Conv2d/convolution_top.v:109]
-WARNING: [VRFC 10-2938] 'enb_kernel_BRAM_addr_counter' is already implicitly declared on line 51 [E:/ITB/Spesialisasi IC Design/VLSI/LSI Contest Okinawa 2026/Source Code/LSI-Okinawa-2026-RasenGAN/Conv2d/convolution_top.v:110]
-WARNING: [VRFC 10-2938] 'rstb_window_BRAM_addr_counter' is already implicitly declared on line 60 [E:/ITB/Spesialisasi IC Design/VLSI/LSI Contest Okinawa 2026/Source Code/LSI-Okinawa-2026-RasenGAN/Conv2d/convolution_top.v:127]
-WARNING: [VRFC 10-2938] 'enb_window_BRAM_addr_counter' is already implicitly declared on line 61 [E:/ITB/Spesialisasi IC Design/VLSI/LSI Contest Okinawa 2026/Source Code/LSI-Okinawa-2026-RasenGAN/Conv2d/convolution_top.v:128]
-WARNING: [VRFC 10-2938] 'rsta_output_BRAM_addr_counter' is already implicitly declared on line 70 [E:/ITB/Spesialisasi IC Design/VLSI/LSI Contest Okinawa 2026/Source Code/LSI-Okinawa-2026-RasenGAN/Conv2d/convolution_top.v:133]
-WARNING: [VRFC 10-2938] 'ena_output_BRAM_addr_counter' is already implicitly declared on line 71 [E:/ITB/Spesialisasi IC Design/VLSI/LSI Contest Okinawa 2026/Source Code/LSI-Okinawa-2026-RasenGAN/Conv2d/convolution_top.v:134]
-WARNING: [VRFC 10-2938] 'rstb_output_BRAM_addr_counter' is already implicitly declared on line 80 [E:/ITB/Spesialisasi IC Design/VLSI/LSI Contest Okinawa 2026/Source Code/LSI-Okinawa-2026-RasenGAN/Conv2d/convolution_top.v:135]
-WARNING: [VRFC 10-2938] 'enb_output_BRAM_addr_counter' is already implicitly declared on line 81 [E:/ITB/Spesialisasi IC Design/VLSI/LSI Contest Okinawa 2026/Source Code/LSI-Okinawa-2026-RasenGAN/Conv2d/convolution_top.v:136]
-WARNING: [VRFC 10-2938] 'en_in_row_counter' is already implicitly declared on line 92 [E:/ITB/Spesialisasi IC Design/VLSI/LSI Contest Okinawa 2026/Source Code/LSI-Okinawa-2026-RasenGAN/Conv2d/convolution_top.v:146]
-WARNING: [VRFC 10-2938] 'en_in_col_counter' is already implicitly declared on line 103 [E:/ITB/Spesialisasi IC Design/VLSI/LSI Contest Okinawa 2026/Source Code/LSI-Okinawa-2026-RasenGAN/Conv2d/convolution_top.v:147]
-WARNING: [VRFC 10-2938] 'rst_in_row_counter' is already implicitly declared on line 91 [E:/ITB/Spesialisasi IC Design/VLSI/LSI Contest Okinawa 2026/Source Code/LSI-Okinawa-2026-RasenGAN/Conv2d/convolution_top.v:148]
-WARNING: [VRFC 10-2938] 'rst_in_col_counter' is already implicitly declared on line 102 [E:/ITB/Spesialisasi IC Design/VLSI/LSI Contest Okinawa 2026/Source Code/LSI-Okinawa-2026-RasenGAN/Conv2d/convolution_top.v:149]
 INFO: [VRFC 10-2263] Analyzing Verilog file "E:/ITB/Spesialisasi IC Design/VLSI/LSI Contest Okinawa 2026/Source Code/LSI-Okinawa-2026-RasenGAN/Conv2d/convolution_top_CU.v" into library xil_defaultlib
 INFO: [VRFC 10-311] analyzing module convolution_top_CU
 INFO: [VRFC 10-2263] Analyzing Verilog file "E:/ITB/Spesialisasi IC Design/VLSI/LSI Contest Okinawa 2026/Source Code/LSI-Okinawa-2026-RasenGAN/Conv2d/counter.v" into library xil_defaultlib
@@ -26,5 +14,3 @@ INFO: [VRFC 10-2263] Analyzing Verilog file "E:/ITB/Spesialisasi IC Design/VLSI/
 INFO: [VRFC 10-311] analyzing module window_reg_3x3
 INFO: [VRFC 10-2263] Analyzing Verilog file "E:/ITB/Spesialisasi IC Design/VLSI/LSI Contest Okinawa 2026/Source Code/LSI-Okinawa-2026-RasenGAN/Conv2d/tb_convolution_top.v" into library xil_defaultlib
 INFO: [VRFC 10-311] analyzing module tb_convolution_top
-INFO: [VRFC 10-2263] Analyzing Verilog file "E:/ITB/Spesialisasi IC Design/VLSI/LSI Contest Okinawa 2026/Source Code/LSI-Okinawa-2026-RasenGAN/Conv2d/Vivado/convolution_top/convolution_top.sim/sim_1/behav/xsim/glbl.v" into library xil_defaultlib
-INFO: [VRFC 10-311] analyzing module glbl

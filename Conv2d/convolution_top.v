@@ -1,4 +1,6 @@
 // NOTE(TO DO): Belum dikasih bagian add noise dan LeakyReLu 
+`timescale 1ns / 1ps
+
 module convolution_top (
     input  wire        clk,
     input  wire        aresetn,
@@ -39,67 +41,6 @@ module convolution_top (
     output wire        m_axis_tvalid,
     input  wire        m_axis_tready,
     output wire        m_axis_tlast
-);
-
-// Address Counters for BRAM(s)
-// Kernel BRAM addr counter
-counter #(
-    .BITWIDTH(8)
-) kernel_BRAM_counter (
-    .clk(clk),
-    .reset(rstb_kernel_BRAM_addr_counter),
-    .enable(enb_kernel_BRAM_addr_counter),
-    .counter_out(kernel_BRAM_counter_out)
-);
-
-// Window BRAM counter
-counter #(
-    .BITWIDTH(7)
-) window_BRAM_counter (
-    .clk(clk),
-    .reset(rstb_window_BRAM_addr_counter),
-    .enable(enb_window_BRAM_addr_counter),
-    .counter_out(window_BRAM_counter_out)
-);
-
-// a_output_BRAM_counter_out, Output BRAM port a addr counter
-counter #(
-    .BITWIDTH(14)
-) a_output_BRAM_counter (
-    .clk(clk),
-    .reset(rsta_output_BRAM_addr_counter),
-    .enable(ena_output_BRAM_addr_counter),
-    .counter_out(a_output_BRAM_counter_out)
-);
-
-// b_output_BRAM_counter_out, Output BRAM port b addr counter
-counter #(
-    .BITWIDTH(14)
-) b_output_BRAM_counter (
-    .clk(clk),
-    .reset(rstb_output_BRAM_addr_counter),
-    .enable(enb_output_BRAM_addr_counter),
-    .counter_out(b_output_BRAM_counter_out)
-);
-
-// in_row_counter, Input buffer (line buffer) row counter
-counter #(
-    .BITWIDTH(8)
-) in_row_counter (
-    .clk(clk),
-    .reset(rst_in_row_counter),
-    .enable(en_in_row_counter),
-    .counter_out(in_row_counter)
-);
-
-// in_col_counter, Input buffer (line buffer) col counter
-counter #(
-    .BITWIDTH(8)
-) in_col_counter (
-    .clk(clk),
-    .reset(rst_in_col_counter),
-    .enable(en_in_col_counter),
-    .counter_out(in_col_counter)
 );
 
 // Control Unit Wires
@@ -146,6 +87,94 @@ wire en_in_col_counter;
 wire rst_in_row_counter;
 wire rst_in_col_counter;
 
+// in_row_counter, Input buffer (line buffer) row counter
+wire [7:0] in_row_counter_o;
+
+// in_col_counter, Input buffer (line buffer) col counter
+wire [7:0] in_col_counter_o;
+
+// Window BRAM n-1 doutb
+wire [15:0] window_bram_n_1_doutb;
+wire [15:0] window_bram_n_2_doutb;
+
+// MUX for window input
+reg [15:0] in_window_row_n_2;
+reg [15:0] in_window_row_n_1;
+reg [15:0] in_window_row_n;
+
+// Window output wires
+wire signed [15:0] out_window_00;
+wire signed [15:0] out_window_01;
+wire signed [15:0] out_window_02;
+wire signed [15:0] out_window_10;
+wire signed [15:0] out_window_11;
+wire signed [15:0] out_window_12;
+wire signed [15:0] out_window_20;
+wire signed [15:0] out_window_21;
+wire signed [15:0] out_window_22;
+
+// Wire for output BRAM
+wire signed [47:0] output_BRAM_doutb;
+
+// Address Counters for BRAM(s)
+// Kernel BRAM addr counter
+counter #(
+    .BITWIDTH(8)
+) kernel_BRAM_counter (
+    .clk(clk),
+    .reset(rstb_kernel_BRAM_addr_counter),
+    .enable(enb_kernel_BRAM_addr_counter),
+    .counter_out(kernel_BRAM_counter_out)
+);
+
+// Window BRAM counter
+counter #(
+    .BITWIDTH(7)
+) window_BRAM_counter (
+    .clk(clk),
+    .reset(rstb_window_BRAM_addr_counter),
+    .enable(enb_window_BRAM_addr_counter),
+    .counter_out(window_BRAM_counter_out)
+);
+
+// a_output_BRAM_counter_out, Output BRAM port a addr counter
+counter #(
+    .BITWIDTH(14)
+) a_output_BRAM_counter (
+    .clk(clk),
+    .reset(rsta_output_BRAM_addr_counter),
+    .enable(ena_output_BRAM_addr_counter),
+    .counter_out(a_output_BRAM_counter_out)
+);
+
+// b_output_BRAM_counter_out, Output BRAM port b addr counter
+counter #(
+    .BITWIDTH(14)
+) b_output_BRAM_counter (
+    .clk(clk),
+    .reset(rstb_output_BRAM_addr_counter),
+    .enable(enb_output_BRAM_addr_counter),
+    .counter_out(b_output_BRAM_counter_out)
+);
+
+counter #(
+    .BITWIDTH(8)
+) in_row_counter (
+    .clk(clk),
+    .reset(rst_in_row_counter),
+    .enable(en_in_row_counter),
+    .counter_out(in_row_counter_o)
+);
+
+counter #(
+    .BITWIDTH(8)
+) in_col_counter (
+    .clk(clk),
+    .reset(rst_in_col_counter),
+    .enable(en_in_col_counter),
+    .counter_out(in_col_counter_o)
+);
+
 // Control Unit
 convolution_top_CU CU (
     // Input signals
@@ -158,8 +187,8 @@ convolution_top_CU CU (
     .window_BRAM_counter_out(window_BRAM_counter_out),
     .a_output_BRAM_counter_out(a_output_BRAM_counter_out),
     .b_output_BRAM_counter_out(b_output_BRAM_counter_out),
-    .in_row_counter(in_row_counter),
-    .in_col_counter(in_col_counter),
+    .in_row_counter(in_row_counter_o),
+    .in_col_counter(in_col_counter_o),
     .s_axis_tvalid(s_axis_tvalid),
     .s_axis_tlast(s_axis_tlast),
     .m_axis_tready(m_axis_tready),
@@ -218,7 +247,6 @@ convolution_top_CU CU (
 
 // Line buffers part
 // Instantiate true dual port bram for input FIFO (line buffer)
-wire [15:0] window_bram_n_1_doutb;
 true_dual_port_bram #(
     .RAM_WIDTH(16),
     .RAM_DEPTH(128)
@@ -240,7 +268,6 @@ true_dual_port_bram #(
     .doutb(window_bram_n_1_doutb)   // Data Out B
 );
 
-wire [15:0] window_bram_n_2_doutb;
 true_dual_port_bram #(
     .RAM_WIDTH(16),
     .RAM_DEPTH(128)
@@ -262,11 +289,7 @@ true_dual_port_bram #(
     .doutb(window_bram_n_2_doutb)   // Data Out B
 );
 
-// MUX for window input
-reg [15:0] in_window_row_n_2;
-reg [15:0] in_window_row_n_1;
-reg [15:0] in_window_row_n;
-
+// MUX for input window
 always @(*) begin
     if (window_row_n_mux) begin
         in_window_row_n <= s_axis_tdata;
@@ -295,17 +318,6 @@ always @(*) begin
 end
 
 // Window register 3x3 pixels for convolution input
-// Window output wires
-wire signed [15:0] out_window_00;
-wire signed [15:0] out_window_01;
-wire signed [15:0] out_window_02;
-wire signed [15:0] out_window_10;
-wire signed [15:0] out_window_11;
-wire signed [15:0] out_window_12;
-wire signed [15:0] out_window_20;
-wire signed [15:0] out_window_21;
-wire signed [15:0] out_window_22;
-
 // Window instantiation
 window_reg_3x3 #(
     .DATA_WIDTH(16)
@@ -335,7 +347,6 @@ window_reg_3x3 #(
 );
 
 // Convolution PE Part
-wire signed [47:0] output_BRAM_doutb;
 // Instantiate PE with buffers
 pe_with_buffers CONV_ENGINE (
     // Data signals
@@ -348,7 +359,7 @@ pe_with_buffers CONV_ENGINE (
     .x20(out_window_22),
     .x21(out_window_21),
     .x22(out_window_20),
-    .kernel_flat(kernel_BRAM_doutb),
+    .kernel_flat(kernel_BRAM_doutb[143:0]),
     .bias(bias_BRAM_douta),
     .BRAM_doutb(output_BRAM_doutb),
 

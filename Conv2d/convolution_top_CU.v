@@ -1,3 +1,5 @@
+`timescale 1ns / 1ps
+
 module convolution_top_CU (
     // Input signals
     input wire aresetn,

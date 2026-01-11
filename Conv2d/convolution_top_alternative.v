@@ -1,3 +1,5 @@
+`timescale 1ns / 1ps
+
 // Modul ini adalah top level dari convolution yang disambung dengan AXI-Stream interface
 module convolution_top_alternative (
     input  wire        aclk,

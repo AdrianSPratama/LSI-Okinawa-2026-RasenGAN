@@ -1,3 +1,5 @@
+`timescale 1ns / 1ps
+
 module multiplier_adder # (
     parameter PIXEL_WIDTH = 16,
     parameter KERNEL_WIDTH = 16,

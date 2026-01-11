@@ -1,3 +1,5 @@
+`timescale 1ns / 1ps
+
 module window_reg_3x3 #(
     parameter DATA_WIDTH = 16
 ) (

@@ -51,7 +51,7 @@ integer i;
 integer j;
 integer k;
 always @(posedge clk) begin
-    if (Rst_kernel) begin
+    if (!Rst_kernel) begin
         for (i = 0; i < 9; i = i + 1) begin
             kernel[i] <= 16'd0;
         end

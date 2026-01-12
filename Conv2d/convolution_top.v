@@ -261,7 +261,7 @@ true_dual_port_bram #(
     .ena(enb_window_BRAM),    // Enable A (Active High)
     .wea(wea_window_BRAM),    // Write Enable A (Active High)
     .addra(window_BRAM_counter_out),  // Address A
-    .dina(s_axis_tdata),   // Data In A from AXI Stream slave
+    .dina(in_window_row_n),   // Data In A from MUX row n
     .douta(),  // Data Out A not used
 
     // Port B

@@ -453,7 +453,7 @@ always @(current_state) begin
             enb_kernel_BRAM_addr_counter <= 0;
             rstb_kernel_BRAM_addr_counter <= 1;
             enb_window_BRAM <= 1;
-            wea_window_BRAM <= 1;
+            wea_window_BRAM <= 0;
             enb_window_BRAM_addr_counter <= 0;
             rstb_window_BRAM_addr_counter <= 1;
             add_bias <= (kernel_BRAM_counter_out < 1); // Gunakan perbandingan channel sekarang, apakah sudah bukan channel pertama
@@ -482,7 +482,7 @@ always @(current_state) begin
             Wr_window <= 1;
             Shift_window <= 1;
             window_row_n_2_mux <= 0;
-            window_row_n_1_mux <= 1;
+            window_row_n_1_mux <= 0;
             window_row_n_mux <= 1;
             enb_kernel_BRAM <= 0;
             enb_kernel_BRAM_addr_counter <= 0;
@@ -558,7 +558,7 @@ always @(current_state) begin
             enb_kernel_BRAM_addr_counter <= 0;
             rstb_kernel_BRAM_addr_counter <= 1;
             enb_window_BRAM <= 1;
-            wea_window_BRAM <= 1;
+            wea_window_BRAM <= 0;
             enb_window_BRAM_addr_counter <= 0;
             rstb_window_BRAM_addr_counter <= 1;
             add_bias <= (kernel_BRAM_counter_out < 1);
@@ -832,7 +832,7 @@ always @(current_state) begin
             Wr_window <= 1;
             Shift_window <= 1;
             window_row_n_2_mux <= 0;
-            window_row_n_1_mux <= 1;
+            window_row_n_1_mux <= 0;
             window_row_n_mux <= 1;
             enb_kernel_BRAM <= 0;
             enb_kernel_BRAM_addr_counter <= 0;
@@ -908,7 +908,7 @@ always @(current_state) begin
             enb_kernel_BRAM_addr_counter <= 0;
             rstb_kernel_BRAM_addr_counter <= 1;
             enb_window_BRAM <= 1;
-            wea_window_BRAM <= 1;
+            wea_window_BRAM <= 0;
             enb_window_BRAM_addr_counter <= 0;
             rstb_window_BRAM_addr_counter <= 1;
             add_bias <= (kernel_BRAM_counter_out < 1);

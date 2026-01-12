@@ -282,7 +282,7 @@ true_dual_port_bram #(
     .ena(enb_window_BRAM),    // Enable A (Active High)
     .wea(wea_window_BRAM),    // Write Enable A (Active High)
     .addra(window_BRAM_counter_out),  // Address A
-    .dina(window_bram_n_1_doutb),   // Data In A from line buffer n-1
+    .dina(in_window_row_n_1),   // Data In A from line buffer n-1
     .douta(),  // Data Out A not used
 
     // Port B

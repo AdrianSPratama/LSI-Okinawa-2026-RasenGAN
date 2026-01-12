@@ -1,2 +1,2 @@
 Time resolution is 1 ps
-ERROR: Illegal hex digit '-' found in data of file "kernel_data.mem"
+WARNING: Too many words specified in data file weight_conv_4x4.mem

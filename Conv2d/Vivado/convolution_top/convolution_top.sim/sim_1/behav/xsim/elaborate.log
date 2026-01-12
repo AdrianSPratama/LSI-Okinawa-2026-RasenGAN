@@ -1,24 +1,10 @@
 Vivado Simulator v2025.1.1
 Copyright 1986-2022 Xilinx, Inc. All Rights Reserved.
 Copyright 2022-2025 Advanced Micro Devices, Inc. All Rights Reserved.
-Running: E:/Xilinx/2025.1.1/Vivado/bin/unwrapped/win64.o/xelab.exe --incr --debug typical --relax --mt 2 -L xil_defaultlib -L unisims_ver -L unimacro_ver -L secureip --snapshot tb_convolution_top_behav xil_defaultlib.tb_convolution_top xil_defaultlib.glbl -log elaborate.log 
+Running: E:/Xilinx/2025.1.1/Vivado/bin/unwrapped/win64.o/xelab.exe --incr --debug typical --relax --mt 2 -L xil_defaultlib -L unisims_ver -L unimacro_ver -L secureip --snapshot tb_convolution_top_alt_behav xil_defaultlib.tb_convolution_top_alt xil_defaultlib.glbl -log elaborate.log 
 Using 2 slave threads.
 Starting static elaboration
 Pass Through NonSizing Optimizer
-WARNING: [VRFC 10-3091] actual bit length 32 differs from formal bit length 8 for port 'Image_size' [E:/ITB/Spesialisasi IC Design/VLSI/LSI Contest Okinawa 2026/Source Code/LSI-Okinawa-2026-RasenGAN/Conv2d/tb_convolution_top.v:50]
-WARNING: [VRFC 10-3091] actual bit length 32 differs from formal bit length 9 for port 'Channel_size' [E:/ITB/Spesialisasi IC Design/VLSI/LSI Contest Okinawa 2026/Source Code/LSI-Okinawa-2026-RasenGAN/Conv2d/tb_convolution_top.v:51]
-WARNING: [VRFC 10-3091] actual bit length 1 differs from formal bit length 7 for port 'counter_out' [E:/ITB/Spesialisasi IC Design/VLSI/LSI Contest Okinawa 2026/Source Code/LSI-Okinawa-2026-RasenGAN/Conv2d/convolution_top.v:137]
-WARNING: [VRFC 10-3091] actual bit length 1 differs from formal bit length 14 for port 'counter_out' [E:/ITB/Spesialisasi IC Design/VLSI/LSI Contest Okinawa 2026/Source Code/LSI-Okinawa-2026-RasenGAN/Conv2d/convolution_top.v:147]
-WARNING: [VRFC 10-3091] actual bit length 1 differs from formal bit length 14 for port 'counter_out' [E:/ITB/Spesialisasi IC Design/VLSI/LSI Contest Okinawa 2026/Source Code/LSI-Okinawa-2026-RasenGAN/Conv2d/convolution_top.v:157]
-WARNING: [VRFC 10-3091] actual bit length 1 differs from formal bit length 7 for port 'window_BRAM_counter_out' [E:/ITB/Spesialisasi IC Design/VLSI/LSI Contest Okinawa 2026/Source Code/LSI-Okinawa-2026-RasenGAN/Conv2d/convolution_top.v:187]
-WARNING: [VRFC 10-3091] actual bit length 1 differs from formal bit length 14 for port 'a_output_BRAM_counter_out' [E:/ITB/Spesialisasi IC Design/VLSI/LSI Contest Okinawa 2026/Source Code/LSI-Okinawa-2026-RasenGAN/Conv2d/convolution_top.v:188]
-WARNING: [VRFC 10-3091] actual bit length 1 differs from formal bit length 14 for port 'b_output_BRAM_counter_out' [E:/ITB/Spesialisasi IC Design/VLSI/LSI Contest Okinawa 2026/Source Code/LSI-Okinawa-2026-RasenGAN/Conv2d/convolution_top.v:189]
-WARNING: [VRFC 10-3091] actual bit length 1 differs from formal bit length 7 for port 'addra' [E:/ITB/Spesialisasi IC Design/VLSI/LSI Contest Okinawa 2026/Source Code/LSI-Okinawa-2026-RasenGAN/Conv2d/convolution_top.v:258]
-WARNING: [VRFC 10-3091] actual bit length 1 differs from formal bit length 7 for port 'addrb' [E:/ITB/Spesialisasi IC Design/VLSI/LSI Contest Okinawa 2026/Source Code/LSI-Okinawa-2026-RasenGAN/Conv2d/convolution_top.v:266]
-WARNING: [VRFC 10-3091] actual bit length 1 differs from formal bit length 7 for port 'addra' [E:/ITB/Spesialisasi IC Design/VLSI/LSI Contest Okinawa 2026/Source Code/LSI-Okinawa-2026-RasenGAN/Conv2d/convolution_top.v:279]
-WARNING: [VRFC 10-3091] actual bit length 1 differs from formal bit length 7 for port 'addrb' [E:/ITB/Spesialisasi IC Design/VLSI/LSI Contest Okinawa 2026/Source Code/LSI-Okinawa-2026-RasenGAN/Conv2d/convolution_top.v:287]
-WARNING: [VRFC 10-3091] actual bit length 1 differs from formal bit length 14 for port 'addra_output_BRAM' [E:/ITB/Spesialisasi IC Design/VLSI/LSI Contest Okinawa 2026/Source Code/LSI-Okinawa-2026-RasenGAN/Conv2d/convolution_top.v:370]
-WARNING: [VRFC 10-3091] actual bit length 1 differs from formal bit length 14 for port 'addrb_output_BRAM' [E:/ITB/Spesialisasi IC Design/VLSI/LSI Contest Okinawa 2026/Source Code/LSI-Okinawa-2026-RasenGAN/Conv2d/convolution_top.v:371]
 Completed static elaboration
 Starting simulation data flow analysis
 Completed simulation data flow analysis
@@ -33,6 +19,6 @@ Compiling module xil_defaultlib.multiplier_adder
 Compiling module xil_defaultlib.true_dual_port_bram(RAM_WIDTH=48...
 Compiling module xil_defaultlib.pe_with_buffers
 Compiling module xil_defaultlib.convolution_top
-Compiling module xil_defaultlib.tb_convolution_top
+Compiling module xil_defaultlib.tb_convolution_top_alt
 Compiling module xil_defaultlib.glbl
-Built simulation snapshot tb_convolution_top_behav
+Built simulation snapshot tb_convolution_top_alt_behav

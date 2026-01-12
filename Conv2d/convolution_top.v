@@ -116,6 +116,11 @@ wire signed [15:0] out_window_22;
 // Wire for output BRAM
 wire signed [47:0] output_BRAM_doutb;
 
+// Wires for counter outputs
+wire [6:0] window_BRAM_counter_out;
+wire [13:0] a_output_BRAM_counter_out;
+wire [13:0] b_output_BRAM_counter_out;
+
 // Address Counters for BRAM(s)
 // Kernel BRAM addr counter
 counter #(

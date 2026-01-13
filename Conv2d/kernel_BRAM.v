@@ -50,7 +50,7 @@ module kernel_BRAM #(
     // Counter for port b address
     counter #(
         .BITWIDTH(8)
-    ) ADDRA_COUNTER (
+    ) ADDRB_COUNTER (
         .enable(enb_ker_BRAM_counter),
         .reset(rstb_ker_BRAM_counter),
         .clk(clk),

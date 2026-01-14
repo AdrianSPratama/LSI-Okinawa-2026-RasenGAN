@@ -3,7 +3,7 @@
 module tb_kernel_BRAM;
 
     parameter KERNEL_WIDTH = 16;
-    parameter CHANNEL_SIZE = 9'd256;
+    parameter CHANNEL_SIZE = 9'd128;
 
     parameter KERNEL_FILE = "weight_conv_4x4.mem";
 
@@ -25,7 +25,7 @@ module tb_kernel_BRAM;
     wire s_axis_tready;
 
     // Simulate M_AXIS to input S_AXIS (DDR simulated by BRAM)
-    reg [255:0] kernel_3x3 [0:255];
+    reg [255:0] kernel_3x3 [0:CHANNEL_SIZE-1];
     
     // Data I/O
     wire [143:0] kernel_BRAM_dina;
@@ -127,10 +127,15 @@ module tb_kernel_BRAM;
             $display("SOME ERROR OCCURED, number of errors: %d", valid);
         end
 
-        repeat (1000) @(posedge clk);
+        repeat (10) @(posedge clk);
 
         // Update kernel BRAM addrb test
-        
+        for (i = 0; i<CHANNEL_SIZE; i=i+1) begin
+            update_BRAM_doutb <= 1;
+            @(posedge clk); 
+            update_BRAM_doutb <= 0;
+            repeat (5) @(posedge clk); 
+        end
 
         $stop;
     end

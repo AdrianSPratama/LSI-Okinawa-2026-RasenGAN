@@ -152,7 +152,7 @@ module kernel_BRAM_CU (
             end
 
             S_Reset_counter_b: begin
-                rstb_ker_BRAM_counter <= 0;
+                rstb_ker_BRAM_counter = 0;
             end
 
             default: begin

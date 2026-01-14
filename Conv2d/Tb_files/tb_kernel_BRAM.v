@@ -20,7 +20,7 @@ module tb_kernel_BRAM;
     reg s_axis_tlast;
 
     // Outputs
-    wire done_loading_1ker;
+    wire last_loading_1ker;
     wire last_channel;
     wire s_axis_tready;
 
@@ -53,7 +53,7 @@ module tb_kernel_BRAM;
         .s_axis_tlast(s_axis_tlast), // Not used
 
         // Control output interface for other blocks
-        .done_loading_1ker(done_loading_1ker),
+        .last_loading_1ker(last_loading_1ker),
         .last_channel(last_channel),
         .s_axis_tready(s_axis_tready),
 

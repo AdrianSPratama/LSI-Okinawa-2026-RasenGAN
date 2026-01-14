@@ -15,7 +15,7 @@ module kernel_BRAM #(
     input wire s_axis_tlast, // Not used
 
     // Control output interface for other blocks
-    output wire done_loading_1ker,
+    output wire last_loading_1ker,
     output wire last_channel,
     output wire s_axis_tready,
 
@@ -71,7 +71,7 @@ module kernel_BRAM #(
         .s_axis_tlast(s_axis_tlast), // Not used
 
         // Control outputs
-        .done_loading_1ker(done_loading_1ker),
+        .last_loading_1ker(last_loading_1ker),
         .last_channel(last_channel),
         .ena_ker_BRAM(ena_ker_BRAM),
         .wea_ker_BRAM(wea_ker_BRAM),

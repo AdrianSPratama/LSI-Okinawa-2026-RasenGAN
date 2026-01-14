@@ -13,7 +13,7 @@ module kernel_BRAM_CU (
     input wire s_axis_tlast, // Not used
 
     // Control outputs
-    output reg done_loading_1ker,
+    output reg last_loading_1ker,
     output reg last_channel,
     output reg ena_ker_BRAM,
     output reg wea_ker_BRAM,
@@ -86,7 +86,7 @@ module kernel_BRAM_CU (
     // State output block
     always @(*) begin
         // Defaults
-        done_loading_1ker = 0;
+        last_loading_1ker = 0;
         last_channel = 0;
         ena_ker_BRAM = 1;
         wea_ker_BRAM = 0;
@@ -99,7 +99,7 @@ module kernel_BRAM_CU (
 
         case (current_state)
             S_Reset: begin
-                done_loading_1ker = 0;
+                last_loading_1ker = 0;
                 last_channel = 0;
                 ena_ker_BRAM = 0;
                 wea_ker_BRAM = 0;
@@ -138,11 +138,11 @@ module kernel_BRAM_CU (
                     ena_ker_BRAM_counter = 0;
                 end
                 else if (a_counter_output == CHANNEL_SIZE-1) begin
-                    done_loading_1ker = 1;
+                    last_loading_1ker = 1;
                     rsta_ker_BRAM_counter = 0;
                 end
                 else begin
-                    done_loading_1ker = 0;
+                    last_loading_1ker = 0;
                     rsta_ker_BRAM_counter = 1;
                 end
             end
@@ -160,7 +160,7 @@ module kernel_BRAM_CU (
             end
 
             default: begin
-                done_loading_1ker = 0;
+                last_loading_1ker = 0;
                 last_channel = 0;
                 ena_ker_BRAM = 1;
                 wea_ker_BRAM = 0;

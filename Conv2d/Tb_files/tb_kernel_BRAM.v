@@ -9,6 +9,8 @@ module tb_kernel_BRAM;
 
     // Variables
     integer chan_index = 0;
+    integer i = 8'd0;
+    integer valid = 0;
 
     // Inputs
     reg clk, rst;
@@ -28,6 +30,10 @@ module tb_kernel_BRAM;
     // Data I/O
     wire [143:0] kernel_BRAM_dina;
     wire [143:0] kernel_BRAM_doutb;
+
+    // Data check
+    wire [255:0] kernel_BRAM_doutb_padded;
+    assign kernel_BRAM_doutb_padded = {{112{1'b0}},kernel_BRAM_doutb};
 
     // Assign kernel_BRAM_dina wire to DDR output reg, take 144 LSB
     assign kernel_BRAM_dina = kernel_3x3[chan_index][143:0];
@@ -65,6 +71,7 @@ module tb_kernel_BRAM;
         // Read initialization file for DDR simulation
         $readmemh(KERNEL_FILE, kernel_3x3);
 
+        // Load kenrel BRAM from dina test
         rst <= 0;
         load_BRAM_dina <= 0;
         update_BRAM_doutb <= 0;
@@ -85,15 +92,45 @@ module tb_kernel_BRAM;
         update_BRAM_doutb <= 0;
         s_axis_tvalid <= 0;
         s_axis_tlast <= 0;
+        
+        @(posedge clk)
+        load_BRAM_dina <= 0;
 
         repeat (10) @(posedge clk);
 
+        s_axis_tvalid <= 1;
         for (chan_index=0; chan_index<CHANNEL_SIZE; chan_index = chan_index + 1) begin
-            s_axis_tvalid <= 1;
+            while (!s_axis_tready) @(posedge clk);
             @(posedge clk);
         end
 
+        s_axis_tvalid <= 0;
+    
+
+        for (i = 0; i<CHANNEL_SIZE; i = i+1) begin
+            @(posedge clk);
+            if (DUT.DATAPATH.kernel_BRAM.BRAM[i] == kernel_3x3[i]) begin
+                $display("Index %d valid", i);
+            end
+            else begin
+                $display("ERROR: Index %d invalid", i);
+                $display("Should be: %h", kernel_3x3[i]);
+                $display("Got: %h", kernel_BRAM_doutb_padded);
+                valid = valid + 1;
+            end
+        end
+
+        if(valid == 0) begin
+            $display("All test passed");
+        end
+        else begin
+            $display("SOME ERROR OCCURED, number of errors: %d", valid);
+        end
+
         repeat (1000) @(posedge clk);
+
+        // Update kernel BRAM addrb test
+        
 
         $stop;
     end

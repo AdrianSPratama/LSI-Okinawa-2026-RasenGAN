@@ -27,11 +27,11 @@ module kernel_BRAM_CU (
 
 parameter state_size = 3;
 parameter S_Reset = 3'd0,
-          S_Idle = 3'd1,
-          S_Wait_saxis_tvalid = 3'd2,
-          S_Loading_ker_BRAM = 3'd3,
-          S_Inc_addrb = 3'd4,
-          S_Check_counter_b = 3'd5;
+        S_Idle = 3'd1,
+        S_Wait_saxis_tvalid = 3'd2,
+        S_Loading_ker_BRAM = 3'd3,
+        S_Inc_addrb = 3'd4,
+        S_Check_counter_b = 3'd5;
 
 // State register
 reg [state_size-1:0] current_state;
@@ -74,76 +74,84 @@ always @(posedge clk) begin
 end
 
 // State output block
-always @(current_state) begin
+always @(*) begin
     // Defaults
-    done_loading_1ker <= 0;
-    last_channel <= 0;
-    ena_ker_BRAM <= 1;
-    wea_ker_BRAM <= 0;
-    enb_ker_BRAM <= 1;
-    enb_ker_BRAM_counter <= 0;
-    rstb_ker_BRAM_counter <= 1;
-    ena_ker_BRAM_counter <= 0;
-    rsta_ker_BRAM_counter <= 1;
-    s_axis_tready <= 0;
+    done_loading_1ker = 0;
+    last_channel = 0;
+    ena_ker_BRAM = 1;
+    wea_ker_BRAM = 0;
+    enb_ker_BRAM = 1;
+    enb_ker_BRAM_counter = 0;
+    rstb_ker_BRAM_counter = 1;
+    ena_ker_BRAM_counter = 0;
+    rsta_ker_BRAM_counter = 1;
+    s_axis_tready = 0;
 
     case (current_state)
         S_Reset: begin
-            done_loading_1ker <= 0;
-            last_channel <= 0;
-            ena_ker_BRAM <= 0;
-            wea_ker_BRAM <= 0;
-            enb_ker_BRAM <= 0;
-            rstb_ker_BRAM_counter <= 0;
-            ena_ker_BRAM_counter <= 0;
-            rsta_ker_BRAM_counter <= 0;
-            s_axis_tready <= 0;
+            done_loading_1ker = 0;
+            last_channel = 0;
+            ena_ker_BRAM = 0;
+            wea_ker_BRAM = 0;
+            enb_ker_BRAM = 0;
+            rstb_ker_BRAM_counter = 0;
+            ena_ker_BRAM_counter = 0;
+            rsta_ker_BRAM_counter = 0;
+            s_axis_tready = 0;
         end
 
         S_Idle: begin
-            ena_ker_BRAM <= 1;
-            enb_ker_BRAM <= 1;
-            rsta_ker_BRAM_counter <= 1;
-            rstb_ker_BRAM_counter <= 1;
+            ena_ker_BRAM = 1;
+            enb_ker_BRAM = 1;
+            rsta_ker_BRAM_counter = 1;
+            rstb_ker_BRAM_counter = 1;
         end
 
         S_Wait_saxis_tvalid: begin
-            s_axis_tready <= 1;
+            s_axis_tready = 1;
+            if (s_axis_tvalid) begin
+                wea_ker_BRAM = 1;
+                ena_ker_BRAM_counter = 1;
+            end
+            else begin
+                wea_ker_BRAM = 0;
+                ena_ker_BRAM_counter = 0;
+            end
         end
 
         S_Loading_ker_BRAM: begin
-            s_axis_tready <= 1;
-            wea_ker_BRAM <= 1;
-            ena_ker_BRAM_counter <= 1;
+            s_axis_tready = 1;
+            wea_ker_BRAM = 1;
+            ena_ker_BRAM_counter = 1;
             if (a_counter_output == CHANNEL_SIZE-1) begin
-                done_loading_1ker <= 1;
-                rsta_ker_BRAM_counter <= 0;
+                done_loading_1ker = 1;
+                rsta_ker_BRAM_counter = 0;
             end
             else begin
-                done_loading_1ker <= 0;
-                rsta_ker_BRAM_counter <= 1;
+                done_loading_1ker = 0;
+                rsta_ker_BRAM_counter = 1;
             end
         end
 
-        S_Inc_addrb: enb_ker_BRAM_counter <= 1;
+        S_Inc_addrb: enb_ker_BRAM_counter = 1;
 
         S_Check_counter_b: begin
-            enb_ker_BRAM_counter <= 0;
-            if (b_counter_output == CHANNEL_SIZE - 1) last_channel <= 1;
-            else last_channel <= 0;
+            enb_ker_BRAM_counter = 0;
+            if (b_counter_output == CHANNEL_SIZE - 1) last_channel = 1;
+            else last_channel = 0;
         end
 
         default: begin
-            done_loading_1ker <= 0;
-            last_channel <= 0;
-            ena_ker_BRAM <= 1;
-            wea_ker_BRAM <= 0;
-            enb_ker_BRAM <= 1;
-            enb_ker_BRAM_counter <= 0;
-            rstb_ker_BRAM_counter <= 1;
-            ena_ker_BRAM_counter <= 0;
-            rsta_ker_BRAM_counter <= 1;
-            s_axis_tready <= 0;
+            done_loading_1ker = 0;
+            last_channel = 0;
+            ena_ker_BRAM = 1;
+            wea_ker_BRAM = 0;
+            enb_ker_BRAM = 1;
+            enb_ker_BRAM_counter = 0;
+            rstb_ker_BRAM_counter = 1;
+            ena_ker_BRAM_counter = 0;
+            rsta_ker_BRAM_counter = 1;
+            s_axis_tready = 0;
         end
     endcase
 end

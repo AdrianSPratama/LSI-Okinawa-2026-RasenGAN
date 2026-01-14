@@ -31,7 +31,8 @@ module kernel_BRAM_CU (
             S_Wait_saxis_tvalid = 3'd2,
             S_Loading_ker_BRAM = 3'd3,
             S_Inc_addrb = 3'd4,
-            S_Check_counter_b = 3'd5;
+            S_Check_counter_b = 3'd5,
+            S_Reset_counter_b = 3'd6;
 
     // State register
     reg [state_size-1:0] current_state;
@@ -66,7 +67,16 @@ module kernel_BRAM_CU (
 
                 S_Inc_addrb: current_state <= S_Check_counter_b;
 
-                S_Check_counter_b: current_state <= S_Idle;
+                S_Check_counter_b: begin
+                    if(b_counter_output == CHANNEL_SIZE - 1) begin
+                        current_state <= S_Reset_counter_b;
+                    end
+                    else begin
+                        current_state <= S_Idle;    
+                    end
+                end
+
+                S_Reset_counter_b: current_state <= S_Idle;
 
                 default: current_state <= S_Reset;
             endcase
@@ -139,6 +149,10 @@ module kernel_BRAM_CU (
                 enb_ker_BRAM_counter = 0;
                 if (b_counter_output == CHANNEL_SIZE - 1) last_channel = 1;
                 else last_channel = 0;
+            end
+
+            S_Reset_counter_b: begin
+                rstb_ker_BRAM_counter <= 0;
             end
 
             default: begin

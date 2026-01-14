@@ -100,7 +100,10 @@ module tb_kernel_BRAM;
 
         s_axis_tvalid <= 1;
         for (chan_index=0; chan_index<CHANNEL_SIZE; chan_index = chan_index + 1) begin
+            s_axis_tvalid <= 1;
             while (!s_axis_tready) @(posedge clk);
+            @(posedge clk);
+            s_axis_tvalid <= 0;
             @(posedge clk);
         end
 

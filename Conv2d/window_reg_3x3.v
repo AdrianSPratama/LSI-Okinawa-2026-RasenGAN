@@ -5,7 +5,7 @@ module window_reg_3x3 #(
     ) (
         input wire clk,
         input wire Wr_window, Shift_window, Rst_window,
-        input wire [DATA_WIDTH-1:0] in_row_n, in_row_n_1, in_row_n_2,
+        input wire signed [DATA_WIDTH-1:0] in_row_n, in_row_n_1, in_row_n_2,
         // Output from every register
         output wire signed [DATA_WIDTH-1:0] out_window_00, out_window_01, out_window_02,
         output wire signed [DATA_WIDTH-1:0] out_window_10, out_window_11, out_window_12,

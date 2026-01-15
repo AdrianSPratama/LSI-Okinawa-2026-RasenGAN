@@ -1,0 +1,466 @@
+`timescale 1ns / 1ps
+
+module input_line_buffer_CU (
+    // Inputs
+    input wire clk,
+    input wire Reset,
+    input wire Stream_first_row, Stream_mid_row, Stream_last_row,
+    input wire [7:0] IMAGE_SIZE,
+    input wire last_channel,
+    input wire [6:0] linebuff_BRAM_counter_out,
+
+    // AXI input signals
+    input wire m_axis_tready,
+    input wire s_axis_tvalid,
+    input wire s_axis_tlast,
+
+    // Control signal outputs
+    // Interface for other blocks
+    output reg Done_1row,
+    output reg Output_valid,
+    output reg s_axis_tready,
+
+    // Internal output control signals
+    output reg Rst_window,
+    output reg Wr_window,
+    output reg Shift_window,
+
+    output reg window_row_n_2_mux,
+    output reg window_row_n_1_mux,
+    output reg window_row_n_mux,
+
+    output reg ena_linebuff_BRAM,
+    output reg wea_linebuff_BRAM,
+    output reg enb_linebuff_BRAM,
+
+    output reg en_linebuff_BRAM_counter,
+    output reg rst_linebuff_BRAM_counter
+);
+    
+    parameter state_size = 5; // State size in bits, approx 24 total states (use 5 bits)
+    // State reg
+    reg [state_size-1:0] current_state;
+
+    // State parameters
+    parameter S_Reset                                       = 5'd0,
+              S_Idle                                        = 5'd1,
+              S_Wait_saxis_tvalid_first_row                 = 5'd2,
+              S_Stream_first_row                            = 5'd3,
+              S_Finish_first_row                            = 5'd4,
+              S_Zero_padding_edge_first                     = 5'd5,
+              S_Wait_saxis_tvalid_mid_row                   = 5'd6,
+              S_Stream_mid_row                              = 5'd7,
+              S_Zero_padding_edge_last                      = 5'd8,
+              S_Finish_mid_row                              = 5'd9,
+              S_Zero_padding_edge_first_last_row            = 5'd10,
+              S_Streaming_last_row                          = 5'd11,
+              S_Idle_last_chan                              = 5'd12,
+              S_Wait_saxis_tvalid_first_row_last_chan       = 5'd13,
+              S_Stream_first_row_last_chan                  = 5'd14,
+              S_Finish_first_row_last_chan                  = 5'd15,
+              S_Zero_padding_edge_first_last_chan           = 5'd16,
+              S_Wait_saxis_tvalid_mid_row_last_chan         = 5'd17,
+              S_Stream_mid_row_last_chan                    = 5'd18,
+              S_Zero_padding_edge_last_last_chan            = 5'd19,
+              S_Finish_mid_row_last_chan                    = 5'd20,
+              S_Zero_padding_edge_first_last_row_last_chan  = 5'd21,
+              S_Wait_saxis_tvalid_last_row_last_chan        = 5'd22,
+              S_Streaming_last_row_last_chan                = 5'd23;
+
+    // State transition block
+    always @(posedge clk) begin
+        if (!Reset) current_state <= S_Reset;
+        else begin
+            case (current_state)
+                S_Reset: current_state <= S_Idle; 
+                
+                S_Idle: begin
+                    if (Stream_first_row) current_state <= S_Wait_saxis_tvalid_first_row;
+                    else if (Stream_mid_row) current_state <= S_Zero_padding_edge_first;
+                    else if (Stream_last_row) current_state <= S_Zero_padding_edge_first_last_row;
+                    else if (last_channel) current_state <= S_Idle_last_chan;
+                    else current_state <= S_Idle; 
+                end
+
+                S_Wait_saxis_tvalid_first_row: begin
+                    if (s_axis_tvalid) current_state <= S_Stream_first_row;
+                    else current_state <= S_Wait_saxis_tvalid_first_row;
+                end
+
+                S_Stream_first_row: begin
+                    if (s_axis_tvalid) begin
+                        if (linebuff_BRAM_counter_out == IMAGE_SIZE - 1) current_state <= S_Finish_first_row;
+                        else current_state <= S_Stream_first_row;
+                    end
+                    else current_state <= S_Wait_saxis_tvalid_first_row;
+                end
+
+                S_Finish_first_row: current_state <= S_Idle;
+
+                S_Zero_padding_edge_first: current_state <= S_Wait_saxis_tvalid_mid_row;
+
+                S_Wait_saxis_tvalid_mid_row: begin
+                    if (s_axis_tvalid) current_state <= S_Stream_mid_row;
+                    else current_state <= S_Wait_saxis_tvalid_mid_row;
+                end
+
+                S_Stream_mid_row: begin
+                    if (s_axis_tvalid) begin
+                        if (linebuff_BRAM_counter_out == IMAGE_SIZE - 1) current_state <= S_Zero_padding_edge_last;
+                        else current_state <= S_Stream_mid_row;
+                    end
+                    else current_state <= S_Wait_saxis_tvalid_mid_row;
+                end
+
+                S_Zero_padding_edge_last: current_state <= S_Finish_mid_row;
+
+                S_Finish_mid_row: current_state <= S_Idle;
+
+                S_Zero_padding_edge_first_last_row: current_state <= S_Streaming_last_row;
+
+                S_Streaming_last_row: begin
+                    if (linebuff_BRAM_counter_out == IMAGE_SIZE - 1) current_state <= S_Zero_padding_edge_last;
+                    else current_state <= S_Streaming_last_row;
+                end
+
+                S_Idle_last_chan: begin
+                    if (Stream_first_row) current_state <= S_Wait_saxis_tvalid_first_row_last_chan;
+                    else if (Stream_mid_row) current_state <= S_Zero_padding_edge_first_last_chan;
+                    else if (Stream_last_row) current_state <= S_Zero_padding_edge_first_last_row_last_chan;
+                    else current_state <= S_Idle_last_chan;
+                end
+
+                S_Wait_saxis_tvalid_first_row_last_chan: begin
+                    if (s_axis_tvalid && m_axis_tready) current_state <= S_Stream_first_row_last_chan;
+                    else current_state <= S_Wait_saxis_tvalid_first_row_last_chan;
+                end
+
+                S_Stream_first_row_last_chan: begin
+                    if (s_axis_tvalid && m_axis_tready) begin
+                        if (linebuff_BRAM_counter_out == IMAGE_SIZE - 1) current_state <= S_Finish_first_row_last_chan;
+                        else current_state <= S_Stream_first_row_last_chan;
+                    end
+                    else current_state <= S_Wait_saxis_tvalid_first_row_last_chan;
+                end
+
+                S_Finish_first_row_last_chan: current_state <= S_Idle_last_chan;
+
+                S_Zero_padding_edge_first_last_chan: current_state <= S_Wait_saxis_tvalid_mid_row_last_chan;
+
+                S_Wait_saxis_tvalid_mid_row_last_chan: begin
+                    if (s_axis_tvalid && m_axis_tready) current_state <= S_Stream_mid_row_last_chan;
+                    else current_state <= S_Wait_saxis_tvalid_mid_row_last_chan;
+                end
+
+                S_Stream_mid_row_last_chan: begin
+                    if (s_axis_tvalid && m_axis_tready) begin
+                        if (linebuff_BRAM_counter_out == IMAGE_SIZE - 1) current_state <= S_Zero_padding_edge_last_last_chan;
+                        else current_state <= S_Stream_mid_row_last_chan;
+                    end
+                    else current_state <= S_Wait_saxis_tvalid_mid_row_last_chan;
+                end
+
+                S_Zero_padding_edge_last_last_chan: current_state <= S_Finish_mid_row_last_chan;
+
+                S_Finish_mid_row_last_chan: current_state <= S_Idle_last_chan;
+
+                S_Zero_padding_edge_first_last_row_last_chan: current_state <= S_Wait_saxis_tvalid_last_row_last_chan;
+
+                S_Wait_saxis_tvalid_last_row_last_chan: begin
+                    if (m_axis_tready) current_state <= S_Streaming_last_row_last_chan;
+                    else current_state <= S_Wait_saxis_tvalid_last_row_last_chan;
+                end
+
+                S_Streaming_last_row_last_chan: begin
+                    if (m_axis_tready) begin
+                        if (linebuff_BRAM_counter_out == IMAGE_SIZE - 1) current_state <= S_Zero_padding_edge_last_last_chan;
+                        else current_state <= S_Streaming_last_row_last_chan;
+                    end
+                    else current_state <= S_Wait_saxis_tvalid_last_row_last_chan;
+                end
+
+                default: current_state <= S_Reset;
+            endcase
+        end
+    end
+
+    // State output
+    always @(*) begin
+        // Defaults, so we don't need to write all of the combination in if else branch (if it's not found then go back to default)
+        Done_1row = 0;
+        Output_valid = 0;
+        Rst_window = 1;
+        Wr_window = 0;
+        Shift_window = 0;
+        window_row_n_2_mux = 0;
+        window_row_n_1_mux = 0;
+        window_row_n_mux = 0;
+        ena_linebuff_BRAM = 1;
+        wea_linebuff_BRAM = 0;
+        enb_linebuff_BRAM = 1;
+        en_linebuff_BRAM_counter = 0;
+        rst_linebuff_BRAM_counter = 1;
+        s_axis_tready = 0;
+
+        case (current_state)
+            S_Reset: begin
+                Done_1row = 0;
+                Output_valid = 0;
+                Rst_window = 0;
+                Wr_window = 0;
+                Shift_window = 0;
+                window_row_n_2_mux = 0;
+                window_row_n_1_mux = 0;
+                window_row_n_mux = 0;
+                ena_linebuff_BRAM = 0;
+                wea_linebuff_BRAM = 0;
+                enb_linebuff_BRAM = 0;
+                en_linebuff_BRAM_counter = 0;
+                rst_linebuff_BRAM_counter = 0;
+                s_axis_tready = 0;
+            end
+
+            S_Idle: begin
+                Rst_window = 1;
+                ena_linebuff_BRAM = 1;
+                enb_linebuff_BRAM = 1;
+                rst_linebuff_BRAM_counter = 1;
+            end
+
+            S_Wait_saxis_tvalid_first_row: begin
+                window_row_n_mux = 1;
+                s_axis_tready = 1;
+                if (s_axis_tvalid) begin
+                    Wr_window = 1;
+                    Shift_window = 1;
+                    wea_linebuff_BRAM = 1;
+                    en_linebuff_BRAM_counter = 1;
+                end
+            end
+
+            S_Stream_first_row: begin
+                window_row_n_mux = 1;
+                Wr_window = 1;
+                Shift_window = 1;
+                wea_linebuff_BRAM = 1;
+                en_linebuff_BRAM_counter = 1;
+                s_axis_tready = 1;
+                if (!s_axis_tvalid) begin
+                    Wr_window = 0;
+                    Shift_window = 0;
+                    wea_linebuff_BRAM = 0;
+                    en_linebuff_BRAM_counter = 0;
+                end
+            end
+
+            S_Finish_first_row: begin
+                Wr_window = 0;
+                Shift_window = 0;
+                wea_linebuff_BRAM = 0;
+                en_linebuff_BRAM_counter = 0;
+                rst_linebuff_BRAM_counter = 0;
+                Done_1row = 1;
+            end
+
+            S_Zero_padding_edge_first: begin
+                Wr_window = 1;
+                Shift_window = 1;
+            end
+
+            S_Wait_saxis_tvalid_mid_row: begin
+                window_row_n_2_mux = 1;
+                window_row_n_1_mux = 1;
+                window_row_n_mux = 1;
+                s_axis_tready = 1;
+                Output_valid = linebuff_BRAM_counter_out >= 2;
+                if (s_axis_tvalid) begin
+                    Wr_window = 1;
+                    Shift_window = 1;
+                    wea_linebuff_BRAM = 1;
+                    en_linebuff_BRAM_counter = 1;
+                end
+            end
+
+            S_Stream_mid_row: begin
+                window_row_n_2_mux = 1;
+                window_row_n_1_mux = 1;
+                window_row_n_mux = 1;
+                s_axis_tready = 1;
+                Wr_window = 1;
+                Shift_window = 1;
+                wea_linebuff_BRAM = 1;
+                en_linebuff_BRAM_counter = 1;
+                Output_valid = linebuff_BRAM_counter_out >= 2;
+                if (!s_axis_tvalid) begin
+                    Wr_window = 0;
+                    Shift_window = 0;
+                    wea_linebuff_BRAM = 0;
+                    en_linebuff_BRAM_counter = 0;
+                end
+            end
+
+            S_Zero_padding_edge_last: begin
+                Wr_window = 1;
+                Shift_window = 1;
+                Output_valid = 1;
+                rst_linebuff_BRAM_counter = 0;
+            end
+
+            S_Finish_mid_row: Done_1row = 1;
+
+            S_Zero_padding_edge_first_last_row: begin
+                Wr_window = 1;
+                Shift_window = 1;
+            end
+
+            S_Streaming_last_row: begin
+                Wr_window = 1;
+                Shift_window = 1;
+                window_row_n_2_mux = 1;
+                window_row_n_1_mux = 1;
+                en_linebuff_BRAM_counter = 1;
+                Output_valid = linebuff_BRAM_counter_out >= 2;
+            end
+
+            S_Idle_last_chan: begin
+                Rst_window = 1;
+                ena_linebuff_BRAM = 1;
+                enb_linebuff_BRAM = 1;
+                rst_linebuff_BRAM_counter = 1;
+            end
+
+            S_Wait_saxis_tvalid_first_row_last_chan: begin
+                window_row_n_mux = 1;
+                s_axis_tready = 1;
+                if (s_axis_tvalid && m_axis_tready) begin
+                    Wr_window = 1;
+                    Shift_window = 1;
+                    wea_linebuff_BRAM = 1;
+                    en_linebuff_BRAM_counter = 1;
+                end
+            end
+
+            S_Stream_first_row_last_chan: begin
+                window_row_n_mux = 1;
+                Wr_window = 1;
+                Shift_window = 1;
+                wea_linebuff_BRAM = 1;
+                en_linebuff_BRAM_counter = 1;
+                s_axis_tready = 1;
+                if (!(s_axis_tvalid && m_axis_tready)) begin
+                    Wr_window = 0;
+                    Shift_window = 0;
+                    wea_linebuff_BRAM = 0;
+                    en_linebuff_BRAM_counter = 0;
+                end
+            end
+
+            S_Finish_first_row_last_chan: begin
+                Wr_window = 0;
+                Shift_window = 0;
+                wea_linebuff_BRAM = 0;
+                en_linebuff_BRAM_counter = 0;
+                rst_linebuff_BRAM_counter = 0;
+                Done_1row = 1;
+            end
+
+            S_Zero_padding_edge_first_last_chan: begin
+                Wr_window = 1;
+                Shift_window = 1;
+            end
+
+            S_Wait_saxis_tvalid_mid_row_last_chan: begin
+                window_row_n_2_mux = 1;
+                window_row_n_1_mux = 1;
+                window_row_n_mux = 1;
+                s_axis_tready = 1;
+                Output_valid = linebuff_BRAM_counter_out >= 2;
+                if (s_axis_tvalid && m_axis_tready) begin
+                    Wr_window = 1;
+                    Shift_window = 1;
+                    wea_linebuff_BRAM = 1;
+                    en_linebuff_BRAM_counter = 1;
+                end
+            end
+
+            S_Stream_mid_row_last_chan: begin
+                window_row_n_2_mux = 1;
+                window_row_n_1_mux = 1;
+                window_row_n_mux = 1;
+                s_axis_tready = 1;
+                Wr_window = 1;
+                Shift_window = 1;
+                wea_linebuff_BRAM = 1;
+                en_linebuff_BRAM_counter = 1;
+                Output_valid = linebuff_BRAM_counter_out >= 2;
+                if (!(s_axis_tvalid && m_axis_tready)) begin
+                    Wr_window = 0;
+                    Shift_window = 0;
+                    wea_linebuff_BRAM = 0;
+                    en_linebuff_BRAM_counter = 0;
+                end
+            end
+
+            S_Zero_padding_edge_last_last_chan: begin
+                Wr_window = 1;
+                Shift_window = 1;
+                Output_valid = 1;
+                rst_linebuff_BRAM_counter = 0;
+            end
+
+            S_Finish_mid_row_last_chan: Done_1row = 1;
+
+            S_Zero_padding_edge_first_last_row_last_chan: begin
+                Wr_window = 1;
+                Shift_window = 1;
+            end
+
+            S_Wait_saxis_tvalid_last_row_last_chan: begin
+                window_row_n_2_mux = 1;
+                window_row_n_1_mux = 1;
+                Output_valid = linebuff_BRAM_counter_out >= 2;
+                if (m_axis_tready) begin
+                    Wr_window = 1;
+                    Shift_window = 1;
+                    window_row_n_2_mux = 1;
+                    window_row_n_1_mux = 1;
+                    en_linebuff_BRAM_counter = 1;
+                    Output_valid = linebuff_BRAM_counter_out >= 2;
+                end
+            end
+
+            S_Streaming_last_row_last_chan: begin
+                Wr_window = 1;
+                Shift_window = 1;
+                window_row_n_2_mux = 1;
+                window_row_n_1_mux = 1;
+                en_linebuff_BRAM_counter = 1;
+                Output_valid = linebuff_BRAM_counter_out >= 2;
+                if (!m_axis_tready) begin
+                    Wr_window = 0;
+                    Shift_window = 0;
+                    wea_linebuff_BRAM = 0;
+                    en_linebuff_BRAM_counter = 0;
+                end
+            end
+
+            default: begin
+                Done_1row = 0;
+                Output_valid = 0;
+                Rst_window = 1;
+                Wr_window = 0;
+                Shift_window = 0;
+                window_row_n_2_mux = 0;
+                window_row_n_1_mux = 0;
+                window_row_n_mux = 0;
+                ena_linebuff_BRAM = 1;
+                wea_linebuff_BRAM = 0;
+                enb_linebuff_BRAM = 1;
+                en_linebuff_BRAM_counter = 0;
+                rst_linebuff_BRAM_counter = 1;
+                s_axis_tready = 0;
+            end 
+        endcase
+    end
+
+endmodule

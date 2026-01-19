@@ -21,9 +21,12 @@ module input_line_buffer_datapath #(
 
     // Line buffer BRAM counter control signals
     input wire en_linebuff_BRAM_counter, rst_linebuff_BRAM_counter,
-    output wire [6:0] linebuff_BRAM_counter_out // Max image size 128, counter 7 bit
+    output wire [7:0] linebuff_BRAM_counter_out // Max image size 128, counter 7 bit
 );
-    
+    // Handle linebuff_BRAM_counter_out overflow
+    wire [6:0] linebuff_BRAM_counter_out_sliced;
+    assign linebuff_BRAM_counter_out_sliced = linebuff_BRAM_counter_out[6:0];
+
     // Define wires
     // Line buffer BRAM wires
     wire signed [DATA_WIDTH-1:0] linebuff_n_1_doutb;
@@ -44,7 +47,7 @@ module input_line_buffer_datapath #(
 
     // Instantiate counters
     counter #(
-        .BITWIDTH(7)
+        .BITWIDTH(8)
     ) LINEBUFF_BRAM_COUNTER (
         .enable(en_linebuff_BRAM_counter),
         .reset(rst_linebuff_BRAM_counter),
@@ -86,7 +89,7 @@ module input_line_buffer_datapath #(
         .clka(~clk),   // Clock A, using inverted clock so reading timing is not delayed
         .ena(ena_linebuff_BRAM),    // Enable A (Active High)
         .wea(wea_linebuff_BRAM),    // Write Enable A (Active High)
-        .addra(linebuff_BRAM_counter_out),  // Address A
+        .addra(linebuff_BRAM_counter_out_sliced),  // Address A
         .dina(mux_row_n_out),   // Data In A 
         .douta(),  // Data Out A not used
 
@@ -94,7 +97,7 @@ module input_line_buffer_datapath #(
         .clkb(~clk),   // Clock B
         .enb(enb_linebuff_BRAM),    // Enable B (Active High)
         .web(1'b0),    // Write Enable B (Active High) not used, always 0
-        .addrb(linebuff_BRAM_counter_out),  // Address B
+        .addrb(linebuff_BRAM_counter_out_sliced),  // Address B
         .dinb(),   // Data In B not used
         .doutb(linebuff_n_1_doutb)   // Data Out B
     );
@@ -107,7 +110,7 @@ module input_line_buffer_datapath #(
         .clka(~clk),   // Clock A, using inverted clock so reading timing is not delayed
         .ena(ena_linebuff_BRAM),    // Enable A (Active High)
         .wea(wea_linebuff_BRAM),    // Write Enable A (Active High)
-        .addra(linebuff_BRAM_counter_out),  // Address A
+        .addra(linebuff_BRAM_counter_out_sliced),  // Address A
         .dina(mux_row_n_1_out),   // Data In A 
         .douta(),  // Data Out A not used
 
@@ -115,7 +118,7 @@ module input_line_buffer_datapath #(
         .clkb(~clk),   // Clock B
         .enb(enb_linebuff_BRAM),    // Enable B (Active High)
         .web(1'b0),    // Write Enable B (Active High) not used, always 0
-        .addrb(linebuff_BRAM_counter_out),  // Address B
+        .addrb(linebuff_BRAM_counter_out_sliced),  // Address B
         .dinb(),   // Data In B not used
         .doutb(linebuff_n_2_doutb)   // Data Out B
     );

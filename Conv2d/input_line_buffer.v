@@ -29,7 +29,7 @@ module input_line_buffer #(
 );
 
     // Wires
-    wire [6:0] linebuff_BRAM_counter_out;
+    wire [7:0] linebuff_BRAM_counter_out;
     wire Rst_window;
     wire Wr_window;
     wire Shift_window;

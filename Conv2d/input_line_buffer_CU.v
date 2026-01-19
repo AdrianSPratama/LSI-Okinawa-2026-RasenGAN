@@ -7,7 +7,7 @@ module input_line_buffer_CU (
     input wire Stream_first_row, Stream_mid_row, Stream_last_row,
     input wire [7:0] IMAGE_SIZE,
     input wire last_channel,
-    input wire [6:0] linebuff_BRAM_counter_out,
+    input wire [7:0] linebuff_BRAM_counter_out,
 
     // AXI input signals
     input wire m_axis_tready,
@@ -46,26 +46,22 @@ module input_line_buffer_CU (
               S_Idle                                        = 5'd1,
               S_Wait_saxis_tvalid_first_row                 = 5'd2,
               S_Stream_first_row                            = 5'd3,
-              S_Finish_first_row                            = 5'd4,
-              S_Zero_padding_edge_first                     = 5'd5,
-              S_Wait_saxis_tvalid_mid_row                   = 5'd6,
-              S_Stream_mid_row                              = 5'd7,
-              S_Zero_padding_edge_last                      = 5'd8,
-              S_Finish_mid_row                              = 5'd9,
-              S_Zero_padding_edge_first_last_row            = 5'd10,
-              S_Streaming_last_row                          = 5'd11,
-              S_Idle_last_chan                              = 5'd12,
-              S_Wait_saxis_tvalid_first_row_last_chan       = 5'd13,
-              S_Stream_first_row_last_chan                  = 5'd14,
-              S_Finish_first_row_last_chan                  = 5'd15,
-              S_Zero_padding_edge_first_last_chan           = 5'd16,
-              S_Wait_saxis_tvalid_mid_row_last_chan         = 5'd17,
-              S_Stream_mid_row_last_chan                    = 5'd18,
-              S_Zero_padding_edge_last_last_chan            = 5'd19,
-              S_Finish_mid_row_last_chan                    = 5'd20,
-              S_Zero_padding_edge_first_last_row_last_chan  = 5'd21,
-              S_Wait_saxis_tvalid_last_row_last_chan        = 5'd22,
-              S_Streaming_last_row_last_chan                = 5'd23;
+              S_Zero_padding_edge_first                     = 5'd4,
+              S_Wait_saxis_tvalid_mid_row                   = 5'd5,
+              S_Stream_mid_row                              = 5'd6,
+              S_Finish_mid_row                              = 5'd7,
+              S_Zero_padding_edge_first_last_row            = 5'd8,
+              S_Streaming_last_row                          = 5'd9,
+              S_Idle_last_chan                              = 5'd10,
+              S_Wait_saxis_tvalid_first_row_last_chan       = 5'd11,
+              S_Stream_first_row_last_chan                  = 5'd12,
+              S_Zero_padding_edge_first_last_chan           = 5'd13,
+              S_Wait_saxis_tvalid_mid_row_last_chan         = 5'd14,
+              S_Stream_mid_row_last_chan                    = 5'd15,
+              S_Finish_mid_row_last_chan                    = 5'd16,
+              S_Zero_padding_edge_first_last_row_last_chan  = 5'd17,
+              S_Wait_saxis_tvalid_last_row_last_chan        = 5'd18,
+              S_Streaming_last_row_last_chan                = 5'd19;
 
     // State transition block
     always @(posedge clk) begin
@@ -88,14 +84,12 @@ module input_line_buffer_CU (
                 end
 
                 S_Stream_first_row: begin
-                    if (linebuff_BRAM_counter_out == IMAGE_SIZE - 1) current_state <= S_Finish_first_row;
+                    if (linebuff_BRAM_counter_out > IMAGE_SIZE - 1) current_state <= S_Idle;
                     else begin
                         if (s_axis_tvalid) current_state <= S_Stream_first_row;
                         else current_state <= S_Wait_saxis_tvalid_first_row;
                     end
                 end
-
-                S_Finish_first_row: current_state <= S_Idle;
 
                 S_Zero_padding_edge_first: current_state <= S_Wait_saxis_tvalid_mid_row;
 
@@ -105,21 +99,19 @@ module input_line_buffer_CU (
                 end
 
                 S_Stream_mid_row: begin
-                    if (linebuff_BRAM_counter_out == IMAGE_SIZE - 1) current_state <= S_Zero_padding_edge_last;
+                    if (linebuff_BRAM_counter_out > IMAGE_SIZE - 1) current_state <= S_Finish_mid_row;
                     else begin
                         if (s_axis_tvalid) current_state <= S_Stream_mid_row;
                         else current_state <= S_Wait_saxis_tvalid_mid_row;
                     end
                 end
 
-                S_Zero_padding_edge_last: current_state <= S_Finish_mid_row;
-
                 S_Finish_mid_row: current_state <= S_Idle;
 
                 S_Zero_padding_edge_first_last_row: current_state <= S_Streaming_last_row;
 
                 S_Streaming_last_row: begin
-                    if (linebuff_BRAM_counter_out == IMAGE_SIZE - 1) current_state <= S_Zero_padding_edge_last;
+                    if (linebuff_BRAM_counter_out > IMAGE_SIZE - 1) current_state <= S_Finish_mid_row;
                     else current_state <= S_Streaming_last_row;
                 end
 
@@ -136,14 +128,12 @@ module input_line_buffer_CU (
                 end
 
                 S_Stream_first_row_last_chan: begin
-                    if (linebuff_BRAM_counter_out == IMAGE_SIZE - 1) current_state <= S_Finish_first_row_last_chan;
+                    if (linebuff_BRAM_counter_out > IMAGE_SIZE - 1) current_state <= S_Idle_last_chan;
                     else begin
                         if (s_axis_tvalid && m_axis_tready) current_state <= S_Stream_first_row_last_chan;
                         else current_state <= S_Wait_saxis_tvalid_first_row_last_chan;
                     end
                 end
-
-                S_Finish_first_row_last_chan: current_state <= S_Idle_last_chan;
 
                 S_Zero_padding_edge_first_last_chan: current_state <= S_Wait_saxis_tvalid_mid_row_last_chan;
 
@@ -153,14 +143,12 @@ module input_line_buffer_CU (
                 end
 
                 S_Stream_mid_row_last_chan: begin
-                    if (linebuff_BRAM_counter_out == IMAGE_SIZE - 1) current_state <= S_Zero_padding_edge_last_last_chan;
+                    if (linebuff_BRAM_counter_out > IMAGE_SIZE - 1) current_state <= S_Finish_mid_row_last_chan;
                     else begin
                         if (s_axis_tvalid && m_axis_tready) current_state <= S_Stream_mid_row_last_chan;
                         else current_state <= S_Wait_saxis_tvalid_mid_row_last_chan;
                     end
                 end
-
-                S_Zero_padding_edge_last_last_chan: current_state <= S_Finish_mid_row_last_chan;
 
                 S_Finish_mid_row_last_chan: current_state <= S_Idle_last_chan;
 
@@ -172,7 +160,7 @@ module input_line_buffer_CU (
                 end
 
                 S_Streaming_last_row_last_chan: begin
-                    if (linebuff_BRAM_counter_out == IMAGE_SIZE - 1) current_state <= S_Zero_padding_edge_last_last_chan;
+                    if (linebuff_BRAM_counter_out > IMAGE_SIZE - 1) current_state <= S_Finish_mid_row_last_chan;
                     else begin
                         if (m_axis_tready) current_state <= S_Streaming_last_row_last_chan;
                         else current_state <= S_Wait_saxis_tvalid_last_row_last_chan;
@@ -245,21 +233,23 @@ module input_line_buffer_CU (
                 wea_linebuff_BRAM = 1;
                 en_linebuff_BRAM_counter = 1;
                 s_axis_tready = 1;
-                if (!s_axis_tvalid) begin
+                if (linebuff_BRAM_counter_out > IMAGE_SIZE - 1) begin
+                    // Pengganti S_Finish_first_row
                     Wr_window = 0;
                     Shift_window = 0;
                     wea_linebuff_BRAM = 0;
                     en_linebuff_BRAM_counter = 0;
+                    rst_linebuff_BRAM_counter = 0;
+                    Done_1row = 1;
                 end
-            end
-
-            S_Finish_first_row: begin
-                Wr_window = 0;
-                Shift_window = 0;
-                wea_linebuff_BRAM = 0;
-                en_linebuff_BRAM_counter = 0;
-                rst_linebuff_BRAM_counter = 0;
-                Done_1row = 1;
+                else begin
+                    if (!s_axis_tvalid) begin
+                        Wr_window = 0;
+                        Shift_window = 0;
+                        wea_linebuff_BRAM = 0;
+                        en_linebuff_BRAM_counter = 0;
+                    end 
+                end
             end
 
             S_Zero_padding_edge_first: begin
@@ -291,19 +281,26 @@ module input_line_buffer_CU (
                 wea_linebuff_BRAM = 1;
                 en_linebuff_BRAM_counter = 1;
                 Output_valid = linebuff_BRAM_counter_out >= 2;
-                if (!s_axis_tvalid) begin
-                    Wr_window = 0;
-                    Shift_window = 0;
+                if (linebuff_BRAM_counter_out > IMAGE_SIZE - 1) begin
+                    // For zero padding
+                    Wr_window = 1;
+                    Shift_window = 1;
+                    Output_valid = 1;
                     wea_linebuff_BRAM = 0;
+                    rst_linebuff_BRAM_counter = 0;
                     en_linebuff_BRAM_counter = 0;
+                    window_row_n_2_mux = 0;
+                    window_row_n_1_mux = 0;
+                    window_row_n_mux = 0;
                 end
-            end
-
-            S_Zero_padding_edge_last: begin
-                Wr_window = 1;
-                Shift_window = 1;
-                Output_valid = 1;
-                rst_linebuff_BRAM_counter = 0;
+                else begin
+                    if (!s_axis_tvalid) begin
+                        Wr_window = 0;
+                        Shift_window = 0;
+                        wea_linebuff_BRAM = 0;
+                        en_linebuff_BRAM_counter = 0;
+                    end 
+                end
             end
 
             S_Finish_mid_row: Done_1row = 1;
@@ -320,6 +317,17 @@ module input_line_buffer_CU (
                 window_row_n_1_mux = 1;
                 en_linebuff_BRAM_counter = 1;
                 Output_valid = linebuff_BRAM_counter_out >= 2;
+                if (linebuff_BRAM_counter_out > IMAGE_SIZE - 1) begin
+                    Wr_window = 1;
+                    Shift_window = 1;
+                    Output_valid = 1;
+                    wea_linebuff_BRAM = 0;
+                    rst_linebuff_BRAM_counter = 0;
+                    en_linebuff_BRAM_counter = 0;
+                    window_row_n_2_mux = 0;
+                    window_row_n_1_mux = 0;
+                    window_row_n_mux = 0;
+                end
             end
 
             S_Idle_last_chan: begin
@@ -347,21 +355,22 @@ module input_line_buffer_CU (
                 wea_linebuff_BRAM = 1;
                 en_linebuff_BRAM_counter = 1;
                 s_axis_tready = 1;
-                if (!(s_axis_tvalid && m_axis_tready)) begin
+                if (linebuff_BRAM_counter_out > IMAGE_SIZE - 1) begin
                     Wr_window = 0;
                     Shift_window = 0;
                     wea_linebuff_BRAM = 0;
                     en_linebuff_BRAM_counter = 0;
+                    rst_linebuff_BRAM_counter = 0;
+                    Done_1row = 1;
                 end
-            end
-
-            S_Finish_first_row_last_chan: begin
-                Wr_window = 0;
-                Shift_window = 0;
-                wea_linebuff_BRAM = 0;
-                en_linebuff_BRAM_counter = 0;
-                rst_linebuff_BRAM_counter = 0;
-                Done_1row = 1;
+                else begin
+                    if (!(s_axis_tvalid && m_axis_tready)) begin
+                        Wr_window = 0;
+                        Shift_window = 0;
+                        wea_linebuff_BRAM = 0;
+                        en_linebuff_BRAM_counter = 0;
+                    end
+                end
             end
 
             S_Zero_padding_edge_first_last_chan: begin
@@ -393,19 +402,26 @@ module input_line_buffer_CU (
                 wea_linebuff_BRAM = 1;
                 en_linebuff_BRAM_counter = 1;
                 Output_valid = linebuff_BRAM_counter_out >= 2;
-                if (!(s_axis_tvalid && m_axis_tready)) begin
-                    Wr_window = 0;
-                    Shift_window = 0;
+                if (linebuff_BRAM_counter_out > IMAGE_SIZE - 1) begin
+                    // For zero padding
+                    Wr_window = 1;
+                    Shift_window = 1;
+                    Output_valid = 1;
                     wea_linebuff_BRAM = 0;
+                    rst_linebuff_BRAM_counter = 0;
                     en_linebuff_BRAM_counter = 0;
+                    window_row_n_2_mux = 0;
+                    window_row_n_1_mux = 0;
+                    window_row_n_mux = 0;
                 end
-            end
-
-            S_Zero_padding_edge_last_last_chan: begin
-                Wr_window = 1;
-                Shift_window = 1;
-                Output_valid = 1;
-                rst_linebuff_BRAM_counter = 0;
+                else begin
+                    if (!(s_axis_tvalid && m_axis_tready)) begin
+                        Wr_window = 0;
+                        Shift_window = 0;
+                        wea_linebuff_BRAM = 0;
+                        en_linebuff_BRAM_counter = 0;
+                    end
+                end
             end
 
             S_Finish_mid_row_last_chan: Done_1row = 1;
@@ -436,11 +452,25 @@ module input_line_buffer_CU (
                 window_row_n_1_mux = 1;
                 en_linebuff_BRAM_counter = 1;
                 Output_valid = linebuff_BRAM_counter_out >= 2;
-                if (!m_axis_tready) begin
-                    Wr_window = 0;
-                    Shift_window = 0;
+                if (linebuff_BRAM_counter_out > IMAGE_SIZE - 1) begin
+                    // For zero padding
+                    Wr_window = 1;
+                    Shift_window = 1;
+                    Output_valid = 1;
                     wea_linebuff_BRAM = 0;
+                    rst_linebuff_BRAM_counter = 0;
                     en_linebuff_BRAM_counter = 0;
+                    window_row_n_2_mux = 0;
+                    window_row_n_1_mux = 0;
+                    window_row_n_mux = 0;
+                end
+                else begin
+                    if (!m_axis_tready) begin
+                        Wr_window = 0;
+                        Shift_window = 0;
+                        wea_linebuff_BRAM = 0;
+                        en_linebuff_BRAM_counter = 0;
+                    end 
                 end
             end
 

@@ -33,18 +33,22 @@ module kernel_BRAM #(
     wire ena_ker_BRAM_counter;
     wire rsta_ker_BRAM_counter;
 
+    wire [8:0] a_counter_output_over;
     wire [7:0] a_counter_output;
     wire [7:0] b_counter_output;
+
+    // Assign a_counter_output
+    assign a_counter_output = a_counter_output_over[7:0];
 
     // Instantiate address counters
     // Counter for port a address
     counter #(
-        .BITWIDTH(8)
+        .BITWIDTH(9)
     ) ADDRA_COUNTER (
         .enable(ena_ker_BRAM_counter),
         .reset(rsta_ker_BRAM_counter),
         .clk(clk),
-        .counter_out(a_counter_output)
+        .counter_out(a_counter_output_over)
     );
 
     // Counter for port b address
@@ -65,7 +69,7 @@ module kernel_BRAM #(
         .load_BRAM_dina(load_BRAM_dina),
         .update_BRAM_doutb(update_BRAM_doutb),
         .CHANNEL_SIZE(CHANNEL_SIZE),
-        .a_counter_output(a_counter_output),
+        .a_counter_output(a_counter_output_over),
         .b_counter_output(b_counter_output),
         .s_axis_tvalid(s_axis_tvalid),
         .s_axis_tlast(s_axis_tlast), // Not used

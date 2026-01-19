@@ -7,7 +7,7 @@ module kernel_BRAM_CU (
     input wire load_BRAM_dina,
     input wire update_BRAM_doutb,
     input wire [8:0] CHANNEL_SIZE,
-    input wire [7:0] a_counter_output,
+    input wire [8:0] a_counter_output,
     input wire [7:0] b_counter_output,
     input wire s_axis_tvalid,
     input wire s_axis_tlast, // Not used
@@ -56,13 +56,11 @@ module kernel_BRAM_CU (
                 end
 
                 S_Loading_ker_BRAM: begin
-                    if (s_axis_tvalid) begin
-                        if (a_counter_output == CHANNEL_SIZE-1) begin
-                            current_state <= S_Idle;
-                        end
-                        else current_state <= S_Loading_ker_BRAM;
+                    if (a_counter_output > CHANNEL_SIZE-1) current_state <= S_Idle;
+                    else begin
+                        if (s_axis_tvalid) current_state <= S_Loading_ker_BRAM;
+                        else current_state <= S_Wait_saxis_tvalid;
                     end
-                    else current_state <= S_Wait_saxis_tvalid;
                 end
 
                 S_Inc_addrb: current_state <= S_Check_counter_b;
@@ -133,17 +131,15 @@ module kernel_BRAM_CU (
                 s_axis_tready = 1;
                 wea_ker_BRAM = 1;
                 ena_ker_BRAM_counter = 1;
-                if (!s_axis_tvalid) begin
-                    wea_ker_BRAM = 0;
-                    ena_ker_BRAM_counter = 0;
-                end
-                else if (a_counter_output == CHANNEL_SIZE-1) begin
+                if (a_counter_output > CHANNEL_SIZE-1) begin
                     last_loading_1ker = 1;
                     rsta_ker_BRAM_counter = 0;
                 end
                 else begin
-                    last_loading_1ker = 0;
-                    rsta_ker_BRAM_counter = 1;
+                    if (!s_axis_tvalid) begin
+                        wea_ker_BRAM = 0;
+                        ena_ker_BRAM_counter = 0;
+                    end
                 end
             end
 

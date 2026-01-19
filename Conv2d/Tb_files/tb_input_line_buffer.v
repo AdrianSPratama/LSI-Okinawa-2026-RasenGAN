@@ -4,7 +4,7 @@ module tb_input_line_buffer;
 
     // Variables
     parameter DATA_WIDTH = 16;
-    parameter IMAGE_SIZE = 4;
+    parameter IMAGE_SIZE = 8'd4;
     parameter CHANNEL_SIZE = 256;
     parameter INPUT_MEM_FILE = "layer_input_4x4.mem";
 
@@ -27,7 +27,9 @@ module tb_input_line_buffer;
     reg [DATA_WIDTH-1:0] input_reg [0:IMAGE_SIZE*IMAGE_SIZE*CHANNEL_SIZE-1];
     // Data input (AXI slave wire)
     wire [255:0] s_axis_tdata;
-    assign s_axis_tdata = {{240{input_reg[DATA_WIDTH-1][DDR_INDEX]}}, input_reg[DDR_INDEX]};
+    assign s_axis_tdata = {{240{input_reg[DDR_INDEX][DATA_WIDTH-1]}}, input_reg[DDR_INDEX][DATA_WIDTH-1:0]};
+    wire [15:0] dina;
+    assign dina = s_axis_tdata[15:0];
 
     // Outputs
     wire [15:0] out_window_00;
@@ -45,16 +47,12 @@ module tb_input_line_buffer;
     wire Output_valid;
     wire s_axis_tready;
 
-    // Generate clock (100MHz)
-    initial clk = 0;
-    always #5 clk = ~clk;
-
     // Instantiate top level DUT
     input_line_buffer #(
         .DATA_WIDTH(DATA_WIDTH)
     ) DUT (
         // Data I/O
-        .dina(s_axis_tdata[15:0]),
+        .dina(dina),
         .out_window_00(out_window_00),
         .out_window_01(out_window_01), 
         .out_window_02(out_window_02),
@@ -86,6 +84,10 @@ module tb_input_line_buffer;
         .s_axis_tready(s_axis_tready)
     );
     
+    // Generate clock (100MHz)
+    initial clk = 0;
+    always #5 clk = ~clk;
+
     // TO-DO: tambahin task buat setiap checks, ini contoh task nya
     // task check_first_row;
     //     input [15:0] pixel_value; // Inputs to the task
@@ -114,22 +116,32 @@ module tb_input_line_buffer;
         s_axis_tvalid = 0;
         s_axis_tlast = 0;
 
-        @(posedge clk);
-
         Reset = 1;
+
+        // Wait until stable to Idle state, minimum 2 clocks
+        repeat (5) @(posedge clk);
+
         Stream_first_row = 1;
 
         @(posedge clk);
 
         Stream_first_row = 0;
 
-        for (DDR_INDEX=0; DDR_INDEX<IMAGE_SIZE*IMAGE_SIZE; DDR_INDEX = DDR_INDEX+1) begin
+        // Test Stream_first_row done, verified
+        for (DDR_INDEX=0; DDR_INDEX<IMAGE_SIZE*IMAGE_SIZE-1; DDR_INDEX = DDR_INDEX+1) begin
             s_axis_tvalid = 1;
+            if (DDR_INDEX == IMAGE_SIZE*IMAGE_SIZE-1) begin
+                s_axis_tlast = 1;
+            end
             @(posedge clk);
+            s_axis_tvalid = 0;
+            @(posedge clk);
+            while (!s_axis_tready) @(posedge clk);
         end
 
-        s_axis_tvalid = 1;
-        @(posedge clk);
+        s_axis_tlast = 0;
+        s_axis_tvalid = 0;
+        repeat (5) @(posedge clk);
 
         $stop;
     end

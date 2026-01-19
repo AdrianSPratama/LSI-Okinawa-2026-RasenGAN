@@ -93,7 +93,7 @@ module input_line_buffer_datapath #(
         // Port B
         .clkb(~clk),   // Clock B
         .enb(enb_linebuff_BRAM),    // Enable B (Active High)
-        .web(0),    // Write Enable B (Active High) not used, always 0
+        .web(1'b0),    // Write Enable B (Active High) not used, always 0
         .addrb(linebuff_BRAM_counter_out),  // Address B
         .dinb(),   // Data In B not used
         .doutb(linebuff_n_1_doutb)   // Data Out B
@@ -114,7 +114,7 @@ module input_line_buffer_datapath #(
         // Port B
         .clkb(~clk),   // Clock B
         .enb(enb_linebuff_BRAM),    // Enable B (Active High)
-        .web(0),    // Write Enable B (Active High) not used, always 0
+        .web(1'b0),    // Write Enable B (Active High) not used, always 0
         .addrb(linebuff_BRAM_counter_out),  // Address B
         .dinb(),   // Data In B not used
         .doutb(linebuff_n_2_doutb)   // Data Out B

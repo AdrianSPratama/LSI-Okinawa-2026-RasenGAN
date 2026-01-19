@@ -46,7 +46,7 @@ module input_line_buffer #(
     wire rst_linebuff_BRAM_counter;
 
     // Instantiate CU
-    input_line_buffer_CU CONTROL (
+    input_line_buffer_CU INPUT_LINE_BUFFER_CONTROL (
         // Inputs
         .clk(clk),
         .Reset(Reset),

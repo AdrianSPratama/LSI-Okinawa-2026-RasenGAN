@@ -88,11 +88,11 @@ module input_line_buffer_CU (
                 end
 
                 S_Stream_first_row: begin
-                    if (s_axis_tvalid) begin
-                        if (linebuff_BRAM_counter_out == IMAGE_SIZE - 1) current_state <= S_Finish_first_row;
-                        else current_state <= S_Stream_first_row;
+                    if (linebuff_BRAM_counter_out == IMAGE_SIZE - 1) current_state <= S_Finish_first_row;
+                    else begin
+                        if (s_axis_tvalid) current_state <= S_Stream_first_row;
+                        else current_state <= S_Wait_saxis_tvalid_first_row;
                     end
-                    else current_state <= S_Wait_saxis_tvalid_first_row;
                 end
 
                 S_Finish_first_row: current_state <= S_Idle;
@@ -105,11 +105,11 @@ module input_line_buffer_CU (
                 end
 
                 S_Stream_mid_row: begin
-                    if (s_axis_tvalid) begin
-                        if (linebuff_BRAM_counter_out == IMAGE_SIZE - 1) current_state <= S_Zero_padding_edge_last;
-                        else current_state <= S_Stream_mid_row;
+                    if (linebuff_BRAM_counter_out == IMAGE_SIZE - 1) current_state <= S_Zero_padding_edge_last;
+                    else begin
+                        if (s_axis_tvalid) current_state <= S_Stream_mid_row;
+                        else current_state <= S_Wait_saxis_tvalid_mid_row;
                     end
-                    else current_state <= S_Wait_saxis_tvalid_mid_row;
                 end
 
                 S_Zero_padding_edge_last: current_state <= S_Finish_mid_row;
@@ -136,11 +136,11 @@ module input_line_buffer_CU (
                 end
 
                 S_Stream_first_row_last_chan: begin
-                    if (s_axis_tvalid && m_axis_tready) begin
-                        if (linebuff_BRAM_counter_out == IMAGE_SIZE - 1) current_state <= S_Finish_first_row_last_chan;
-                        else current_state <= S_Stream_first_row_last_chan;
+                    if (linebuff_BRAM_counter_out == IMAGE_SIZE - 1) current_state <= S_Finish_first_row_last_chan;
+                    else begin
+                        if (s_axis_tvalid && m_axis_tready) current_state <= S_Stream_first_row_last_chan;
+                        else current_state <= S_Wait_saxis_tvalid_first_row_last_chan;
                     end
-                    else current_state <= S_Wait_saxis_tvalid_first_row_last_chan;
                 end
 
                 S_Finish_first_row_last_chan: current_state <= S_Idle_last_chan;
@@ -153,11 +153,11 @@ module input_line_buffer_CU (
                 end
 
                 S_Stream_mid_row_last_chan: begin
-                    if (s_axis_tvalid && m_axis_tready) begin
-                        if (linebuff_BRAM_counter_out == IMAGE_SIZE - 1) current_state <= S_Zero_padding_edge_last_last_chan;
-                        else current_state <= S_Stream_mid_row_last_chan;
+                    if (linebuff_BRAM_counter_out == IMAGE_SIZE - 1) current_state <= S_Zero_padding_edge_last_last_chan;
+                    else begin
+                        if (s_axis_tvalid && m_axis_tready) current_state <= S_Stream_mid_row_last_chan;
+                        else current_state <= S_Wait_saxis_tvalid_mid_row_last_chan;
                     end
-                    else current_state <= S_Wait_saxis_tvalid_mid_row_last_chan;
                 end
 
                 S_Zero_padding_edge_last_last_chan: current_state <= S_Finish_mid_row_last_chan;
@@ -172,11 +172,11 @@ module input_line_buffer_CU (
                 end
 
                 S_Streaming_last_row_last_chan: begin
-                    if (m_axis_tready) begin
-                        if (linebuff_BRAM_counter_out == IMAGE_SIZE - 1) current_state <= S_Zero_padding_edge_last_last_chan;
-                        else current_state <= S_Streaming_last_row_last_chan;
+                    if (linebuff_BRAM_counter_out == IMAGE_SIZE - 1) current_state <= S_Zero_padding_edge_last_last_chan;
+                    else begin
+                        if (m_axis_tready) current_state <= S_Streaming_last_row_last_chan;
+                        else current_state <= S_Wait_saxis_tvalid_last_row_last_chan;
                     end
-                    else current_state <= S_Wait_saxis_tvalid_last_row_last_chan;
                 end
 
                 default: current_state <= S_Reset;

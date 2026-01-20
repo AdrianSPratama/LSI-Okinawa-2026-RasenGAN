@@ -131,6 +131,15 @@ module tb_input_line_buffer;
         // Test Stream_first_row done, verified
         for (DDR_INDEX=0; DDR_INDEX<IMAGE_SIZE*IMAGE_SIZE; DDR_INDEX = DDR_INDEX+1) begin
             s_axis_tvalid = 1;
+
+            // Automated check for window reg when Output_valid, check when s_axis_tvalid
+            if (input_reg[DDR_INDEX-1] == out_window_20) begin
+                $display("Output valid, expected %h, got %h", input_reg[DDR_INDEX-1], out_window_20);
+            end
+            else begin
+                $display("ERROR: not valid, expected %h, got %h", input_reg[DDR_INDEX-1], out_window_20); 
+            end
+
             // s_axis_tlast signal and start streaming last row, verified
             if (DDR_INDEX == IMAGE_SIZE*IMAGE_SIZE-1) begin
                 s_axis_tlast = 1;
@@ -164,8 +173,9 @@ module tb_input_line_buffer;
             end
 
             // Test s_axis_tvalid clock
-            @(posedge clk);
-            s_axis_tvalid = 0;
+            // @(posedge clk);
+            // s_axis_tvalid = 0;
+            // @(posedge clk);
             @(posedge clk);
 
             // Waiting for s_axis_tready

@@ -133,7 +133,9 @@ module tb_input_line_buffer;
             // s_axis_tlast signal and start streaming last row
             if (DDR_INDEX == IMAGE_SIZE*IMAGE_SIZE-1) begin
                 s_axis_tlast = 1;
-                repeat (2) @(posedge clk);
+                @(posedge clk);
+                s_axis_tlast = 0;
+                repeat (3) @(posedge clk);
                 Stream_last_row = 1;
                 @(posedge clk);
                 Stream_last_row = 0;

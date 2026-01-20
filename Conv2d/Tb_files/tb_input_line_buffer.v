@@ -162,6 +162,8 @@ module tb_input_line_buffer;
                 @(posedge clk);
                 Stream_mid_row = 0;
             end
+
+            // Test s_axis_tvalid clock
             @(posedge clk);
             s_axis_tvalid = 0;
             @(posedge clk);

@@ -262,7 +262,7 @@ module input_line_buffer_CU (
                 window_row_n_1_mux = 1;
                 window_row_n_mux = 1;
                 s_axis_tready = 1;
-                Output_valid = linebuff_BRAM_counter_out >= 2;
+                Output_valid = 0;
                 if (s_axis_tvalid) begin
                     Wr_window = 1;
                     Shift_window = 1;
@@ -386,7 +386,7 @@ module input_line_buffer_CU (
                 window_row_n_1_mux = 1;
                 window_row_n_mux = 1;
                 s_axis_tready = 1;
-                Output_valid = linebuff_BRAM_counter_out >= 2;
+                Output_valid = 0;
                 if (s_axis_tvalid && m_axis_tready) begin
                     Wr_window = 1;
                     Shift_window = 1;
@@ -440,7 +440,7 @@ module input_line_buffer_CU (
             S_Wait_saxis_tvalid_last_row_last_chan: begin
                 window_row_n_2_mux = 1;
                 window_row_n_1_mux = 1;
-                Output_valid = linebuff_BRAM_counter_out >= 2;
+                Output_valid = 0;
                 if (m_axis_tready) begin
                     Wr_window = 1;
                     Shift_window = 1;

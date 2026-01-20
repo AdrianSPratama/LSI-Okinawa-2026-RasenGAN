@@ -130,10 +130,30 @@ module tb_input_line_buffer;
         // Test Stream_first_row done, verified
         for (DDR_INDEX=0; DDR_INDEX<IMAGE_SIZE*IMAGE_SIZE-1; DDR_INDEX = DDR_INDEX+1) begin
             s_axis_tvalid = 1;
+            // s_axis_tlast signal and start streaming last row
             if (DDR_INDEX == IMAGE_SIZE*IMAGE_SIZE-1) begin
                 s_axis_tlast = 1;
+                repeat (2) @(posedge clk);
+                Stream_last_row = 1;
+                @(posedge clk);
+                Stream_last_row = 0;
             end
+            // Start streaming row 2, verified
             else if (DDR_INDEX == IMAGE_SIZE) begin
+                repeat (2) @(posedge clk);
+                Stream_mid_row = 1;
+                @(posedge clk);
+                Stream_mid_row = 0;
+            end
+            // Start streaming row 3
+            else if (DDR_INDEX == 2*IMAGE_SIZE) begin
+                repeat (2) @(posedge clk);
+                Stream_mid_row = 1;
+                @(posedge clk);
+                Stream_mid_row = 0;
+            end
+            // Start streaming row 4
+            else if (DDR_INDEX == 3*IMAGE_SIZE) begin
                 repeat (2) @(posedge clk);
                 Stream_mid_row = 1;
                 @(posedge clk);
@@ -142,6 +162,8 @@ module tb_input_line_buffer;
             @(posedge clk);
             s_axis_tvalid = 0;
             @(posedge clk);
+            
+            // Waiting for s_axis_tready
             while (!s_axis_tready) @(posedge clk);
         end
 

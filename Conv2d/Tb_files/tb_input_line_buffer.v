@@ -1,3 +1,4 @@
+// TODO: check last channel stream, should be the same as the other channel
 `timescale 1ns / 1ps
 
 module tb_input_line_buffer;
@@ -130,7 +131,7 @@ module tb_input_line_buffer;
         // Test Stream_first_row done, verified
         for (DDR_INDEX=0; DDR_INDEX<IMAGE_SIZE*IMAGE_SIZE; DDR_INDEX = DDR_INDEX+1) begin
             s_axis_tvalid = 1;
-            // s_axis_tlast signal and start streaming last row
+            // s_axis_tlast signal and start streaming last row, verified
             if (DDR_INDEX == IMAGE_SIZE*IMAGE_SIZE-1) begin
                 s_axis_tlast = 1;
                 @(posedge clk);
@@ -147,14 +148,14 @@ module tb_input_line_buffer;
                 @(posedge clk);
                 Stream_mid_row = 0;
             end
-            // Start streaming row 3
+            // Start streaming row 3, verified
             else if (DDR_INDEX == 2*IMAGE_SIZE) begin
                 repeat (3) @(posedge clk);
                 Stream_mid_row = 1;
                 @(posedge clk);
                 Stream_mid_row = 0;
             end
-            // Start streaming row 4
+            // Start streaming row 4, verified
             else if (DDR_INDEX == 3*IMAGE_SIZE) begin
                 repeat (3) @(posedge clk);
                 Stream_mid_row = 1;

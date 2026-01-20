@@ -107,7 +107,7 @@ module input_line_buffer_datapath #(
         .RAM_DEPTH(128)                     // Memory depth, max image size 128
     ) LINE_BUFFER_N_2_BRAM (
         // Port A
-        .clka(~clk),   // Clock A, using inverted clock so reading timing is not delayed
+        .clka(clk),   // Clock A, using inverted clock so reading timing is not delayed
         .ena(ena_linebuff_BRAM),    // Enable A (Active High)
         .wea(wea_linebuff_BRAM),    // Write Enable A (Active High)
         .addra(linebuff_BRAM_counter_out_sliced),  // Address A

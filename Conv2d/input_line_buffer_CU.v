@@ -303,7 +303,10 @@ module input_line_buffer_CU (
                 end
             end
 
-            S_Finish_mid_row: Done_1row = 1;
+            S_Finish_mid_row: begin
+               Done_1row = 1;
+               Output_valid = 1; 
+            end
 
             S_Zero_padding_edge_first_last_row: begin
                 Wr_window = 1;
@@ -424,7 +427,10 @@ module input_line_buffer_CU (
                 end
             end
 
-            S_Finish_mid_row_last_chan: Done_1row = 1;
+            S_Finish_mid_row_last_chan: begin
+               Done_1row = 1;
+               Output_valid = 1; 
+            end
 
             S_Zero_padding_edge_first_last_row_last_chan: begin
                 Wr_window = 1;

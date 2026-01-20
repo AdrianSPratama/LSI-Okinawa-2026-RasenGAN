@@ -133,6 +133,12 @@ module tb_input_line_buffer;
             if (DDR_INDEX == IMAGE_SIZE*IMAGE_SIZE-1) begin
                 s_axis_tlast = 1;
             end
+            else if (DDR_INDEX == IMAGE_SIZE) begin
+                repeat (2) @(posedge clk);
+                Stream_mid_row = 1;
+                @(posedge clk);
+                Stream_mid_row = 0;
+            end
             @(posedge clk);
             s_axis_tvalid = 0;
             @(posedge clk);

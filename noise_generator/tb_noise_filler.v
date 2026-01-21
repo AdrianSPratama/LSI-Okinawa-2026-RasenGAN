@@ -1,18 +1,18 @@
 `include "noise_matrix_filler.v"
-module tb_noise_filler;
+module tb_noise_filler #(parameter DATA_WIDTH = 16, parameter ADDR_WIDTH = 14);
     reg  clk;
     reg rst_n;
     reg start;
     reg [2:0] size;
     
-    wire [13:0] bram_addr;
-    wire [63:0] bram_wdata;
+    wire [ADDR_WIDTH-1:0] bram_addr;
+    wire [DATA_WIDTH-1:0] bram_wdata;
     wire bram_we;           
     wire done;
 
     noise_matrix_filler #(
-        .DATA_WIDTH(64),
-        .ADDR_WIDTH(14)
+        .DATA_WIDTH(DATA_WIDTH),
+        .ADDR_WIDTH(ADDR_WIDTH)
     ) uut (
         .clk(clk),
         .rst_n(rst_n),
@@ -36,15 +36,17 @@ module tb_noise_filler;
         clk = 0;
         rst_n = 0;
         start = 0;
-        size = 3'b001; // 4x4
+        size = 3'b000; // 
         #20;
         rst_n = 1;
         #20;
         start = 1;
         #20;
         start = 0;
-        #1000;
+        // until done = 1
+        wait (done == 1);
+        #20;    
         $finish;
     end
 
-endmodule;
+endmodule

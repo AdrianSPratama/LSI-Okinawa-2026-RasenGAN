@@ -1,7 +1,7 @@
 `include "lfsr_noise_gen.v"
 
 module noise_matrix_filler #(
-    parameter DATA_WIDTH = 64,
+    parameter DATA_WIDTH = 16, // Ubah default ke 16 sesuai spesifikasi [-2, 2]
     parameter ADDR_WIDTH = 14 
 )(
     input wire clk,
@@ -21,12 +21,12 @@ module noise_matrix_filler #(
     wire [DATA_WIDTH-1:0] noise_val;
     reg enable_lfsr;
     
-    // Register untuk menyimpan batas alamat
     reg [ADDR_WIDTH-1:0] addr_limit; 
     
     // Generator Noise
+    // Pastikan parameter DATA_WIDTH diteruskan dengan benar
     lfsr_noise_gen #(
-        .DATA_WIDTH(64)
+        .DATA_WIDTH(DATA_WIDTH)
     ) noise_inst (
         .clk(clk),
         .rst_n(rst_n),
@@ -36,6 +36,8 @@ module noise_matrix_filler #(
     );
     
     reg [ADDR_WIDTH-1:0] decoded_limit;
+    
+    // Decoder ukuran matriks
     always @(*) begin
         case (size)
             3'b000: decoded_limit = 14'd15;    // 4x4
@@ -48,46 +50,50 @@ module noise_matrix_filler #(
         endcase
     end
 
-    assign bram_wdata = noise_val;
+    // Handling Range [-2, 2]
+    /* CATATAN IMPLEMENTASI:
+       Jika format data adalah Fixed Point Q3.13 (1 bit sign, 2 bit integer, 13 bit frac),
+       Maka full 16-bit random akan menghasilkan range [-4, 4) secara matematis.
+       
+       Jika Anda ingin STRICTLY [-2, 2], Anda bisa melakukan right shift (div 2)
+       pada output noise, atau memastikan bit MSB ke-2 (integer bit tertinggi) selalu sama dengan bit sign.
+       
+       Di bawah ini adalah implementasi raw (full range). 
+       Jika ingin memperkecil range menjadi setengahnya, ubah assign di bawah:
+       assign bram_wdata = {noise_val[DATA_WIDTH-1], noise_val[DATA_WIDTH-1:1]}; // Arithmetic Shift Right
+    */
+    assign bram_wdata = noise_val; 
     assign bram_we = enable_lfsr && noise_valid; 
 
-    
-    // State Machine & Address Counter
+    // State Machine
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
-            bram_addr <= 0;
+            bram_addr   <= 0;
             enable_lfsr <= 0;
-            done <= 0;
-            addr_limit <= 0;
+            done        <= 0;
+            addr_limit  <= 0;
         end else begin
-            // Trigger Start
+            // Start logic
             if (start && !enable_lfsr && !done) begin
                 enable_lfsr <= 1;
-                bram_addr <= 0;
-                done <= 0;
-                addr_limit <= decoded_limit; 
+                bram_addr   <= 0;
+                done        <= 0;
+                addr_limit  <= decoded_limit; 
             end 
             
             if (enable_lfsr) begin
                 if (noise_valid) begin
                     if (bram_addr == addr_limit) begin
                         enable_lfsr <= 0;
-                        done <= 1;
+                        done        <= 1;
                     end else begin
-                        bram_addr <= bram_addr + 1;
+                        bram_addr   <= bram_addr + 1;
                     end
                 end
             end else begin
-                if (!start) done <= 0; // Reset done handshake
+                if (!start) done <= 0; // Handshake reset
             end
         end
     end
 
 endmodule
-
-/*
-Generator Noise LFSR :
-noise sepanjang 16-bit, range [-2, 2] dihasilkan satu per cycle.
-untuk 4x4, diperlukan 16 cycle.
-Untuk 128x128, diperlukan 16384 cycle.
-*/

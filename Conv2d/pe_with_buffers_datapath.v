@@ -86,7 +86,7 @@ module pe_with_buffers_datapath #(
         .RAM_DEPTH(16384) // Depth for 128x128 output, address width auto adjusted by RAM_DEPTH
     ) output_BRAM (
         // Port A
-        .clka(clk),
+        .clka(~clk),
         .ena(ena_output_BRAM),
         .wea(wea_output_BRAM),
         .addra(addra_output_BRAM),
@@ -94,7 +94,7 @@ module pe_with_buffers_datapath #(
         .douta(BRAM_douta),
 
         // Port B
-        .clkb(clk),
+        .clkb(~clk),
         .enb(enb_output_BRAM),
         .web(1'b0), // No write on port B
         .addrb(addrb_output_BRAM),

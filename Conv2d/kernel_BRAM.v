@@ -19,6 +19,7 @@ module kernel_BRAM #(
     output wire last_channel,
     output wire s_axis_tready,
     output wire Kernel_BRAM_IDLE,
+    output wire [7:0] b_counter_output,
 
     // Data ports
     input wire [143:0] kernel_BRAM_dina,
@@ -36,7 +37,6 @@ module kernel_BRAM #(
 
     wire [8:0] a_counter_output_over;
     wire [7:0] a_counter_output;
-    wire [7:0] b_counter_output;
 
     // Assign a_counter_output
     assign a_counter_output = a_counter_output_over[7:0];

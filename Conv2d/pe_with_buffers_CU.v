@@ -1,3 +1,5 @@
+`timescale 1ns / 1ps
+
 module pe_with_buffers_CU (
     input wire clk,
     input wire Reset,

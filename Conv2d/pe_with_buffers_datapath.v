@@ -1,6 +1,6 @@
 `timescale 1ns / 1ps
 
-module pe_with_buffers #(
+module pe_with_buffers_datapath #(
     parameter PIXEL_WIDTH = 16,
     parameter KERNEL_WIDTH = 16,
     parameter RESULT_WIDTH = 48

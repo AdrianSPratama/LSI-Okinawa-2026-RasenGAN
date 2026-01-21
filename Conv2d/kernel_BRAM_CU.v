@@ -15,6 +15,7 @@ module kernel_BRAM_CU (
     // Control outputs
     output reg last_loading_1ker,
     output reg last_channel,
+    output reg Kernel_BRAM_IDLE,
     output reg ena_ker_BRAM,
     output reg wea_ker_BRAM,
     output reg enb_ker_BRAM,
@@ -94,6 +95,7 @@ module kernel_BRAM_CU (
         ena_ker_BRAM_counter = 0;
         rsta_ker_BRAM_counter = 1;
         s_axis_tready = 0;
+        Kernel_BRAM_IDLE = 0;
 
         case (current_state)
             S_Reset: begin
@@ -113,6 +115,7 @@ module kernel_BRAM_CU (
                 enb_ker_BRAM = 1;
                 rsta_ker_BRAM_counter = 1;
                 rstb_ker_BRAM_counter = 1;
+                Kernel_BRAM_IDLE = 1;
             end
 
             S_Wait_saxis_tvalid: begin

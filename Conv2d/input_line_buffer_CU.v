@@ -19,6 +19,7 @@ module input_line_buffer_CU (
     output reg Done_1row,
     output reg Output_valid,
     output reg s_axis_tready,
+    output reg Input_line_buffer_IDLE,
 
     // Internal output control signals
     output reg Rst_window,
@@ -189,6 +190,7 @@ module input_line_buffer_CU (
         en_linebuff_BRAM_counter = 0;
         rst_linebuff_BRAM_counter = 1;
         s_axis_tready = 0;
+        Input_line_buffer_IDLE = 0;
 
         case (current_state)
             S_Reset: begin
@@ -213,6 +215,7 @@ module input_line_buffer_CU (
                 ena_linebuff_BRAM = 1;
                 enb_linebuff_BRAM = 1;
                 rst_linebuff_BRAM_counter = 1;
+                Input_line_buffer_IDLE = 1;
             end
 
             S_Wait_saxis_tvalid_first_row: begin
@@ -338,6 +341,7 @@ module input_line_buffer_CU (
                 ena_linebuff_BRAM = 1;
                 enb_linebuff_BRAM = 1;
                 rst_linebuff_BRAM_counter = 1;
+                Input_line_buffer_IDLE = 1;
             end
 
             S_Wait_saxis_tvalid_first_row_last_chan: begin

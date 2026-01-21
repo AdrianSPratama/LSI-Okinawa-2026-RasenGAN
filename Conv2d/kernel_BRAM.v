@@ -18,6 +18,7 @@ module kernel_BRAM #(
     output wire last_loading_1ker,
     output wire last_channel,
     output wire s_axis_tready,
+    output wire Kernel_BRAM_IDLE,
 
     // Data ports
     input wire [143:0] kernel_BRAM_dina,
@@ -72,6 +73,7 @@ module kernel_BRAM #(
         .a_counter_output(a_counter_output_over),
         .b_counter_output(b_counter_output),
         .s_axis_tvalid(s_axis_tvalid),
+        .Kernel_BRAM_IDLE(Kernel_BRAM_IDLE),
         .s_axis_tlast(s_axis_tlast), // Not used
 
         // Control outputs

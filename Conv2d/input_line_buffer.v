@@ -25,6 +25,7 @@ module input_line_buffer #(
     // Output controls for interface
     output wire Done_1row,
     output wire Output_valid,
+    output wire Input_line_buffer_IDLE,
     output wire s_axis_tready
 );
 
@@ -66,6 +67,7 @@ module input_line_buffer #(
         // Interface for other blocks
         .Done_1row(Done_1row),
         .Output_valid(Output_valid),
+        .Input_line_buffer_IDLE(Input_line_buffer_IDLE),
         .s_axis_tready(s_axis_tready),
 
         // Internal output control signals

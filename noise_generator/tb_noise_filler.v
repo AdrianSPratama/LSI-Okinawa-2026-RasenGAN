@@ -36,7 +36,7 @@ module tb_noise_filler;
         clk = 0;
         rst_n = 0;
         start = 0;
-        size = 3'b000; // 4x4
+        size = 3'b001; // 4x4
         #20;
         rst_n = 1;
         #20;

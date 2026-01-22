@@ -23,7 +23,7 @@ module top_level_conv_CU (
     input wire PE_ready,
     input wire PE_with_buffers_IDLE,
 
-    input wire top_row_counter_out,
+    input wire [6:0] top_row_counter_out,
 
     input wire aresetn,
 

@@ -1,5 +1,4 @@
 module reg_output #(parameter length = 16)
-
 (
     input wire clk,
     input wire rst,
@@ -8,6 +7,7 @@ module reg_output #(parameter length = 16)
     input wire row_even,
     input wire coloumn_even,
     input wire [7:0] kolom,
+    input wire [7:0] s_kolom,
 
     input wire [length-1:0] data_in1,
     input wire [length-1:0] data_in2,
@@ -22,100 +22,113 @@ module reg_output #(parameter length = 16)
 
     output reg [length-1:0] dout
 );
-    reg [length-1:0] temp_dout [0:127];
 
-    always @(*) begin
+    // reg [7:0] s_kolom;
 
-        case (write_mode)
+    // ==========================================
+    // DEFINISI BRAM
+    // ==========================================
+    // Atribut ini memberi tahu tool synthesis untuk menggunakan Block RAM
+    (* ram_style = "block" *) reg [length-1:0] temp_dout [0:127];
+    
+    // Variabel penampung hasil bacaan BRAM (Synchronous output)
+    reg [length-1:0] bram_read_data;
 
-                    4'b0000 : begin
-                        dout = data_in9;
+    // ==========================================
+    // SYNCHRONOUS PROCESS (Read & Write BRAM)
+    // ==========================================
+    always @(posedge clk) begin
+        // 1. MEMORY READ OPERATION
+        // Data akan tersedia di 'bram_read_data' pada clock edge berikutnya.
+        // Ini menciptakan Latency 1 Clock Cycle.
+        bram_read_data <= temp_dout[s_kolom];
+
+        // 2. MEMORY WRITE OPERATION
+        // Catatan: Reset array memori dihapus agar valid menjadi BRAM.
+        if (rst) begin
+            // Logic Write sesuai kode asli Anda
+            case (write_mode) 
+                4'b0100 : begin
+                    if (coloumn_even == 1'b0) begin
+                        temp_dout[kolom] <= data_in3;
+                    end else begin
+                        temp_dout[kolom] <= data_in4;
                     end
-
-                    4'b0001 : begin
-                        // if coloumn_even, dout = data_in5 else data_in6
-                        dout = coloumn_even ? data_in6 : data_in5;
-                    end
-
-                    4'b0010 : begin
-                        dout = data_in9;
-                    end
-
-                    4'b0011 : begin
-                        dout = row_even ? data_in7 : temp_dout[kolom];
-                        
-                    end
-
-                    4'b0100 : begin
-
-                        if (coloumn_even == 1'b0) begin
-                            if (row_even == 1'b1) begin
-                                dout = data_in1;
-                            end else begin
-                                dout = temp_dout[kolom];
-                            end
-                        end else begin
-                            if (row_even == 1'b1) begin
-                                dout = data_in2;
-                            end else begin
-                                dout = temp_dout[kolom];
-                            end
-                        end
-                        
-                    end
-
-                    4'b0101 : begin
-                        dout = row_even ? data_in7 : temp_dout[kolom];
-
-                    end
-
-                    4'b0110 : begin
-                        dout = data_in9;
-                    end
-
-
-                    4'b0111 : begin
-                        dout = coloumn_even ? data_in6 : data_in5;
-                    end
-
-                    4'b1000 : begin
-                        dout = data_in9;
-                    end
+                end
 
                 default : begin
-                        // do nothing
-                    end
-
-                endcase;
-        
-
+                    // Pada kode asli, semua mode selain 0100 menulis data_in8
+                    // Pastikan ini memang logic yang diinginkan
+                    temp_dout[kolom] <= data_in8;
+                end
+            endcase
+        end
     end
 
-    always @(posedge clk) begin
-        if (!rst) begin
-            temp_dout[0] <= 0;
-        end else begin
-            case (write_mode) 
+    // ==========================================
+    // COMBINATIONAL OUTPUT LOGIC
+    // ==========================================
+    always @(*) begin
+        case (write_mode)
+
+            4'b0000 : begin
+                dout = data_in9;
+            end
+
+            4'b0001 : begin
+                dout = coloumn_even ? data_in6 : data_in5;
+            end
+
+            4'b0010 : begin
+                dout = data_in9;
+            end
+
+            4'b0011 : begin
+                // Menggunakan bram_read_data (hasil bacaan sync)
+                dout = row_even ? data_in7 : bram_read_data; 
+            end
 
             4'b0100 : begin
-            if (coloumn_even == 1'b0) begin
-                    temp_dout[kolom] <= data_in3;
+                if (coloumn_even == 1'b0) begin
+                    if (row_even == 1'b1) begin
+                        dout = data_in1;
+                    end else begin
+                        // Menggunakan bram_read_data
+                        dout = bram_read_data;
                     end
-
-            else begin
-                    temp_dout[kolom] <= data_in4;
+                end else begin
+                    if (row_even == 1'b1) begin
+                        dout = data_in2;
+                    end else begin
+                        // Menggunakan bram_read_data
+                        dout = bram_read_data;
+                    end
                 end
             end
 
-            default : begin
-                temp_dout[kolom] <= data_in8;
-
+            4'b0101 : begin
+                // Menggunakan bram_read_data
+                dout = row_even ? data_in7 : bram_read_data;
             end
 
-            endcase
-        end
+            4'b0110 : begin
+                dout = data_in9;
+            end
 
+            4'b0111 : begin
+                dout = coloumn_even ? data_in6 : data_in5;
+            end
+
+            4'b1000 : begin
+                dout = data_in9;
+            end
+
+            default : begin
+                // Good practice: assign default value to prevent latches
+                dout = {length{1'b0}}; 
+            end
+
+        endcase
     end
 
-
-endmodule;
+endmodule

@@ -10,6 +10,7 @@ module control_unit_upsample(
     output reg [13:0] addr_input,
     output reg [13:0] addr_output,
     output reg [7:0] kolom,
+    output reg [7:0] s_kolom,
 
     output wire row_even,
     output wire coloumn_even
@@ -20,6 +21,8 @@ module control_unit_upsample(
     reg en_counter;
     reg [13:0] offset_addr;
     reg [7:0] number_of_row;
+
+    reg en_s_kolom;
 
     localparam IDLE      = 6'b000000;
     localparam LOAD      = 6'b000001;
@@ -39,14 +42,16 @@ module control_unit_upsample(
 
     reg x;
 
-    always @(posedge clk ) begin
+    always @(posedge clk ) begin 
         if (!rst) begin
             STATE <= 6'b0;
             baris <= 8'b00000001;
             kolom <= 8'b0;
             addr_input <= 14'b0;
             addr_output <= 14'b0;
-            x <= 1'b0;
+            s_kolom <= 8'b0;
+            en_s_kolom <= 1'b0;
+            x <= 1'b1;
 
         end else begin
             STATE <= NEXT_STATE;
@@ -57,17 +62,24 @@ module control_unit_upsample(
             end 
 
             if (kolom == batas_kolom) begin
-            baris <= baris + 1;
-            kolom <= kolom + 1;
-            kolom <= 8'b0;
-            if (baris > 1) en_write_in <= ~ en_write_in;
+                baris <= baris + 1;
+                kolom <= kolom + 1;
+                kolom <= 8'b0;
+                // if (baris > 1) en_write_in <= ~ en_write_in;
             end
+
+            if (kolom == (batas_kolom - 1) && baris > 1 ) en_write_in <= ~ en_write_in;
 
             x <= ~x;
 
             if (~x && en_write_in) begin
                 addr_input <= addr_input + 1'b1;
             end
+
+
+            if (en_s_kolom == 1'b1) s_kolom <= s_kolom + 1'b1;
+            if (s_kolom == batas_kolom) s_kolom <= 8'b0;
+
         end
     end
 
@@ -105,6 +117,8 @@ module control_unit_upsample(
         
 
         NEXT_STATE <= MODE1;
+        en_write_in <= 1'b1;
+        en_s_kolom <= 1'b1;
         
         
 
@@ -118,7 +132,7 @@ module control_unit_upsample(
         en_write_out <= 1'b1;
 
         en_counter <= 1'b1;
-        en_write_in <= 1'b1;
+        
         
         case (kolom) 
             0 : begin

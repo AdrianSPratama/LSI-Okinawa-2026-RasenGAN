@@ -19,7 +19,7 @@ reg [7:0] kolom;
 reg [7:0] batas_kolom;
 reg x;
 
-reg [length - 1:0] prev_row [0:127]; // assuming max 128 elements per row
+(* ram_style = "block" *) reg [length - 1:0] prev_row [0:127]; // assuming max 128 elements per row
 
     always @(posedge clk) begin
         if (!rst) begin

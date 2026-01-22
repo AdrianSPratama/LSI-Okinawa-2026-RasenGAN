@@ -65,6 +65,7 @@ module top_upsample #(parameter length = 16) (
     wire even_coloumn;
 
     wire [7:0] kolom;
+    wire [7:0] s_kolom;
 
     control_unit_upsample control_unit_inst (
         .clk(clk),
@@ -73,12 +74,14 @@ module top_upsample #(parameter length = 16) (
         .done(done),
         .size_upsample(size_upsample),
 
+
         .write_mode(write_mode),
         .en_write_in(en_write_in),
         .en_write_out(en_write_out),
         .addr_input(addr_input),
         .addr_output(addr_output),
         .kolom(kolom),
+        .s_kolom(s_kolom),
 
         .row_even(even_row),
         .coloumn_even(even_coloumn)
@@ -118,6 +121,7 @@ module top_upsample #(parameter length = 16) (
         .data_in3(out3),
         .data_in4(out4),
         .kolom(kolom),
+        .s_kolom(s_kolom),
 
         .data_in5(out5),
         .data_in6(out6),

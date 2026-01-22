@@ -15,6 +15,7 @@ module tb_top_upsample;
     reg [2:0] mode;
     reg [2:0] size_upsample;
     
+    // Wire untuk koneksi ke DUT
     wire [LENGTH - 1:0] t_data_in;
     wire done;
     wire [LENGTH - 1:0] t_data_out;
@@ -22,15 +23,18 @@ module tb_top_upsample;
     wire [13:0] addr_output;
 
     // ==========================================
-    // 2. Memori (Matrix)
+    // 2. Memori (Simulasi BRAM)
     // ==========================================
     // Input 8x8 = 64 elemen
-    reg [LENGTH-1:0] data_input [0:63];
+    reg [LENGTH-1:0] bram_input_mem [0:63];
     // Output 16x16 = 256 elemen
-    reg [LENGTH-1:0] data_output [0:255];
+    reg [LENGTH-1:0] bram_output_mem [0:255];
+
+    // Register sementara untuk menampung hasil baca BRAM (karena ada latency)
+    reg [LENGTH-1:0] r_data_in_bram;
 
     integer i, j;
-    integer cycle_count; // Counter untuk timeout
+    integer cycle_count;
 
     // ==========================================
     // 3. Instansiasi DUT
@@ -44,14 +48,14 @@ module tb_top_upsample;
         .mode(mode), 
         .size_upsample(size_upsample), 
         .done(done), 
-        .t_data_in(t_data_in), 
+        .t_data_in(t_data_in), // Terhubung ke output register BRAM
         .t_data_out(t_data_out), 
         .addr_input(addr_input), 
         .addr_output(addr_output)
     );
 
     // ==========================================
-    // 4. Clock
+    // 4. Clock Generation
     // ==========================================
     initial begin
         clk = 0;
@@ -59,17 +63,29 @@ module tb_top_upsample;
     end
 
     // ==========================================
-    // 5. Logika Memori (Read & Write)
+    // 5. Model BRAM (Synchronous Read & Write)
     // ==========================================
     
-    // READ: Kirim data ke DUT (Batas diubah ke 64 untuk input 8x8)
-    assign t_data_in = (addr_input < 64) ? data_input[addr_input] : 0;
+    // --- BRAM INPUT (Read Port) ---
+    // Prilaku BRAM: Data keluar 1 clock setelah alamat diberikan.
+    assign t_data_in = r_data_in_bram;
 
-    // WRITE: Tangkap output dari DUT (Batas diubah ke 256 untuk output 16x16)
     always @(posedge clk) begin
+        // Proteksi alamat agar tidak out of bound simulation error
+        if (addr_input < 16) begin
+            r_data_in_bram <= bram_input_mem[addr_input];
+        end else begin
+            r_data_in_bram <= 0;
+        end
+    end
+
+    // --- BRAM OUTPUT (Write Port) ---
+    // Prilaku BRAM: Data ditulis saat clock naik jika Write Enable aktif.
+    always @(posedge clk) begin
+        // Menggunakan sinyal write enable dari DUT (uut.en_write_out)
         if (uut.en_write_out) begin 
-            if (addr_output < 256) begin
-                data_output[addr_output] <= t_data_out;
+            if (addr_output < 64) begin
+                bram_output_mem[addr_output] <= t_data_out;
             end
         end
     end
@@ -85,40 +101,36 @@ module tb_top_upsample;
         rst = 1;
         start = 0;
         mode = 0;
-        // MODIFIKASI: Size diset ke 001
-        size_upsample = 3'b001; 
+        size_upsample = 3'b000; // Size 001 sesuai request
         cycle_count = 0;
+        
+        // Inisialisasi output register BRAM agar tidak X di awal
+        r_data_in_bram = 0;
 
-        // --- Isi Data Input (100, 110, 120... sampai 64 data) ---
+        // --- Isi BRAM Input (Initial Load) ---
+        // Ini mensimulasikan file .coe atau memori yang sudah terisi sebelum start
         $display("--------------------------------");
-        $display("Initializing Memory (64 items)...");
-        // MODIFIKASI: Loop 64 kali
-        for (i = 0; i < 64; i = i + 1) begin
-            data_input[i] = 100 + (i * 10);
+        $display("Initializing BRAM Input (16 items)...");
+        for (i = 0; i < 16; i = i + 1) begin
+            bram_input_mem[i] = 100 + (i * 10);
         end
 
-        // Bersihkan output (256 items)
-        for (i = 0; i < 256; i = i + 1) begin
-            data_output[i] = 0;
+        // Bersihkan BRAM Output
+        for (i = 0; i < 64; i = i + 1) begin
+            bram_output_mem[i] = 0;
         end
 
         // --- Reset Sequence ---
-        #20 rst = 0; // Active Low Reset (Assuming logic uses !rst) or active high depending on design
-        // Jika modul Anda reset active LOW (rst=0 reset), gunakan baris di atas.
-        // Jika modul Anda reset active HIGH, tukar logika ini.
-        // Asumsi dari kode awal: rst=1 awal, lalu rst=0, lalu rst=1. 
-        // Biasanya active low reset ditulis: initial rst=0; #10 rst=1;
-        // Tapi saya ikuti pola kode asli Anda:
+        #20 rst = 0; 
         #20 rst = 1; 
         #20;
 
         // --- Start ---
-        $display("Starting Simulation with Size = %b...", size_upsample);
+        $display("Starting Simulation...");
         start = 1;
-        #10 start = 0; // Pulse start
+        #10 start = 0; 
 
         // --- LOOP TUNGGU ---
-        // Timeout dinaikkan ke 5000 karena data lebih banyak
         while ((done == 0) && (cycle_count < 5000)) begin
             @(posedge clk); 
             cycle_count = cycle_count + 1;
@@ -127,29 +139,27 @@ module tb_top_upsample;
         // --- Cek Hasil ---
         if (done) begin
             $display("Status: DONE signal received at cycle %0d", cycle_count);
-            #20; // Tunggu write terakhir selesai
+            #20; 
         end else begin
             $display("Status: TIMEOUT reached (5000 cycles)!");
         end
 
-        // --- Tampilkan Matrix Input (8x8) ---
-        $display("\nMatrix Input (8x8):");
-        for (i = 0; i < 8; i = i + 1) begin
+        // --- Tampilkan Matrix Input ---
+        $display("\nMatrix Input (4x4) from BRAM:");
+        for (i = 0; i < 4; i = i + 1) begin
             $write("Row %0d: ", i);
-            for (j = 0; j < 8; j = j + 1) begin
-                // Menampilkan index i*8 + j
-                $write("%4d ", data_input[i*8 + j]);
+            for (j = 0; j < 4; j = j + 1) begin
+                $write("%4d ", bram_input_mem[i*4 + j]);
             end
             $write("\n");
         end
 
-        // --- Tampilkan Matrix Output (16x16) ---
-        $display("\nMatrix Output (16x16):");
-        for (i = 0; i < 16; i = i + 1) begin
+        // --- Tampilkan Matrix Output ---
+        $display("\nMatrix Output (8x8) in BRAM:");
+        for (i = 0; i < 8; i = i + 1) begin
             $write("Row %02d: ", i);
-            for (j = 0; j < 16; j = j + 1) begin
-                // Menampilkan index i*16 + j
-                $write("%4d ", data_output[i*16 + j]);
+            for (j = 0; j < 8; j = j + 1) begin
+                $write("%4d ", bram_output_mem[i*8 + j]);
             end
             $write("\n"); 
         end

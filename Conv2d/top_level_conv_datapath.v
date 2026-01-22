@@ -46,6 +46,7 @@ module top_level_conv_datapath #(
     output wire PE_with_buffers_IDLE,
     output wire ena_bias_BRAM_addr_counter,
     output wire rst_bias_BRAM_addr_counter,
+    output wire [11:0] bias_BRAM_addr_counter_out,
 
     output wire [6:0] top_row_counter_out,
 
@@ -121,6 +122,16 @@ module top_level_conv_datapath #(
         .reset(rst_top_row_counter), 
         .clk(clk),
         .counter_out(top_row_counter_out)
+    );
+
+    // Instantiate counter for bias_BRAM
+    counter #(
+        .BITWIDTH(12)
+    ) BIAS_BRAM_ADDR_COUTNER (
+        .enable(ena_bias_BRAM_addr_counter),
+        .reset(rst_bias_BRAM_addr_counter), 
+        .clk(clk),
+        .counter_out(bias_BRAM_addr_counter_out)
     );
 
     // MUX for s_axis_tready

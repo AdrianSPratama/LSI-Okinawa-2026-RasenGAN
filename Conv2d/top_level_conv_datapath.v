@@ -62,7 +62,7 @@ module top_level_conv_datapath #(
     // Slave
     input wire s_axis_tvalid,
     input wire s_axis_tlast,
-    output wire s_axis_tready,
+    output reg s_axis_tready,
 
     // Master
     output wire m_axis_tvalid,

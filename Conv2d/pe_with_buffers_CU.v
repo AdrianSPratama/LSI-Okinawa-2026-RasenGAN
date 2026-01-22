@@ -25,6 +25,7 @@ module pe_with_buffers_CU (
 
     // Internal outputs
     output reg ena_bias_BRAM_addr_counter,
+    output reg rst_bias_BRAM_addr_counter,
     output reg add_bias,
 
     output reg Wr_kernel,
@@ -162,6 +163,7 @@ module pe_with_buffers_CU (
 
         // Internal outputs
         ena_bias_BRAM_addr_counter = 0;
+        rst_bias_BRAM_addr_counter = 1;
         add_bias = 0;
 
         Wr_kernel = 0;
@@ -184,6 +186,7 @@ module pe_with_buffers_CU (
 
                 // Internal outputs
                 ena_bias_BRAM_addr_counter = 0;
+                rst_bias_BRAM_addr_counter = 0;
                 add_bias = 0;
 
                 Wr_kernel = 0;

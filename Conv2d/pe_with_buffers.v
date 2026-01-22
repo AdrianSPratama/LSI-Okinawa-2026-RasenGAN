@@ -38,6 +38,7 @@ module pe_with_buffers #(
     // input wire wea_output_BRAM,
     // input wire enb_output_BRAM // Write port b not used
     output wire ena_bias_BRAM_addr_counter,
+    output wire rst_bias_BRAM_addr_counter,
 
     // AXI signalsm_axis_tvalid
     output wire m_axis_tvalid,
@@ -99,8 +100,10 @@ module pe_with_buffers #(
         .PE_ready(PE_ready),
         .PE_with_buffers_IDLE(PE_with_buffers_IDLE),
 
-        // Internal outputs
         .ena_bias_BRAM_addr_counter(ena_bias_BRAM_addr_counter),
+        .rst_bias_BRAM_addr_counter(rst_bias_BRAM_addr_counter),
+        
+        // Internal outputs
         .add_bias(add_bias),
 
         .Wr_kernel(Wr_kernel),

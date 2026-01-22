@@ -18,6 +18,7 @@ module top_level_conv #(
     output wire ena_bias_BRAM_addr_counter,
     output wire rst_bias_BRAM_addr_counter,
     output wire [11:0] bias_BRAM_addr_counter_out,
+    output wire conv_DONE,
 
     // Data I/O
     input wire [15:0] bias_in,
@@ -52,7 +53,6 @@ module top_level_conv #(
     wire [6:0] top_row_counter_out;
 
     wire slave_select;
-    wire conv_DONE;
     wire en_reg_last_chan;
     wire rst_reg_last_chan;
 
@@ -187,7 +187,7 @@ module top_level_conv #(
 
         // Data input bias from bias_BRAM (instantiated outside)
         .bias_in(bias_in),
-        
+
         // AXI signals
         // Slave
         .s_axis_tvalid(s_axis_tvalid),

@@ -27,10 +27,6 @@ module top_level_conv_CU (
 
     input wire aresetn,
 
-    input wire s_axis_tvalid,
-    input wire s_axis_tlast,
-    input wire m_axis_tready,
-
     // Control outputs
     output reg slave_select,
     output reg conv_DONE,
@@ -53,11 +49,7 @@ module top_level_conv_CU (
     output reg rst_top_row_counter,
 
     output reg [8:0] CHANNEL_SIZE,
-    output reg [7:0] IMAGE_SIZE,
-
-    output reg s_axis_tready,
-    output reg m_axis_tvalid,
-    output reg m_axis_tlast
+    output reg [7:0] IMAGE_SIZE
 );
 
     parameter state_size = 5;
@@ -205,10 +197,6 @@ module top_level_conv_CU (
             default: IMAGE_SIZE = 8'd4;
         endcase
 
-        s_axis_tready = 0;
-        m_axis_tvalid = 0;
-        m_axis_tlast = 0;
-
         case (current_state)
             S_Reset: begin // Check if IMAGE_SIZE and CHANNEL_SIZE have to be 0 too in S_Reset
                 slave_select = 0;
@@ -230,9 +218,6 @@ module top_level_conv_CU (
 
                 en_top_row_counter = 0;
                 rst_top_row_counter = 0;
-                s_axis_tready = 0;
-                m_axis_tvalid = 0;
-                m_axis_tlast = 0;
             end
 
             S_Idle: begin
@@ -334,9 +319,6 @@ module top_level_conv_CU (
 
                 en_top_row_counter = 0;
                 rst_top_row_counter = 1;
-                s_axis_tready = 0;
-                m_axis_tvalid = 0;
-                m_axis_tlast = 0;
             end
         endcase
     end

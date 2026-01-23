@@ -101,10 +101,6 @@ module top_level_conv #(
 
         .aresetn(aresetn),
 
-        .s_axis_tvalid(s_axis_tvalid),
-        .s_axis_tlast(s_axis_tlast),
-        .m_axis_tready(m_axis_tready),
-
         // Control outputs
         .slave_select(slave_select),
         .conv_DONE(conv_DONE),
@@ -127,11 +123,7 @@ module top_level_conv #(
         .rst_top_row_counter(rst_top_row_counter),
 
         .CHANNEL_SIZE(CHANNEL_SIZE),
-        .IMAGE_SIZE(IMAGE_SIZE),
-
-        .s_axis_tready(s_axis_tready),
-        .m_axis_tvalid(m_axis_tvalid),
-        .m_axis_tlast(m_axis_tlast)
+        .IMAGE_SIZE(IMAGE_SIZE)
     );
 
     top_level_conv_datapath #(

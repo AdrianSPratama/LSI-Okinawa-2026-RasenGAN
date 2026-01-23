@@ -62,6 +62,9 @@ module pe_with_buffers #(
     wire rsta_output_BRAM_counter;
     wire [14:0] a_output_BRAM_counter_out;
 
+    wire [13:0] addra_output_BRAM;
+    wire [13:0] addrb_output_BRAM;
+
     // Assign addra_output_BRAM and addrb_output_BRAM
     assign addra_output_BRAM = a_output_BRAM_counter_out[13:0];
     assign addrb_output_BRAM = addra_output_BRAM - 1;

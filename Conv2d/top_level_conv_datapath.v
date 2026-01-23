@@ -72,6 +72,7 @@ module top_level_conv_datapath #(
     
     // Wires
     wire signed [47:0] bias_padded;
+    wire [15:0] input_line_buffer_dina;
 
     // Controls
     wire kernel_BRAM_s_axis_tready;

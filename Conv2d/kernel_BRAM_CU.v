@@ -143,6 +143,8 @@ module kernel_BRAM_CU (
                 if (a_counter_output > CHANNEL_SIZE-1) begin
                     last_loading_1ker = 1;
                     rsta_ker_BRAM_counter = 0;
+                    s_axis_tready = 0;
+                    wea_ker_BRAM = 0;
                 end
                 else begin
                     if (!s_axis_tvalid) begin

@@ -72,90 +72,95 @@ module top_level_conv_CU (
               S_En_reg_last_chan                = 5'd16,
               S_Done_conv                       = 5'd17;
 
-    reg [state_size-1:0] current_state;
+    reg [state_size-1:0] current_state, next_state;
 
     // State transition block
     always @(posedge clk) begin
         if (!Reset_top || !aresetn) current_state <= S_Reset;
-        else begin
-            case (current_state)
-                S_Reset: current_state <= S_Idle;
-                
-                S_Idle: begin
-                    if (Load_kernel_BRAM && Kernel_BRAM_IDLE) current_state <= S_Loading_kernel_BRAM;
-                    else current_state <= S_Idle;
+        else current_state <= next_state;
+    end
+
+    // State conditional block
+    always @(*) begin
+        next_state <= current_state;
+
+        case (current_state)
+            S_Reset: next_state <= S_Idle;
+            
+            S_Idle: begin
+                if (Load_kernel_BRAM && Kernel_BRAM_IDLE) next_state <= S_Loading_kernel_BRAM;
+                else next_state <= S_Idle;
+            end
+
+            S_Loading_kernel_BRAM: begin
+                if (last_loading_1ker) next_state <= S_Loading_kernel_reg;
+                else next_state <= S_Loading_kernel_BRAM;
+            end
+
+            S_Loading_kernel_reg: begin
+                if (PE_ready) next_state <= S_Wait_idle;
+                else next_state <= S_Loading_kernel_reg;
+            end
+
+            S_Wait_idle: begin
+                if (Input_line_buffer_IDLE && PE_with_buffers_IDLE) next_state <= S_Stream_first_row;
+                else next_state <= S_Wait_idle;
+            end
+
+            S_Stream_first_row: next_state <= S_Wait_stream_first_row_finish;
+
+            S_Wait_stream_first_row_finish: begin
+                if (Done_1row) next_state <= S_Wait_idle_mid_row;
+                else next_state <= S_Wait_stream_first_row_finish;
+            end
+
+            S_Wait_idle_mid_row: begin
+                if (Input_line_buffer_IDLE && PE_with_buffers_IDLE) next_state <= S_Stream_mid_row;
+                else next_state <= S_Wait_idle_mid_row;
+            end
+
+            S_Stream_mid_row: next_state <= S_Wait_stream_mid_row_finish;
+
+            S_Wait_stream_mid_row_finish: begin
+                if (Done_1row) begin
+                    if (top_row_counter_out == IMAGE_SIZE-2) next_state <= S_Wait_idle_last_row;
+                    else next_state <= S_Wait_idle_mid_row;
                 end
+                else next_state <= S_Wait_stream_mid_row_finish;
+            end
 
-                S_Loading_kernel_BRAM: begin
-                    if (last_loading_1ker) current_state <= S_Loading_kernel_reg;
-                    else current_state <= S_Loading_kernel_BRAM;
-                end
+            S_Wait_idle_last_row: begin
+                if (Input_line_buffer_IDLE && PE_with_buffers_IDLE) next_state <= S_Stream_last_row;
+                else next_state <= S_Wait_idle_last_row;
+            end
 
-                S_Loading_kernel_reg: begin
-                    if (PE_ready) current_state <= S_Wait_idle;
-                    else current_state <= S_Loading_kernel_reg;
-                end
+            S_Stream_last_row: next_state <= S_Wait_stream_last_row_finish;
 
-                S_Wait_idle: begin
-                    if (Input_line_buffer_IDLE && PE_with_buffers_IDLE) current_state <= S_Stream_first_row;
-                    else current_state <= S_Wait_idle;
-                end
+            S_Wait_stream_last_row_finish: begin
+                if (Done_1row) next_state <= S_Wait_idle_update_kernel_BRAM;
+                else next_state <= S_Wait_stream_last_row_finish;
+            end
 
-                S_Stream_first_row: current_state <= S_Wait_stream_first_row_finish;
+            S_Wait_idle_update_kernel_BRAM: begin
+                if (Input_line_buffer_IDLE && PE_with_buffers_IDLE) next_state <= S_Update_BRAM_doutb;
+                else next_state <= S_Wait_idle_update_kernel_BRAM;
+            end
 
-                S_Wait_stream_first_row_finish: begin
-                    if (Done_1row) current_state <= S_Wait_idle_mid_row;
-                    else current_state <= S_Wait_stream_first_row_finish;
-                end
+            S_Update_BRAM_doutb: next_state <= S_Wait_update_BRAM_doutb;
 
-                S_Wait_idle_mid_row: begin
-                    if (Input_line_buffer_IDLE && PE_with_buffers_IDLE) current_state <= S_Stream_mid_row;
-                    else current_state <= S_Wait_idle_mid_row;
-                end
+            S_Wait_update_BRAM_doutb: begin
+                if (reg_last_chan) next_state <= S_Done_conv;
+                else if (last_channel) next_state <= S_En_reg_last_chan;
+                else if (top_row_counter_out == 3) next_state <= S_Loading_kernel_reg;
+                else next_state <= S_Wait_update_BRAM_doutb;
+            end
 
-                S_Stream_mid_row: current_state <= S_Wait_stream_mid_row_finish;
+            S_En_reg_last_chan: next_state <= S_Loading_kernel_reg;
 
-                S_Wait_stream_mid_row_finish: begin
-                    if (Done_1row) begin
-                        if (top_row_counter_out == IMAGE_SIZE-2) current_state <= S_Wait_idle_last_row;
-                        else current_state <= S_Wait_idle_mid_row;
-                    end
-                    else current_state <= S_Wait_stream_mid_row_finish;
-                end
+            S_Done_conv: next_state <= S_Reset;
 
-                S_Wait_idle_last_row: begin
-                    if (Input_line_buffer_IDLE && PE_with_buffers_IDLE) current_state <= S_Stream_last_row;
-                    else current_state <= S_Wait_idle_last_row;
-                end
-
-                S_Stream_last_row: current_state <= S_Wait_stream_last_row_finish;
-
-                S_Wait_stream_last_row_finish: begin
-                    if (Done_1row) current_state <= S_Wait_idle_update_kernel_BRAM;
-                    else current_state <= S_Wait_stream_last_row_finish;
-                end
-
-                S_Wait_idle_update_kernel_BRAM: begin
-                    if (Input_line_buffer_IDLE && PE_with_buffers_IDLE) current_state <= S_Update_BRAM_doutb;
-                    else current_state <= S_Wait_idle_update_kernel_BRAM;
-                end
-
-                S_Update_BRAM_doutb: current_state <= S_Wait_update_BRAM_doutb;
-
-                S_Wait_update_BRAM_doutb: begin
-                    if (reg_last_chan) current_state <= S_Done_conv;
-                    else if (last_channel) current_state <= S_En_reg_last_chan;
-                    else if (top_row_counter_out == 3) current_state <= S_Loading_kernel_reg;
-                    else current_state <= S_Wait_update_BRAM_doutb;
-                end
-
-                S_En_reg_last_chan: current_state <= S_Loading_kernel_reg;
-
-                S_Done_conv: current_state <= S_Reset;
-
-                default: current_state <= S_Idle;
-            endcase
-        end
+            default: next_state <= S_Idle;
+        endcase
     end
 
     // State output

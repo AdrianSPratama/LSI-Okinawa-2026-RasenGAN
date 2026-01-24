@@ -57,97 +57,100 @@ module pe_with_buffers_CU (
               S_Writing_porta_output_BRAM__last_row_last_chan   = 4'd14,
               S_Reset_porta_counter_m_axis_tlast                = 4'd15;
 
-    reg [state_size-1:0] current_state;
+    reg [state_size-1:0] current_state, next_state;
 
     // State transition block
     always @(posedge clk) begin
-        if (!Reset) begin
-            current_state <= S_Reset;
-        end
-        else begin
-            case (current_state)
-                S_Reset: current_state <= S_Idle;
+        if (!Reset) current_state <= S_Reset;
+        else current_state <= next_state;
+    end
 
-                S_Idle: begin
-                    if (Load_kernel_reg) current_state <= S_Load_kernel_reg;
-                    else if (Stream_mid_row) current_state <= S_Wait_output_valid_mid_row;
-                    else if (Stream_last_row) current_state <= S_Wait_output_valid_last_row;
-                    else if (last_channel) current_state <= S_Idle_last_chan;
-                    else current_state <= S_Idle;
+    // State conditional block
+    always @(*) begin
+        next_state <= current_state;
+
+        case (current_state)
+            S_Reset: next_state <= S_Idle;
+
+            S_Idle: begin
+                if (Load_kernel_reg) next_state <= S_Load_kernel_reg;
+                else if (Stream_mid_row) next_state <= S_Wait_output_valid_mid_row;
+                else if (Stream_last_row) next_state <= S_Wait_output_valid_last_row;
+                else if (last_channel) next_state <= S_Idle_last_chan;
+                else next_state <= S_Idle;
+            end
+
+            S_Load_kernel_reg: next_state <= S_PE_ready;
+
+            S_PE_ready: next_state <= S_Idle;
+
+            S_Wait_output_valid_mid_row: begin
+                if (Output_valid) next_state <= S_Writing_porta_output_BRAM_mid_row;
+                else next_state <= S_Wait_output_valid_mid_row;
+            end
+
+            S_Writing_porta_output_BRAM_mid_row: begin
+                if (Done_1row) next_state <= S_Idle;
+                else begin
+                    if (Output_valid) next_state <= S_Writing_porta_output_BRAM_mid_row;
+                    else next_state <= S_Wait_output_valid_mid_row;
                 end
+            end
 
-                S_Load_kernel_reg: current_state <= S_PE_ready;
+            S_Wait_output_valid_last_row: begin
+                if (Output_valid) next_state <= S_Writing_porta_output_BRAM_last_row;
+                else next_state <= S_Wait_output_valid_last_row;
+            end
 
-                S_PE_ready: current_state <= S_Idle;
-
-                S_Wait_output_valid_mid_row: begin
-                    if (Output_valid) current_state <= S_Writing_porta_output_BRAM_mid_row;
-                    else current_state <= S_Wait_output_valid_mid_row;
+            S_Writing_porta_output_BRAM_last_row: begin
+                if (Done_1row) next_state <= S_Reset_porta_counter;
+                else begin
+                    if (Output_valid) next_state <= S_Writing_porta_output_BRAM_last_row;
+                    else next_state <= S_Wait_output_valid_last_row;
                 end
+            end
 
-                S_Writing_porta_output_BRAM_mid_row: begin
-                    if (Done_1row) current_state <= S_Idle;
-                    else begin
-                        if (Output_valid) current_state <= S_Writing_porta_output_BRAM_mid_row;
-                        else current_state <= S_Wait_output_valid_mid_row;
-                    end
+            S_Reset_porta_counter: next_state <= S_Idle;
+
+            S_Idle_last_chan: begin
+                if (Load_kernel_reg) next_state <= S_PE_ready_last_chan;
+                else if (Stream_mid_row) next_state <= S_Wait_output_valid_mid_row_last_chan;
+                else if (Stream_last_row) next_state <= S_Wait_output_valid__last_row_last_chan;
+                else next_state <= S_Idle_last_chan;
+            end
+
+            S_PE_ready_last_chan: next_state <= S_Idle_last_chan;
+
+            S_Wait_output_valid_mid_row_last_chan: begin
+                if (Output_valid) next_state <= S_Writing_porta_output_BRAM_mid_row_last_chan;
+                else next_state <= S_Wait_output_valid_mid_row_last_chan;
+            end
+
+            S_Writing_porta_output_BRAM_mid_row_last_chan: begin
+                if (Done_1row) next_state <= S_Idle_last_chan;
+                else begin
+                    if (Output_valid) next_state <= S_Writing_porta_output_BRAM_mid_row_last_chan;
+                    else next_state <= S_Wait_output_valid_mid_row_last_chan;
                 end
+            end
 
-                S_Wait_output_valid_last_row: begin
-                    if (Output_valid) current_state <= S_Writing_porta_output_BRAM_last_row;
-                    else current_state <= S_Wait_output_valid_last_row;
+            S_Wait_output_valid__last_row_last_chan: begin
+                if (Output_valid) next_state <= S_Writing_porta_output_BRAM__last_row_last_chan;
+                else next_state <= S_Wait_output_valid__last_row_last_chan;
+            end
+
+            S_Writing_porta_output_BRAM__last_row_last_chan: begin
+                if (Done_1row) next_state <= S_Reset_porta_counter_m_axis_tlast;
+                else begin
+                    if (Output_valid) next_state <= S_Writing_porta_output_BRAM__last_row_last_chan;
+                    else next_state <= S_Wait_output_valid__last_row_last_chan;
                 end
+            end
 
-                S_Writing_porta_output_BRAM_last_row: begin
-                    if (Done_1row) current_state <= S_Reset_porta_counter;
-                    else begin
-                        if (Output_valid) current_state <= S_Writing_porta_output_BRAM_last_row;
-                        else current_state <= S_Wait_output_valid_last_row;
-                    end
-                end
+            S_Reset_porta_counter_m_axis_tlast: next_state <= S_Idle_last_chan;
 
-                S_Reset_porta_counter: current_state <= S_Idle;
-
-                S_Idle_last_chan: begin
-                    if (Load_kernel_reg) current_state <= S_PE_ready_last_chan;
-                    else if (Stream_mid_row) current_state <= S_Wait_output_valid_mid_row_last_chan;
-                    else if (Stream_last_row) current_state <= S_Wait_output_valid__last_row_last_chan;
-                    else current_state <= S_Idle_last_chan;
-                end
-
-                S_PE_ready_last_chan: current_state <= S_Idle_last_chan;
-
-                S_Wait_output_valid_mid_row_last_chan: begin
-                    if (Output_valid) current_state <= S_Writing_porta_output_BRAM_mid_row_last_chan;
-                    else current_state <= S_Wait_output_valid_mid_row_last_chan;
-                end
-
-                S_Writing_porta_output_BRAM_mid_row_last_chan: begin
-                    if (Done_1row) current_state <= S_Idle_last_chan;
-                    else begin
-                        if (Output_valid) current_state <= S_Writing_porta_output_BRAM_mid_row_last_chan;
-                        else current_state <= S_Wait_output_valid_mid_row_last_chan;
-                    end
-                end
-
-                S_Wait_output_valid__last_row_last_chan: begin
-                    if (Output_valid) current_state <= S_Writing_porta_output_BRAM__last_row_last_chan;
-                    else current_state <= S_Wait_output_valid__last_row_last_chan;
-                end
-
-                S_Writing_porta_output_BRAM__last_row_last_chan: begin
-                    if (Done_1row) current_state <= S_Reset_porta_counter_m_axis_tlast;
-                    else begin
-                        if (Output_valid) current_state <= S_Writing_porta_output_BRAM__last_row_last_chan;
-                        else current_state <= S_Wait_output_valid__last_row_last_chan;
-                    end
-                end
-
-                S_Reset_porta_counter_m_axis_tlast: current_state <= S_Idle_last_chan;
-
-                default: current_state <= S_Idle; 
-            endcase
-        end
+            default: next_state <= S_Idle; 
+        endcase
     end
 
     // State outputs

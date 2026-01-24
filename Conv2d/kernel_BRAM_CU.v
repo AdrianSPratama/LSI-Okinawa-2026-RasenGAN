@@ -36,50 +36,56 @@ module kernel_BRAM_CU (
             S_Reset_counter_b = 3'd6;
 
     // State register
-    reg [state_size-1:0] current_state;
+    reg [state_size-1:0] current_state, next_state;
 
     // State transition block
     always @(posedge clk) begin
         if (!Reset) current_state <= S_Reset;
-        else begin
-            case (current_state)
-                S_Reset: current_state <= S_Idle;
+        else current_state <= next_state;
+    end
 
-                S_Idle: begin
-                    if (load_BRAM_dina) current_state <= S_Wait_saxis_tvalid;
-                    else if (update_BRAM_doutb) current_state <= S_Inc_addrb;
-                    else current_state <= S_Idle;
+    // State conditional block
+    always @(*) begin
+        next_state <= current_state;
+        
+        case (current_state)
+            S_Reset: next_state <= S_Idle;
+
+            S_Idle: begin
+                if (load_BRAM_dina) next_state <= S_Wait_saxis_tvalid;
+                else if (update_BRAM_doutb) next_state <= S_Inc_addrb;
+                else next_state <= S_Idle;
+            end
+
+            S_Wait_saxis_tvalid: begin
+                if (s_axis_tvalid) next_state <= S_Loading_ker_BRAM;
+                else next_state <= S_Wait_saxis_tvalid;
+            end
+
+            S_Loading_ker_BRAM: begin
+                if (a_counter_output > CHANNEL_SIZE-1) next_state <= S_Idle;
+                else begin
+                    if (s_axis_tvalid) next_state <= S_Loading_ker_BRAM;
+                    else next_state <= S_Wait_saxis_tvalid;
                 end
+            end
 
-                S_Wait_saxis_tvalid: begin
-                    if (s_axis_tvalid) current_state <= S_Loading_ker_BRAM;
-                    else current_state <= S_Wait_saxis_tvalid;
+            S_Inc_addrb: next_state <= S_Check_counter_b;
+
+            S_Check_counter_b: begin
+                if(b_counter_output == CHANNEL_SIZE - 1) begin
+                    next_state <= S_Reset_counter_b;
                 end
-
-                S_Loading_ker_BRAM: begin
-                    if (a_counter_output > CHANNEL_SIZE-1) current_state <= S_Idle;
-                    else begin
-                        if (s_axis_tvalid) current_state <= S_Loading_ker_BRAM;
-                        else current_state <= S_Wait_saxis_tvalid;
-                    end
+                else begin
+                    next_state <= S_Idle;    
                 end
+            end
 
-                S_Inc_addrb: current_state <= S_Check_counter_b;
+            S_Reset_counter_b: next_state <= S_Idle;
 
-                S_Check_counter_b: begin
-                    if(b_counter_output == CHANNEL_SIZE - 1) begin
-                        current_state <= S_Reset_counter_b;
-                    end
-                    else begin
-                        current_state <= S_Idle;    
-                    end
-                end
-
-                S_Reset_counter_b: current_state <= S_Idle;
-
-                default: current_state <= S_Reset;
-            endcase
-        end
+            default: next_state <= S_Reset;
+        endcase
+  
     end
 
     // State output block

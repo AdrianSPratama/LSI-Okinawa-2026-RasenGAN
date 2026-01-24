@@ -76,7 +76,7 @@ module top_level_conv_CU (
 
     // State transition block
     always @(posedge clk) begin
-        if (!Reset_top || !aresetn) current_state <= S_Reset;
+        if ((!Reset_top) || (!aresetn)) current_state <= S_Reset;
         else current_state <= next_state;
     end
 

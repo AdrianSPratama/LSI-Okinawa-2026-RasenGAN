@@ -117,6 +117,8 @@ module tb_input_line_buffer;
         s_axis_tvalid = 0;
         s_axis_tlast = 0;
 
+        repeat (5) @(posedge clk);
+
         Reset = 1;
 
         // Wait until stable to Idle state, minimum 2 clocks
@@ -177,9 +179,9 @@ module tb_input_line_buffer;
             
             // Test s_axis_tvalid clock
             @(posedge clk);
-            s_axis_tvalid = 0;
-            @(posedge clk);
-            @(posedge clk);
+            // s_axis_tvalid = 0;
+            // @(posedge clk);
+            // @(posedge clk);
         end
 
         s_axis_tlast = 0;

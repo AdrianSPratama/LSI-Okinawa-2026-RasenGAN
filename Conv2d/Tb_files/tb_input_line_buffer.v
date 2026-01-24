@@ -128,6 +128,9 @@ module tb_input_line_buffer;
 
         Stream_first_row = 0;
 
+        repeat (10) @(posedge clk);
+        s_axis_tvalid = 1;
+
         // Test Stream_first_row done, verified
         for (DDR_INDEX=0; DDR_INDEX<IMAGE_SIZE*IMAGE_SIZE; DDR_INDEX = DDR_INDEX+1) begin
             s_axis_tvalid = 1;
@@ -143,48 +146,54 @@ module tb_input_line_buffer;
             // s_axis_tlast signal and start streaming last row, verified
             if (DDR_INDEX == IMAGE_SIZE*IMAGE_SIZE-1) begin
                 s_axis_tlast = 1;
-                @(posedge clk);
-                s_axis_tlast = 0;
-                repeat (3) @(posedge clk);
-                Stream_last_row = 1;
-                @(posedge clk);
-                Stream_last_row = 0;
             end
             // Start streaming row 2, verified
-            else if (DDR_INDEX == IMAGE_SIZE) begin
+            else if (DDR_INDEX == IMAGE_SIZE-1) begin
                 repeat (2) @(posedge clk);
+                s_axis_tvalid = 0;
                 Stream_mid_row = 1;
                 @(posedge clk);
                 Stream_mid_row = 0;
             end
             // Start streaming row 3, verified
-            else if (DDR_INDEX == 2*IMAGE_SIZE) begin
+            else if (DDR_INDEX == 2*IMAGE_SIZE-1) begin
                 repeat (3) @(posedge clk);
+                s_axis_tvalid = 0;
                 Stream_mid_row = 1;
                 @(posedge clk);
                 Stream_mid_row = 0;
             end
             // Start streaming row 4, verified
-            else if (DDR_INDEX == 3*IMAGE_SIZE) begin
+            else if (DDR_INDEX == 3*IMAGE_SIZE-1) begin
                 repeat (3) @(posedge clk);
+                s_axis_tvalid = 0;
                 Stream_mid_row = 1;
                 @(posedge clk);
                 Stream_mid_row = 0;
             end
 
+            // Waiting for s_axis_tready
+            while (!s_axis_tready) @(posedge clk);
+            
             // Test s_axis_tvalid clock
             @(posedge clk);
             s_axis_tvalid = 0;
             @(posedge clk);
             @(posedge clk);
-
-            // Waiting for s_axis_tready
-            while (!s_axis_tready) @(posedge clk);
         end
 
         s_axis_tlast = 0;
         s_axis_tvalid = 0;
-        repeat (5) @(posedge clk);
+
+        @(posedge clk);
+        s_axis_tlast = 0;
+        repeat (3) @(posedge clk);
+        s_axis_tvalid = 0;
+        Stream_last_row = 1;
+        @(posedge clk);
+        Stream_last_row = 0;
+
+        repeat (20) @(posedge clk);
 
         $stop;
     end

@@ -244,6 +244,7 @@ module input_line_buffer_CU (
                     en_linebuff_BRAM_counter = 0;
                     rst_linebuff_BRAM_counter = 0;
                     Done_1row = 1;
+                    s_axis_tready = 0;
                 end
                 else begin
                     if (!s_axis_tvalid) begin
@@ -295,6 +296,7 @@ module input_line_buffer_CU (
                     window_row_n_2_mux = 0;
                     window_row_n_1_mux = 0;
                     window_row_n_mux = 0;
+                    s_axis_tready = 0;
                 end
                 else begin
                     if (!s_axis_tvalid) begin
@@ -333,6 +335,7 @@ module input_line_buffer_CU (
                     window_row_n_2_mux = 0;
                     window_row_n_1_mux = 0;
                     window_row_n_mux = 0;
+                    s_axis_tready = 0;
                 end
             end
 
@@ -369,6 +372,7 @@ module input_line_buffer_CU (
                     en_linebuff_BRAM_counter = 0;
                     rst_linebuff_BRAM_counter = 0;
                     Done_1row = 1;
+                    s_axis_tready = 0;
                 end
                 else begin
                     if (!(s_axis_tvalid && m_axis_tready)) begin
@@ -420,6 +424,7 @@ module input_line_buffer_CU (
                     window_row_n_2_mux = 0;
                     window_row_n_1_mux = 0;
                     window_row_n_mux = 0;
+                    s_axis_tready = 0;
                 end
                 else begin
                     if (!(s_axis_tvalid && m_axis_tready)) begin
@@ -473,6 +478,7 @@ module input_line_buffer_CU (
                     window_row_n_2_mux = 0;
                     window_row_n_1_mux = 0;
                     window_row_n_mux = 0;
+                    s_axis_tready = 0;
                 end
                 else begin
                     if (!m_axis_tready) begin

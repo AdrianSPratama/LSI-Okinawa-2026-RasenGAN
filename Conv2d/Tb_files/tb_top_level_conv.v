@@ -11,7 +11,7 @@ module tb_top_level_conv;
     parameter IMAGE_SIZE = 4;
     parameter CHANNEL_SIZE = 256;
 
-    parameter INPUT_MEM_FILE = "weight_and_image_input_4x4";
+    parameter INPUT_MEM_FILE = "weight_and_image_input_4x4.mem";
     parameter OUTPUT_MEM_FILE = "result_conv_4x4.mem";
 
     integer DDR_INDEX;
@@ -26,7 +26,7 @@ module tb_top_level_conv;
     // Control outputs
     wire ena_bias_BRAM_addr_counter;
     wire rst_bias_BRAM_addr_counter;
-    wire bias_BRAM_addr_counter_out;
+    wire [11:0] bias_BRAM_addr_counter_out;
     wire conv_DONE;
 
     // AXI control signals

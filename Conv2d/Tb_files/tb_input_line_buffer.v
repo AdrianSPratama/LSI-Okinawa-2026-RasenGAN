@@ -173,9 +173,9 @@ module tb_input_line_buffer;
             end
 
             // Test s_axis_tvalid clock
-            // @(posedge clk);
-            // s_axis_tvalid = 0;
-            // @(posedge clk);
+            @(posedge clk);
+            s_axis_tvalid = 0;
+            @(posedge clk);
             @(posedge clk);
 
             // Waiting for s_axis_tready

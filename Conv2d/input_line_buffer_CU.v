@@ -40,7 +40,7 @@ module input_line_buffer_CU (
     
     parameter state_size = 5; // State size in bits, approx 24 total states (use 5 bits)
     // State reg
-    reg [state_size-1:0] current_state;
+    reg [state_size-1:0] current_state, next_state;
 
     // State parameters
     parameter S_Reset                                       = 5'd0,
@@ -67,110 +67,115 @@ module input_line_buffer_CU (
     // State transition block
     always @(posedge clk) begin
         if (!Reset) current_state <= S_Reset;
-        else begin
-            case (current_state)
-                S_Reset: current_state <= S_Idle; 
-                
-                S_Idle: begin
-                    if (Stream_first_row) current_state <= S_Wait_saxis_tvalid_first_row;
-                    else if (Stream_mid_row) current_state <= S_Zero_padding_edge_first;
-                    else if (Stream_last_row) current_state <= S_Zero_padding_edge_first_last_row;
-                    else if (last_channel) current_state <= S_Idle_last_chan;
-                    else current_state <= S_Idle; 
+        else current_state <= next_state;
+    end
+
+    // State transition block
+    always @(*) begin
+        next_state <= current_state;
+
+        case (current_state)
+            S_Reset: next_state <= S_Idle; 
+            
+            S_Idle: begin
+                if (Stream_first_row) next_state <= S_Wait_saxis_tvalid_first_row;
+                else if (Stream_mid_row) next_state <= S_Zero_padding_edge_first;
+                else if (Stream_last_row) next_state <= S_Zero_padding_edge_first_last_row;
+                else if (last_channel) next_state <= S_Idle_last_chan;
+                else next_state <= S_Idle; 
+            end
+
+            S_Wait_saxis_tvalid_first_row: begin
+                if (s_axis_tvalid) next_state <= S_Stream_first_row;
+                else next_state <= S_Wait_saxis_tvalid_first_row;
+            end
+
+            S_Stream_first_row: begin
+                if (linebuff_BRAM_counter_out > IMAGE_SIZE - 1) next_state <= S_Idle;
+                else begin
+                    if (s_axis_tvalid) next_state <= S_Stream_first_row;
+                    else next_state <= S_Wait_saxis_tvalid_first_row;
                 end
+            end
 
-                S_Wait_saxis_tvalid_first_row: begin
-                    if (s_axis_tvalid) current_state <= S_Stream_first_row;
-                    else current_state <= S_Wait_saxis_tvalid_first_row;
+            S_Zero_padding_edge_first: next_state <= S_Wait_saxis_tvalid_mid_row;
+
+            S_Wait_saxis_tvalid_mid_row: begin
+                if (s_axis_tvalid) next_state <= S_Stream_mid_row;
+                else next_state <= S_Wait_saxis_tvalid_mid_row;
+            end
+
+            S_Stream_mid_row: begin
+                if (linebuff_BRAM_counter_out > IMAGE_SIZE - 1) next_state <= S_Finish_mid_row;
+                else begin
+                    if (s_axis_tvalid) next_state <= S_Stream_mid_row;
+                    else next_state <= S_Wait_saxis_tvalid_mid_row;
                 end
+            end
 
-                S_Stream_first_row: begin
-                    if (linebuff_BRAM_counter_out > IMAGE_SIZE - 1) current_state <= S_Idle;
-                    else begin
-                        if (s_axis_tvalid) current_state <= S_Stream_first_row;
-                        else current_state <= S_Wait_saxis_tvalid_first_row;
-                    end
+            S_Finish_mid_row: next_state <= S_Idle;
+
+            S_Zero_padding_edge_first_last_row: next_state <= S_Streaming_last_row;
+
+            S_Streaming_last_row: begin
+                if (linebuff_BRAM_counter_out > IMAGE_SIZE - 1) next_state <= S_Finish_mid_row;
+                else next_state <= S_Streaming_last_row;
+            end
+
+            S_Idle_last_chan: begin
+                if (Stream_first_row) next_state <= S_Wait_saxis_tvalid_first_row_last_chan;
+                else if (Stream_mid_row) next_state <= S_Zero_padding_edge_first_last_chan;
+                else if (Stream_last_row) next_state <= S_Zero_padding_edge_first_last_row_last_chan;
+                else next_state <= S_Idle_last_chan;
+            end
+
+            S_Wait_saxis_tvalid_first_row_last_chan: begin
+                if (s_axis_tvalid && m_axis_tready) next_state <= S_Stream_first_row_last_chan;
+                else next_state <= S_Wait_saxis_tvalid_first_row_last_chan;
+            end
+
+            S_Stream_first_row_last_chan: begin
+                if (linebuff_BRAM_counter_out > IMAGE_SIZE - 1) next_state <= S_Idle_last_chan;
+                else begin
+                    if (s_axis_tvalid && m_axis_tready) next_state <= S_Stream_first_row_last_chan;
+                    else next_state <= S_Wait_saxis_tvalid_first_row_last_chan;
                 end
+            end
 
-                S_Zero_padding_edge_first: current_state <= S_Wait_saxis_tvalid_mid_row;
+            S_Zero_padding_edge_first_last_chan: next_state <= S_Wait_saxis_tvalid_mid_row_last_chan;
 
-                S_Wait_saxis_tvalid_mid_row: begin
-                    if (s_axis_tvalid) current_state <= S_Stream_mid_row;
-                    else current_state <= S_Wait_saxis_tvalid_mid_row;
+            S_Wait_saxis_tvalid_mid_row_last_chan: begin
+                if (s_axis_tvalid && m_axis_tready) next_state <= S_Stream_mid_row_last_chan;
+                else next_state <= S_Wait_saxis_tvalid_mid_row_last_chan;
+            end
+
+            S_Stream_mid_row_last_chan: begin
+                if (linebuff_BRAM_counter_out > IMAGE_SIZE - 1) next_state <= S_Finish_mid_row_last_chan;
+                else begin
+                    if (s_axis_tvalid && m_axis_tready) next_state <= S_Stream_mid_row_last_chan;
+                    else next_state <= S_Wait_saxis_tvalid_mid_row_last_chan;
                 end
+            end
 
-                S_Stream_mid_row: begin
-                    if (linebuff_BRAM_counter_out > IMAGE_SIZE - 1) current_state <= S_Finish_mid_row;
-                    else begin
-                        if (s_axis_tvalid) current_state <= S_Stream_mid_row;
-                        else current_state <= S_Wait_saxis_tvalid_mid_row;
-                    end
+            S_Finish_mid_row_last_chan: next_state <= S_Idle_last_chan;
+
+            S_Zero_padding_edge_first_last_row_last_chan: next_state <= S_Wait_saxis_tvalid_last_row_last_chan;
+
+            S_Wait_saxis_tvalid_last_row_last_chan: begin
+                if (m_axis_tready) next_state <= S_Streaming_last_row_last_chan;
+                else next_state <= S_Wait_saxis_tvalid_last_row_last_chan;
+            end
+
+            S_Streaming_last_row_last_chan: begin
+                if (linebuff_BRAM_counter_out > IMAGE_SIZE - 1) next_state <= S_Finish_mid_row_last_chan;
+                else begin
+                    if (m_axis_tready) next_state <= S_Streaming_last_row_last_chan;
+                    else next_state <= S_Wait_saxis_tvalid_last_row_last_chan;
                 end
+            end
 
-                S_Finish_mid_row: current_state <= S_Idle;
-
-                S_Zero_padding_edge_first_last_row: current_state <= S_Streaming_last_row;
-
-                S_Streaming_last_row: begin
-                    if (linebuff_BRAM_counter_out > IMAGE_SIZE - 1) current_state <= S_Finish_mid_row;
-                    else current_state <= S_Streaming_last_row;
-                end
-
-                S_Idle_last_chan: begin
-                    if (Stream_first_row) current_state <= S_Wait_saxis_tvalid_first_row_last_chan;
-                    else if (Stream_mid_row) current_state <= S_Zero_padding_edge_first_last_chan;
-                    else if (Stream_last_row) current_state <= S_Zero_padding_edge_first_last_row_last_chan;
-                    else current_state <= S_Idle_last_chan;
-                end
-
-                S_Wait_saxis_tvalid_first_row_last_chan: begin
-                    if (s_axis_tvalid && m_axis_tready) current_state <= S_Stream_first_row_last_chan;
-                    else current_state <= S_Wait_saxis_tvalid_first_row_last_chan;
-                end
-
-                S_Stream_first_row_last_chan: begin
-                    if (linebuff_BRAM_counter_out > IMAGE_SIZE - 1) current_state <= S_Idle_last_chan;
-                    else begin
-                        if (s_axis_tvalid && m_axis_tready) current_state <= S_Stream_first_row_last_chan;
-                        else current_state <= S_Wait_saxis_tvalid_first_row_last_chan;
-                    end
-                end
-
-                S_Zero_padding_edge_first_last_chan: current_state <= S_Wait_saxis_tvalid_mid_row_last_chan;
-
-                S_Wait_saxis_tvalid_mid_row_last_chan: begin
-                    if (s_axis_tvalid && m_axis_tready) current_state <= S_Stream_mid_row_last_chan;
-                    else current_state <= S_Wait_saxis_tvalid_mid_row_last_chan;
-                end
-
-                S_Stream_mid_row_last_chan: begin
-                    if (linebuff_BRAM_counter_out > IMAGE_SIZE - 1) current_state <= S_Finish_mid_row_last_chan;
-                    else begin
-                        if (s_axis_tvalid && m_axis_tready) current_state <= S_Stream_mid_row_last_chan;
-                        else current_state <= S_Wait_saxis_tvalid_mid_row_last_chan;
-                    end
-                end
-
-                S_Finish_mid_row_last_chan: current_state <= S_Idle_last_chan;
-
-                S_Zero_padding_edge_first_last_row_last_chan: current_state <= S_Wait_saxis_tvalid_last_row_last_chan;
-
-                S_Wait_saxis_tvalid_last_row_last_chan: begin
-                    if (m_axis_tready) current_state <= S_Streaming_last_row_last_chan;
-                    else current_state <= S_Wait_saxis_tvalid_last_row_last_chan;
-                end
-
-                S_Streaming_last_row_last_chan: begin
-                    if (linebuff_BRAM_counter_out > IMAGE_SIZE - 1) current_state <= S_Finish_mid_row_last_chan;
-                    else begin
-                        if (m_axis_tready) current_state <= S_Streaming_last_row_last_chan;
-                        else current_state <= S_Wait_saxis_tvalid_last_row_last_chan;
-                    end
-                end
-
-                default: current_state <= S_Reset;
-            endcase
-        end
+            default: next_state <= S_Reset;
+        endcase
     end
 
     // State output

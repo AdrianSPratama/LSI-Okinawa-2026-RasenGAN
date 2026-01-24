@@ -39,23 +39,24 @@ module pe_with_buffers_CU (
     output reg rsta_output_BRAM_counter
 );
     
-    parameter state_size = 4;
-    parameter S_Reset                                           = 4'd0,
-              S_Idle                                            = 4'd1,
-              S_Load_kernel_reg                                 = 4'd2,
-              S_PE_ready                                        = 4'd3,
-              S_Wait_output_valid_mid_row                       = 4'd4,
-              S_Writing_porta_output_BRAM_mid_row               = 4'd5,
-              S_Wait_output_valid_last_row                      = 4'd6,
-              S_Writing_porta_output_BRAM_last_row              = 4'd7,
-              S_Reset_porta_counter                             = 4'd8,
-              S_Idle_last_chan                                  = 4'd9,
-              S_PE_ready_last_chan                              = 4'd10,
-              S_Wait_output_valid_mid_row_last_chan             = 4'd11,
-              S_Writing_porta_output_BRAM_mid_row_last_chan     = 4'd12,
-              S_Wait_output_valid__last_row_last_chan           = 4'd13,
-              S_Writing_porta_output_BRAM__last_row_last_chan   = 4'd14,
-              S_Reset_porta_counter_m_axis_tlast                = 4'd15;
+    parameter state_size = 5;
+    parameter S_Reset                                           = 5'd0,
+              S_Idle                                            = 5'd1,
+              S_Load_kernel_reg                                 = 5'd2,
+              S_PE_ready                                        = 5'd3,
+              S_Wait_output_valid_mid_row                       = 5'd4,
+              S_Writing_porta_output_BRAM_mid_row               = 5'd5,
+              S_Wait_output_valid_last_row                      = 5'd6,
+              S_Writing_porta_output_BRAM_last_row              = 5'd7,
+              S_Reset_porta_counter                             = 5'd8,
+              S_Idle_last_chan                                  = 5'd9,
+              S_PE_ready_last_chan                              = 5'd10,
+              S_Wait_output_valid_mid_row_last_chan             = 5'd11,
+              S_Writing_porta_output_BRAM_mid_row_last_chan     = 5'd12,
+              S_Extend_m_axis_tvalid                            = 5'd13,
+              S_Wait_output_valid__last_row_last_chan           = 5'd14,
+              S_Writing_porta_output_BRAM__last_row_last_chan   = 5'd15,
+              S_Reset_porta_counter_m_axis_tlast                = 5'd16;
 
     reg [state_size-1:0] current_state, next_state;
 
@@ -127,12 +128,14 @@ module pe_with_buffers_CU (
             end
 
             S_Writing_porta_output_BRAM_mid_row_last_chan: begin
-                if (Done_1row) next_state <= S_Idle_last_chan;
+                if (Done_1row) next_state <= S_Extend_m_axis_tvalid;
                 else begin
                     if (Output_valid) next_state <= S_Writing_porta_output_BRAM_mid_row_last_chan;
                     else next_state <= S_Wait_output_valid_mid_row_last_chan;
                 end
             end
+
+            S_Extend_m_axis_tvalid: next_state <= S_Idle_last_chan;
 
             S_Wait_output_valid__last_row_last_chan: begin
                 if (Output_valid) next_state <= S_Writing_porta_output_BRAM__last_row_last_chan;
@@ -290,6 +293,8 @@ module pe_with_buffers_CU (
                     end
                 end
             end
+
+            S_Extend_m_axis_tvalid: m_axis_tvalid = 1;
 
             S_Wait_output_valid__last_row_last_chan: begin
                 if (Output_valid) begin

@@ -34,7 +34,7 @@ true_dual_port_bram #(
     .enb(enb_kernel_BRAM),    // Enable B (Active High)
     .web(1'b0),    // Write Enable B (Active High) not used
     .addrb(kernel_BRAM_addrb),  // Address B
-    .dinb(),   // Data In B not used
+    .dinb({KERNEL_WIDTH{1'b0}}),   // Data In B not used
     .doutb(kernel_BRAM_doutb)   // Data Out B
 );
 

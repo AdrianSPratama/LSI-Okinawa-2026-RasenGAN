@@ -98,7 +98,7 @@ module input_line_buffer_datapath #(
         .enb(enb_linebuff_BRAM),    // Enable B (Active High)
         .web(1'b0),    // Write Enable B (Active High) not used, always 0
         .addrb(linebuff_BRAM_counter_out_sliced),  // Address B
-        .dinb(),   // Data In B not used
+        .dinb({DATA_WIDTH{1'b0}}),   // Data In B not used
         .doutb(linebuff_n_1_doutb)   // Data Out B
     );
 
@@ -119,7 +119,7 @@ module input_line_buffer_datapath #(
         .enb(enb_linebuff_BRAM),    // Enable B (Active High)
         .web(1'b0),    // Write Enable B (Active High) not used, always 0
         .addrb(linebuff_BRAM_counter_out_sliced),  // Address B
-        .dinb(),   // Data In B not used
+        .dinb({DATA_WIDTH{1'b0}}),   // Data In B not used
         .doutb(linebuff_n_2_doutb)   // Data Out B
     );
 

@@ -12,7 +12,7 @@ module pe_with_buffers #(
     input wire signed [PIXEL_WIDTH-1:0] x20, x21, x22,
     input wire [9*KERNEL_WIDTH-1:0] kernel_flat,
     input wire signed [RESULT_WIDTH-1:0] bias,
-    output wire signed [RESULT_WIDTH-1:0] BRAM_doutb,
+    output wire signed [RESULT_WIDTH-1:0] accumulator_out,
 
     // Control signals
     // From inside this module
@@ -67,7 +67,7 @@ module pe_with_buffers #(
 
     // Assign addra_output_BRAM and addrb_output_BRAM
     assign addra_output_BRAM = a_output_BRAM_counter_out[13:0];
-    assign addrb_output_BRAM = addra_output_BRAM - 1;
+    assign addrb_output_BRAM = addra_output_BRAM;
 
     // Instantiate counters
     counter #(
@@ -139,7 +139,7 @@ module pe_with_buffers #(
 
         .kernel_flat(kernel_flat),
         .bias(bias),
-        .BRAM_doutb(BRAM_doutb),
+        .accumulator_out(accumulator_out),
 
         // Control signals
         .clk(clk),

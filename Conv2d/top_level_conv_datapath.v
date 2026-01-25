@@ -94,7 +94,7 @@ module top_level_conv_datapath #(
     wire signed [PIXEL_WIDTH-1:0] out_window_21;
     wire signed [PIXEL_WIDTH-1:0] out_window_22;
 
-    wire signed [47:0] output_BRAM_doutb;
+    wire signed [47:0] accumulator_out;
 
     // Assigns
     assign bias_padded = bias_in;
@@ -102,7 +102,7 @@ module top_level_conv_datapath #(
     assign kernel_BRAM_dina = s_axis_tdata[143:0];
     assign input_line_buffer_dina = s_axis_tdata[15:0];
 
-    assign m_axis_tdata = {{16{output_BRAM_doutb[47]}} ,output_BRAM_doutb};// For now assign m_axis_tdata to output_BRAM
+    assign m_axis_tdata = {{16{accumulator_out[47]}} ,accumulator_out};// For now assign m_axis_tdata to output_BRAM
 
     // Reg_last_chan
     reg Reg_last_chan;
@@ -222,7 +222,7 @@ module top_level_conv_datapath #(
         .x22(out_window_20),
         .kernel_flat(kernel_BRAM_doutb),
         .bias(bias_padded),
-        .BRAM_doutb(output_BRAM_doutb),
+        .accumulator_out(accumulator_out),
 
         // Control signals
         // From inside this module

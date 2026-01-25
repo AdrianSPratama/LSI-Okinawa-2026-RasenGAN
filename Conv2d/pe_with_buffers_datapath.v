@@ -11,7 +11,7 @@ module pe_with_buffers_datapath #(
     input wire signed [PIXEL_WIDTH-1:0] x20, x21, x22,
     input wire [9*KERNEL_WIDTH-1:0] kernel_flat,
     input wire signed [RESULT_WIDTH-1:0] bias,
-    output wire signed [RESULT_WIDTH-1:0] BRAM_doutb,
+    output wire signed [RESULT_WIDTH-1:0] accumulator_out,
 
     // Control signals
     input wire clk,
@@ -42,6 +42,9 @@ module pe_with_buffers_datapath #(
         .k20(kernel[6]), .k21(kernel[7]), .k22(kernel[8]),
         .result(result_mult_add)
     );
+
+    // Wires
+    wire signed [RESULT_WIDTH-1:0] BRAM_doutb;
 
     // Bagian kernel register
     reg signed [15:0] kernel [0:8]; // 9 kernel values of 16 bits each
@@ -74,10 +77,9 @@ module pe_with_buffers_datapath #(
     // Bagian mux pemilih jumlah bias
     wire signed [RESULT_WIDTH-1:0] BRAM_douta;
     wire signed [RESULT_WIDTH-1:0] in_2_accumulator;
-    assign in_2_accumulator = add_bias ? bias : BRAM_douta;
+    assign in_2_accumulator = add_bias ? bias : BRAM_doutb;
 
     // Bagian depan accumulator dina
-    wire signed [RESULT_WIDTH-1:0] accumulator_out;
     assign accumulator_out = result_mult_add + in_2_accumulator;
 
     // Bagian output BRAM, instantiate true dual-port BRAM
@@ -86,19 +88,19 @@ module pe_with_buffers_datapath #(
         .RAM_DEPTH(16384) // Depth for 128x128 output, address width auto adjusted by RAM_DEPTH
     ) output_BRAM (
         // Port A
-        .clka(~clk),
+        .clka(clk),
         .ena(ena_output_BRAM),
-        .wea(wea_output_BRAM),
+        .wea(wea_output_BRAM), 
         .addra(addra_output_BRAM),
-        .dina(accumulator_out),
+        .dina(accumulator_out), 
         .douta(BRAM_douta),
 
         // Port B
         .clkb(~clk),
         .enb(enb_output_BRAM),
-        .web(1'b0), // No write on port B
+        .web(1'b0), // No write on port A
         .addrb(addrb_output_BRAM),
-        .dinb( {RESULT_WIDTH{1'b0}} ), // No data input on port B
+        .dinb({RESULT_WIDTH{1'b0}}), // No data input on port B
         .doutb(BRAM_doutb)
     );
 

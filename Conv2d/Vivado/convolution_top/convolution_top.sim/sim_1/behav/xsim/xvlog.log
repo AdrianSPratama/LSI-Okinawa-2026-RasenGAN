@@ -1,0 +1,16 @@
+INFO: [VRFC 10-2263] Analyzing Verilog file "E:/ITB/Spesialisasi IC Design/VLSI/LSI Contest Okinawa 2026/Source Code/LSI-Okinawa-2026-RasenGAN/Conv2d/convolution_top.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module convolution_top
+INFO: [VRFC 10-2263] Analyzing Verilog file "E:/ITB/Spesialisasi IC Design/VLSI/LSI Contest Okinawa 2026/Source Code/LSI-Okinawa-2026-RasenGAN/Conv2d/convolution_top_CU.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module convolution_top_CU
+INFO: [VRFC 10-2263] Analyzing Verilog file "E:/ITB/Spesialisasi IC Design/VLSI/LSI Contest Okinawa 2026/Source Code/LSI-Okinawa-2026-RasenGAN/Conv2d/counter.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module counter
+INFO: [VRFC 10-2263] Analyzing Verilog file "E:/ITB/Spesialisasi IC Design/VLSI/LSI Contest Okinawa 2026/Source Code/LSI-Okinawa-2026-RasenGAN/Conv2d/multiplier_adder.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module multiplier_adder
+INFO: [VRFC 10-2263] Analyzing Verilog file "E:/ITB/Spesialisasi IC Design/VLSI/LSI Contest Okinawa 2026/Source Code/LSI-Okinawa-2026-RasenGAN/Conv2d/pe_with_buffers.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module pe_with_buffers
+INFO: [VRFC 10-2263] Analyzing Verilog file "E:/ITB/Spesialisasi IC Design/VLSI/LSI Contest Okinawa 2026/Source Code/LSI-Okinawa-2026-RasenGAN/Conv2d/true_dual_port_bram.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module true_dual_port_bram
+INFO: [VRFC 10-2263] Analyzing Verilog file "E:/ITB/Spesialisasi IC Design/VLSI/LSI Contest Okinawa 2026/Source Code/LSI-Okinawa-2026-RasenGAN/Conv2d/window_reg_3x3.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module window_reg_3x3
+INFO: [VRFC 10-2263] Analyzing Verilog file "E:/ITB/Spesialisasi IC Design/VLSI/LSI Contest Okinawa 2026/Source Code/LSI-Okinawa-2026-RasenGAN/Conv2d/tb_convolution_top_alt.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module tb_convolution_top_alt

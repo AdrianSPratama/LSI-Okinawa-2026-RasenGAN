@@ -1,0 +1,24 @@
+#-----------------------------------------------------------
+# Vivado v2025.1.1 (64-bit)
+# SW Build 6233196 on Thu Sep 11 21:27:30 MDT 2025
+# IP Build 6232796 on Fri Sep 12 01:46:16 MDT 2025
+# SharedData Build 6233195 on Thu Sep 11 17:56:43 MDT 2025
+# Start of session at: Sun Jan 11 13:56:20 2026
+# Process ID         : 20896
+# Current directory  : E:/ITB/Spesialisasi IC Design/VLSI/LSI Contest Okinawa 2026/Source Code/LSI-Okinawa-2026-RasenGAN/Conv2d/Vivado/convolution_top/convolution_top.runs/synth_1
+# Command line       : vivado.exe -log convolution_top.vds -product Vivado -mode batch -messageDb vivado.pb -notrace -source convolution_top.tcl
+# Log file           : E:/ITB/Spesialisasi IC Design/VLSI/LSI Contest Okinawa 2026/Source Code/LSI-Okinawa-2026-RasenGAN/Conv2d/Vivado/convolution_top/convolution_top.runs/synth_1/convolution_top.vds
+# Journal file       : E:/ITB/Spesialisasi IC Design/VLSI/LSI Contest Okinawa 2026/Source Code/LSI-Okinawa-2026-RasenGAN/Conv2d/Vivado/convolution_top/convolution_top.runs/synth_1\vivado.jou
+# Running On         : DESKTOP-9F6IRHU
+# Platform           : Windows Server 2016 or Windows 10
+# Operating System   : 26200
+# Processor Detail   : AMD Ryzen 5 5600H with Radeon Graphics         
+# CPU Frequency      : 3294 MHz
+# CPU Physical cores : 6
+# CPU Logical cores  : 12
+# Host memory        : 16539 MB
+# Swap memory        : 6442 MB
+# Total Virtual      : 22981 MB
+# Available Virtual  : 3262 MB
+#-----------------------------------------------------------
+source convolution_top.tcl -notrace

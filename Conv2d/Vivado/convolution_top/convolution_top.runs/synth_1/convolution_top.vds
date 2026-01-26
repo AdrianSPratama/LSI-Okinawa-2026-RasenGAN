@@ -1,0 +1,627 @@
+#-----------------------------------------------------------
+# Vivado v2025.1.1 (64-bit)
+# SW Build 6233196 on Thu Sep 11 21:27:30 MDT 2025
+# IP Build 6232796 on Fri Sep 12 01:46:16 MDT 2025
+# SharedData Build 6233195 on Thu Sep 11 17:56:43 MDT 2025
+# Start of session at: Sun Jan 11 13:56:20 2026
+# Process ID         : 20896
+# Current directory  : E:/ITB/Spesialisasi IC Design/VLSI/LSI Contest Okinawa 2026/Source Code/LSI-Okinawa-2026-RasenGAN/Conv2d/Vivado/convolution_top/convolution_top.runs/synth_1
+# Command line       : vivado.exe -log convolution_top.vds -product Vivado -mode batch -messageDb vivado.pb -notrace -source convolution_top.tcl
+# Log file           : E:/ITB/Spesialisasi IC Design/VLSI/LSI Contest Okinawa 2026/Source Code/LSI-Okinawa-2026-RasenGAN/Conv2d/Vivado/convolution_top/convolution_top.runs/synth_1/convolution_top.vds
+# Journal file       : E:/ITB/Spesialisasi IC Design/VLSI/LSI Contest Okinawa 2026/Source Code/LSI-Okinawa-2026-RasenGAN/Conv2d/Vivado/convolution_top/convolution_top.runs/synth_1\vivado.jou
+# Running On         : DESKTOP-9F6IRHU
+# Platform           : Windows Server 2016 or Windows 10
+# Operating System   : 26200
+# Processor Detail   : AMD Ryzen 5 5600H with Radeon Graphics         
+# CPU Frequency      : 3294 MHz
+# CPU Physical cores : 6
+# CPU Logical cores  : 12
+# Host memory        : 16539 MB
+# Swap memory        : 6442 MB
+# Total Virtual      : 22981 MB
+# Available Virtual  : 3262 MB
+#-----------------------------------------------------------
+source convolution_top.tcl -notrace
+create_project: Time (s): cpu = 00:00:11 ; elapsed = 00:00:08 . Memory (MB): peak = 496.188 ; gain = 216.824
+Command: read_checkpoint -auto_incremental -incremental {E:/ITB/Spesialisasi IC Design/VLSI/LSI Contest Okinawa 2026/Source Code/LSI-Okinawa-2026-RasenGAN/Conv2d/Vivado/convolution_top/convolution_top.srcs/utils_1/imports/synth_1/convolution_top.dcp}
+INFO: [Vivado 12-5825] Read reference checkpoint from E:/ITB/Spesialisasi IC Design/VLSI/LSI Contest Okinawa 2026/Source Code/LSI-Okinawa-2026-RasenGAN/Conv2d/Vivado/convolution_top/convolution_top.srcs/utils_1/imports/synth_1/convolution_top.dcp for incremental synthesis
+INFO: [Vivado 12-7989] Please ensure there are no constraint changes
+Command: synth_design -top convolution_top -part xc7z020clg400-1
+Starting synth_design
+Attempting to get a license for feature 'Synthesis' and/or device 'xc7z020'
+INFO: [Common 17-349] Got license for feature 'Synthesis' and/or device 'xc7z020'
+INFO: [Designutils 20-5440] No compile time benefit to using incremental synthesis; A full resynthesis will be run
+INFO: [Designutils 20-4379] Flow is switching to default flow due to incremental criteria not met. If you would like to alter this behaviour and have the flow terminate instead, please set the following parameter config_implementation {autoIncr.Synth.RejectBehavior Terminate}
+INFO: [Synth 8-7079] Multithreading enabled for synth_design using a maximum of 2 processes.
+INFO: [Synth 8-7078] Launching helper process for spawning children vivado processes
+INFO: [Synth 8-7075] Helper process launched with PID 20004
+---------------------------------------------------------------------------------
+Starting Synthesize : Time (s): cpu = 00:00:07 ; elapsed = 00:00:08 . Memory (MB): peak = 995.984 ; gain = 487.738
+---------------------------------------------------------------------------------
+INFO: [Synth 8-11241] undeclared symbol 'rstb_kernel_BRAM_addr_counter', assumed default net type 'wire' [E:/ITB/Spesialisasi IC Design/VLSI/LSI Contest Okinawa 2026/Source Code/LSI-Okinawa-2026-RasenGAN/Conv2d/convolution_top.v:50]
+INFO: [Synth 8-11241] undeclared symbol 'enb_kernel_BRAM_addr_counter', assumed default net type 'wire' [E:/ITB/Spesialisasi IC Design/VLSI/LSI Contest Okinawa 2026/Source Code/LSI-Okinawa-2026-RasenGAN/Conv2d/convolution_top.v:51]
+INFO: [Synth 8-11241] undeclared symbol 'rstb_window_BRAM_addr_counter', assumed default net type 'wire' [E:/ITB/Spesialisasi IC Design/VLSI/LSI Contest Okinawa 2026/Source Code/LSI-Okinawa-2026-RasenGAN/Conv2d/convolution_top.v:60]
+INFO: [Synth 8-11241] undeclared symbol 'enb_window_BRAM_addr_counter', assumed default net type 'wire' [E:/ITB/Spesialisasi IC Design/VLSI/LSI Contest Okinawa 2026/Source Code/LSI-Okinawa-2026-RasenGAN/Conv2d/convolution_top.v:61]
+INFO: [Synth 8-11241] undeclared symbol 'window_BRAM_counter_out', assumed default net type 'wire' [E:/ITB/Spesialisasi IC Design/VLSI/LSI Contest Okinawa 2026/Source Code/LSI-Okinawa-2026-RasenGAN/Conv2d/convolution_top.v:62]
+INFO: [Synth 8-11241] undeclared symbol 'rsta_output_BRAM_addr_counter', assumed default net type 'wire' [E:/ITB/Spesialisasi IC Design/VLSI/LSI Contest Okinawa 2026/Source Code/LSI-Okinawa-2026-RasenGAN/Conv2d/convolution_top.v:70]
+INFO: [Synth 8-11241] undeclared symbol 'ena_output_BRAM_addr_counter', assumed default net type 'wire' [E:/ITB/Spesialisasi IC Design/VLSI/LSI Contest Okinawa 2026/Source Code/LSI-Okinawa-2026-RasenGAN/Conv2d/convolution_top.v:71]
+INFO: [Synth 8-11241] undeclared symbol 'a_output_BRAM_counter_out', assumed default net type 'wire' [E:/ITB/Spesialisasi IC Design/VLSI/LSI Contest Okinawa 2026/Source Code/LSI-Okinawa-2026-RasenGAN/Conv2d/convolution_top.v:72]
+INFO: [Synth 8-11241] undeclared symbol 'rstb_output_BRAM_addr_counter', assumed default net type 'wire' [E:/ITB/Spesialisasi IC Design/VLSI/LSI Contest Okinawa 2026/Source Code/LSI-Okinawa-2026-RasenGAN/Conv2d/convolution_top.v:80]
+INFO: [Synth 8-11241] undeclared symbol 'enb_output_BRAM_addr_counter', assumed default net type 'wire' [E:/ITB/Spesialisasi IC Design/VLSI/LSI Contest Okinawa 2026/Source Code/LSI-Okinawa-2026-RasenGAN/Conv2d/convolution_top.v:81]
+INFO: [Synth 8-11241] undeclared symbol 'b_output_BRAM_counter_out', assumed default net type 'wire' [E:/ITB/Spesialisasi IC Design/VLSI/LSI Contest Okinawa 2026/Source Code/LSI-Okinawa-2026-RasenGAN/Conv2d/convolution_top.v:82]
+INFO: [Synth 8-11241] undeclared symbol 'rst_in_row_counter', assumed default net type 'wire' [E:/ITB/Spesialisasi IC Design/VLSI/LSI Contest Okinawa 2026/Source Code/LSI-Okinawa-2026-RasenGAN/Conv2d/convolution_top.v:91]
+INFO: [Synth 8-11241] undeclared symbol 'en_in_row_counter', assumed default net type 'wire' [E:/ITB/Spesialisasi IC Design/VLSI/LSI Contest Okinawa 2026/Source Code/LSI-Okinawa-2026-RasenGAN/Conv2d/convolution_top.v:92]
+INFO: [Synth 8-11241] undeclared symbol 'rst_in_col_counter', assumed default net type 'wire' [E:/ITB/Spesialisasi IC Design/VLSI/LSI Contest Okinawa 2026/Source Code/LSI-Okinawa-2026-RasenGAN/Conv2d/convolution_top.v:102]
+INFO: [Synth 8-11241] undeclared symbol 'en_in_col_counter', assumed default net type 'wire' [E:/ITB/Spesialisasi IC Design/VLSI/LSI Contest Okinawa 2026/Source Code/LSI-Okinawa-2026-RasenGAN/Conv2d/convolution_top.v:103]
+WARNING: [Synth 8-8895] 'rstb_kernel_BRAM_addr_counter' is already implicitly declared on line 50 [E:/ITB/Spesialisasi IC Design/VLSI/LSI Contest Okinawa 2026/Source Code/LSI-Okinawa-2026-RasenGAN/Conv2d/convolution_top.v:109]
+WARNING: [Synth 8-8895] 'enb_kernel_BRAM_addr_counter' is already implicitly declared on line 51 [E:/ITB/Spesialisasi IC Design/VLSI/LSI Contest Okinawa 2026/Source Code/LSI-Okinawa-2026-RasenGAN/Conv2d/convolution_top.v:110]
+WARNING: [Synth 8-8895] 'rstb_window_BRAM_addr_counter' is already implicitly declared on line 60 [E:/ITB/Spesialisasi IC Design/VLSI/LSI Contest Okinawa 2026/Source Code/LSI-Okinawa-2026-RasenGAN/Conv2d/convolution_top.v:127]
+WARNING: [Synth 8-8895] 'enb_window_BRAM_addr_counter' is already implicitly declared on line 61 [E:/ITB/Spesialisasi IC Design/VLSI/LSI Contest Okinawa 2026/Source Code/LSI-Okinawa-2026-RasenGAN/Conv2d/convolution_top.v:128]
+WARNING: [Synth 8-8895] 'rsta_output_BRAM_addr_counter' is already implicitly declared on line 70 [E:/ITB/Spesialisasi IC Design/VLSI/LSI Contest Okinawa 2026/Source Code/LSI-Okinawa-2026-RasenGAN/Conv2d/convolution_top.v:133]
+WARNING: [Synth 8-8895] 'ena_output_BRAM_addr_counter' is already implicitly declared on line 71 [E:/ITB/Spesialisasi IC Design/VLSI/LSI Contest Okinawa 2026/Source Code/LSI-Okinawa-2026-RasenGAN/Conv2d/convolution_top.v:134]
+WARNING: [Synth 8-8895] 'rstb_output_BRAM_addr_counter' is already implicitly declared on line 80 [E:/ITB/Spesialisasi IC Design/VLSI/LSI Contest Okinawa 2026/Source Code/LSI-Okinawa-2026-RasenGAN/Conv2d/convolution_top.v:135]
+WARNING: [Synth 8-8895] 'enb_output_BRAM_addr_counter' is already implicitly declared on line 81 [E:/ITB/Spesialisasi IC Design/VLSI/LSI Contest Okinawa 2026/Source Code/LSI-Okinawa-2026-RasenGAN/Conv2d/convolution_top.v:136]
+WARNING: [Synth 8-8895] 'en_in_row_counter' is already implicitly declared on line 92 [E:/ITB/Spesialisasi IC Design/VLSI/LSI Contest Okinawa 2026/Source Code/LSI-Okinawa-2026-RasenGAN/Conv2d/convolution_top.v:146]
+WARNING: [Synth 8-8895] 'en_in_col_counter' is already implicitly declared on line 103 [E:/ITB/Spesialisasi IC Design/VLSI/LSI Contest Okinawa 2026/Source Code/LSI-Okinawa-2026-RasenGAN/Conv2d/convolution_top.v:147]
+WARNING: [Synth 8-8895] 'rst_in_row_counter' is already implicitly declared on line 91 [E:/ITB/Spesialisasi IC Design/VLSI/LSI Contest Okinawa 2026/Source Code/LSI-Okinawa-2026-RasenGAN/Conv2d/convolution_top.v:148]
+WARNING: [Synth 8-8895] 'rst_in_col_counter' is already implicitly declared on line 102 [E:/ITB/Spesialisasi IC Design/VLSI/LSI Contest Okinawa 2026/Source Code/LSI-Okinawa-2026-RasenGAN/Conv2d/convolution_top.v:149]
+INFO: [Synth 8-6157] synthesizing module 'convolution_top' [E:/ITB/Spesialisasi IC Design/VLSI/LSI Contest Okinawa 2026/Source Code/LSI-Okinawa-2026-RasenGAN/Conv2d/convolution_top.v:2]
+INFO: [Synth 8-6157] synthesizing module 'counter' [E:/ITB/Spesialisasi IC Design/VLSI/LSI Contest Okinawa 2026/Source Code/LSI-Okinawa-2026-RasenGAN/Conv2d/counter.v:1]
+	Parameter BITWIDTH bound to: 8 - type: integer 
+INFO: [Synth 8-6155] done synthesizing module 'counter' (0#1) [E:/ITB/Spesialisasi IC Design/VLSI/LSI Contest Okinawa 2026/Source Code/LSI-Okinawa-2026-RasenGAN/Conv2d/counter.v:1]
+INFO: [Synth 8-6157] synthesizing module 'counter__parameterized0' [E:/ITB/Spesialisasi IC Design/VLSI/LSI Contest Okinawa 2026/Source Code/LSI-Okinawa-2026-RasenGAN/Conv2d/counter.v:1]
+	Parameter BITWIDTH bound to: 7 - type: integer 
+INFO: [Synth 8-6155] done synthesizing module 'counter__parameterized0' (0#1) [E:/ITB/Spesialisasi IC Design/VLSI/LSI Contest Okinawa 2026/Source Code/LSI-Okinawa-2026-RasenGAN/Conv2d/counter.v:1]
+WARNING: [Synth 8-689] width (1) of port connection 'counter_out' does not match port width (7) of module 'counter__parameterized0' [E:/ITB/Spesialisasi IC Design/VLSI/LSI Contest Okinawa 2026/Source Code/LSI-Okinawa-2026-RasenGAN/Conv2d/convolution_top.v:62]
+INFO: [Synth 8-6157] synthesizing module 'counter__parameterized1' [E:/ITB/Spesialisasi IC Design/VLSI/LSI Contest Okinawa 2026/Source Code/LSI-Okinawa-2026-RasenGAN/Conv2d/counter.v:1]
+	Parameter BITWIDTH bound to: 14 - type: integer 
+INFO: [Synth 8-6155] done synthesizing module 'counter__parameterized1' (0#1) [E:/ITB/Spesialisasi IC Design/VLSI/LSI Contest Okinawa 2026/Source Code/LSI-Okinawa-2026-RasenGAN/Conv2d/counter.v:1]
+WARNING: [Synth 8-689] width (1) of port connection 'counter_out' does not match port width (14) of module 'counter__parameterized1' [E:/ITB/Spesialisasi IC Design/VLSI/LSI Contest Okinawa 2026/Source Code/LSI-Okinawa-2026-RasenGAN/Conv2d/convolution_top.v:72]
+WARNING: [Synth 8-689] width (1) of port connection 'counter_out' does not match port width (14) of module 'counter__parameterized1' [E:/ITB/Spesialisasi IC Design/VLSI/LSI Contest Okinawa 2026/Source Code/LSI-Okinawa-2026-RasenGAN/Conv2d/convolution_top.v:82]
+INFO: [Synth 8-6157] synthesizing module 'convolution_top_CU' [E:/ITB/Spesialisasi IC Design/VLSI/LSI Contest Okinawa 2026/Source Code/LSI-Okinawa-2026-RasenGAN/Conv2d/convolution_top_CU.v:1]
+WARNING: [Synth 8-567] referenced signal 'kernel_BRAM_counter_out' should be on the sensitivity list [E:/ITB/Spesialisasi IC Design/VLSI/LSI Contest Okinawa 2026/Source Code/LSI-Okinawa-2026-RasenGAN/Conv2d/convolution_top_CU.v:299]
+WARNING: [Synth 8-567] referenced signal 'in_col_counter' should be on the sensitivity list [E:/ITB/Spesialisasi IC Design/VLSI/LSI Contest Okinawa 2026/Source Code/LSI-Okinawa-2026-RasenGAN/Conv2d/convolution_top_CU.v:299]
+WARNING: [Synth 8-567] referenced signal 'ena_output_BRAM_z_1' should be on the sensitivity list [E:/ITB/Spesialisasi IC Design/VLSI/LSI Contest Okinawa 2026/Source Code/LSI-Okinawa-2026-RasenGAN/Conv2d/convolution_top_CU.v:299]
+WARNING: [Synth 8-567] referenced signal 'ena_output_BRAM_addr_counter_z_1' should be on the sensitivity list [E:/ITB/Spesialisasi IC Design/VLSI/LSI Contest Okinawa 2026/Source Code/LSI-Okinawa-2026-RasenGAN/Conv2d/convolution_top_CU.v:299]
+WARNING: [Synth 8-567] referenced signal 'rsta_output_BRAM_addr_counter_z_1' should be on the sensitivity list [E:/ITB/Spesialisasi IC Design/VLSI/LSI Contest Okinawa 2026/Source Code/LSI-Okinawa-2026-RasenGAN/Conv2d/convolution_top_CU.v:299]
+INFO: [Synth 8-6155] done synthesizing module 'convolution_top_CU' (0#1) [E:/ITB/Spesialisasi IC Design/VLSI/LSI Contest Okinawa 2026/Source Code/LSI-Okinawa-2026-RasenGAN/Conv2d/convolution_top_CU.v:1]
+WARNING: [Synth 8-689] width (1) of port connection 'window_BRAM_counter_out' does not match port width (7) of module 'convolution_top_CU' [E:/ITB/Spesialisasi IC Design/VLSI/LSI Contest Okinawa 2026/Source Code/LSI-Okinawa-2026-RasenGAN/Conv2d/convolution_top.v:160]
+WARNING: [Synth 8-689] width (1) of port connection 'a_output_BRAM_counter_out' does not match port width (14) of module 'convolution_top_CU' [E:/ITB/Spesialisasi IC Design/VLSI/LSI Contest Okinawa 2026/Source Code/LSI-Okinawa-2026-RasenGAN/Conv2d/convolution_top.v:161]
+WARNING: [Synth 8-689] width (1) of port connection 'b_output_BRAM_counter_out' does not match port width (14) of module 'convolution_top_CU' [E:/ITB/Spesialisasi IC Design/VLSI/LSI Contest Okinawa 2026/Source Code/LSI-Okinawa-2026-RasenGAN/Conv2d/convolution_top.v:162]
+INFO: [Synth 8-6157] synthesizing module 'true_dual_port_bram' [E:/ITB/Spesialisasi IC Design/VLSI/LSI Contest Okinawa 2026/Source Code/LSI-Okinawa-2026-RasenGAN/Conv2d/true_dual_port_bram.v:3]
+	Parameter RAM_WIDTH bound to: 16 - type: integer 
+	Parameter RAM_DEPTH bound to: 128 - type: integer 
+INFO: [Synth 8-6155] done synthesizing module 'true_dual_port_bram' (0#1) [E:/ITB/Spesialisasi IC Design/VLSI/LSI Contest Okinawa 2026/Source Code/LSI-Okinawa-2026-RasenGAN/Conv2d/true_dual_port_bram.v:3]
+WARNING: [Synth 8-689] width (1) of port connection 'addra' does not match port width (7) of module 'true_dual_port_bram' [E:/ITB/Spesialisasi IC Design/VLSI/LSI Contest Okinawa 2026/Source Code/LSI-Okinawa-2026-RasenGAN/Conv2d/convolution_top.v:232]
+WARNING: [Synth 8-689] width (1) of port connection 'addrb' does not match port width (7) of module 'true_dual_port_bram' [E:/ITB/Spesialisasi IC Design/VLSI/LSI Contest Okinawa 2026/Source Code/LSI-Okinawa-2026-RasenGAN/Conv2d/convolution_top.v:240]
+WARNING: [Synth 8-689] width (1) of port connection 'addra' does not match port width (7) of module 'true_dual_port_bram' [E:/ITB/Spesialisasi IC Design/VLSI/LSI Contest Okinawa 2026/Source Code/LSI-Okinawa-2026-RasenGAN/Conv2d/convolution_top.v:254]
+WARNING: [Synth 8-689] width (1) of port connection 'addrb' does not match port width (7) of module 'true_dual_port_bram' [E:/ITB/Spesialisasi IC Design/VLSI/LSI Contest Okinawa 2026/Source Code/LSI-Okinawa-2026-RasenGAN/Conv2d/convolution_top.v:262]
+INFO: [Synth 8-6157] synthesizing module 'window_reg_3x3' [E:/ITB/Spesialisasi IC Design/VLSI/LSI Contest Okinawa 2026/Source Code/LSI-Okinawa-2026-RasenGAN/Conv2d/window_reg_3x3.v:1]
+	Parameter DATA_WIDTH bound to: 16 - type: integer 
+INFO: [Synth 8-6155] done synthesizing module 'window_reg_3x3' (0#1) [E:/ITB/Spesialisasi IC Design/VLSI/LSI Contest Okinawa 2026/Source Code/LSI-Okinawa-2026-RasenGAN/Conv2d/window_reg_3x3.v:1]
+INFO: [Synth 8-6157] synthesizing module 'pe_with_buffers' [E:/ITB/Spesialisasi IC Design/VLSI/LSI Contest Okinawa 2026/Source Code/LSI-Okinawa-2026-RasenGAN/Conv2d/pe_with_buffers.v:1]
+INFO: [Synth 8-6157] synthesizing module 'multiplier_adder' [E:/ITB/Spesialisasi IC Design/VLSI/LSI Contest Okinawa 2026/Source Code/LSI-Okinawa-2026-RasenGAN/Conv2d/multiplier_adder.v:1]
+	Parameter PIXEL_WIDTH bound to: 16 - type: integer 
+	Parameter KERNEL_WIDTH bound to: 16 - type: integer 
+	Parameter RESULT_WIDTH bound to: 48 - type: integer 
+INFO: [Synth 8-6155] done synthesizing module 'multiplier_adder' (0#1) [E:/ITB/Spesialisasi IC Design/VLSI/LSI Contest Okinawa 2026/Source Code/LSI-Okinawa-2026-RasenGAN/Conv2d/multiplier_adder.v:1]
+INFO: [Synth 8-6157] synthesizing module 'true_dual_port_bram__parameterized0' [E:/ITB/Spesialisasi IC Design/VLSI/LSI Contest Okinawa 2026/Source Code/LSI-Okinawa-2026-RasenGAN/Conv2d/true_dual_port_bram.v:3]
+	Parameter RAM_WIDTH bound to: 48 - type: integer 
+	Parameter RAM_DEPTH bound to: 16384 - type: integer 
+INFO: [Synth 8-6155] done synthesizing module 'true_dual_port_bram__parameterized0' (0#1) [E:/ITB/Spesialisasi IC Design/VLSI/LSI Contest Okinawa 2026/Source Code/LSI-Okinawa-2026-RasenGAN/Conv2d/true_dual_port_bram.v:3]
+INFO: [Synth 8-6155] done synthesizing module 'pe_with_buffers' (0#1) [E:/ITB/Spesialisasi IC Design/VLSI/LSI Contest Okinawa 2026/Source Code/LSI-Okinawa-2026-RasenGAN/Conv2d/pe_with_buffers.v:1]
+WARNING: [Synth 8-689] width (256) of port connection 'kernel_flat' does not match port width (144) of module 'pe_with_buffers' [E:/ITB/Spesialisasi IC Design/VLSI/LSI Contest Okinawa 2026/Source Code/LSI-Okinawa-2026-RasenGAN/Conv2d/convolution_top.v:353]
+WARNING: [Synth 8-689] width (1) of port connection 'addra_output_BRAM' does not match port width (14) of module 'pe_with_buffers' [E:/ITB/Spesialisasi IC Design/VLSI/LSI Contest Okinawa 2026/Source Code/LSI-Okinawa-2026-RasenGAN/Conv2d/convolution_top.v:361]
+WARNING: [Synth 8-689] width (1) of port connection 'addrb_output_BRAM' does not match port width (14) of module 'pe_with_buffers' [E:/ITB/Spesialisasi IC Design/VLSI/LSI Contest Okinawa 2026/Source Code/LSI-Okinawa-2026-RasenGAN/Conv2d/convolution_top.v:362]
+INFO: [Synth 8-6155] done synthesizing module 'convolution_top' (0#1) [E:/ITB/Spesialisasi IC Design/VLSI/LSI Contest Okinawa 2026/Source Code/LSI-Okinawa-2026-RasenGAN/Conv2d/convolution_top.v:2]
+WARNING: [Synth 8-7129] Port window_BRAM_counter_out[6] in module convolution_top_CU is either unconnected or has no load
+WARNING: [Synth 8-7129] Port window_BRAM_counter_out[5] in module convolution_top_CU is either unconnected or has no load
+WARNING: [Synth 8-7129] Port window_BRAM_counter_out[4] in module convolution_top_CU is either unconnected or has no load
+WARNING: [Synth 8-7129] Port window_BRAM_counter_out[3] in module convolution_top_CU is either unconnected or has no load
+WARNING: [Synth 8-7129] Port window_BRAM_counter_out[2] in module convolution_top_CU is either unconnected or has no load
+WARNING: [Synth 8-7129] Port window_BRAM_counter_out[1] in module convolution_top_CU is either unconnected or has no load
+WARNING: [Synth 8-7129] Port window_BRAM_counter_out[0] in module convolution_top_CU is either unconnected or has no load
+WARNING: [Synth 8-7129] Port a_output_BRAM_counter_out[13] in module convolution_top_CU is either unconnected or has no load
+WARNING: [Synth 8-7129] Port a_output_BRAM_counter_out[12] in module convolution_top_CU is either unconnected or has no load
+WARNING: [Synth 8-7129] Port a_output_BRAM_counter_out[11] in module convolution_top_CU is either unconnected or has no load
+WARNING: [Synth 8-7129] Port a_output_BRAM_counter_out[10] in module convolution_top_CU is either unconnected or has no load
+WARNING: [Synth 8-7129] Port a_output_BRAM_counter_out[9] in module convolution_top_CU is either unconnected or has no load
+WARNING: [Synth 8-7129] Port a_output_BRAM_counter_out[8] in module convolution_top_CU is either unconnected or has no load
+WARNING: [Synth 8-7129] Port a_output_BRAM_counter_out[7] in module convolution_top_CU is either unconnected or has no load
+WARNING: [Synth 8-7129] Port a_output_BRAM_counter_out[6] in module convolution_top_CU is either unconnected or has no load
+WARNING: [Synth 8-7129] Port a_output_BRAM_counter_out[5] in module convolution_top_CU is either unconnected or has no load
+WARNING: [Synth 8-7129] Port a_output_BRAM_counter_out[4] in module convolution_top_CU is either unconnected or has no load
+WARNING: [Synth 8-7129] Port a_output_BRAM_counter_out[3] in module convolution_top_CU is either unconnected or has no load
+WARNING: [Synth 8-7129] Port a_output_BRAM_counter_out[2] in module convolution_top_CU is either unconnected or has no load
+WARNING: [Synth 8-7129] Port a_output_BRAM_counter_out[1] in module convolution_top_CU is either unconnected or has no load
+WARNING: [Synth 8-7129] Port a_output_BRAM_counter_out[0] in module convolution_top_CU is either unconnected or has no load
+WARNING: [Synth 8-7129] Port b_output_BRAM_counter_out[13] in module convolution_top_CU is either unconnected or has no load
+WARNING: [Synth 8-7129] Port b_output_BRAM_counter_out[12] in module convolution_top_CU is either unconnected or has no load
+WARNING: [Synth 8-7129] Port b_output_BRAM_counter_out[11] in module convolution_top_CU is either unconnected or has no load
+WARNING: [Synth 8-7129] Port b_output_BRAM_counter_out[10] in module convolution_top_CU is either unconnected or has no load
+WARNING: [Synth 8-7129] Port b_output_BRAM_counter_out[9] in module convolution_top_CU is either unconnected or has no load
+WARNING: [Synth 8-7129] Port b_output_BRAM_counter_out[8] in module convolution_top_CU is either unconnected or has no load
+WARNING: [Synth 8-7129] Port b_output_BRAM_counter_out[7] in module convolution_top_CU is either unconnected or has no load
+WARNING: [Synth 8-7129] Port b_output_BRAM_counter_out[6] in module convolution_top_CU is either unconnected or has no load
+WARNING: [Synth 8-7129] Port b_output_BRAM_counter_out[5] in module convolution_top_CU is either unconnected or has no load
+WARNING: [Synth 8-7129] Port b_output_BRAM_counter_out[4] in module convolution_top_CU is either unconnected or has no load
+WARNING: [Synth 8-7129] Port b_output_BRAM_counter_out[3] in module convolution_top_CU is either unconnected or has no load
+WARNING: [Synth 8-7129] Port b_output_BRAM_counter_out[2] in module convolution_top_CU is either unconnected or has no load
+WARNING: [Synth 8-7129] Port b_output_BRAM_counter_out[1] in module convolution_top_CU is either unconnected or has no load
+WARNING: [Synth 8-7129] Port b_output_BRAM_counter_out[0] in module convolution_top_CU is either unconnected or has no load
+WARNING: [Synth 8-7129] Port s_axis_tlast in module convolution_top_CU is either unconnected or has no load
+WARNING: [Synth 8-7129] Port kernel_BRAM_doutb[255] in module convolution_top is either unconnected or has no load
+WARNING: [Synth 8-7129] Port kernel_BRAM_doutb[254] in module convolution_top is either unconnected or has no load
+WARNING: [Synth 8-7129] Port kernel_BRAM_doutb[253] in module convolution_top is either unconnected or has no load
+WARNING: [Synth 8-7129] Port kernel_BRAM_doutb[252] in module convolution_top is either unconnected or has no load
+WARNING: [Synth 8-7129] Port kernel_BRAM_doutb[251] in module convolution_top is either unconnected or has no load
+WARNING: [Synth 8-7129] Port kernel_BRAM_doutb[250] in module convolution_top is either unconnected or has no load
+WARNING: [Synth 8-7129] Port kernel_BRAM_doutb[249] in module convolution_top is either unconnected or has no load
+WARNING: [Synth 8-7129] Port kernel_BRAM_doutb[248] in module convolution_top is either unconnected or has no load
+WARNING: [Synth 8-7129] Port kernel_BRAM_doutb[247] in module convolution_top is either unconnected or has no load
+WARNING: [Synth 8-7129] Port kernel_BRAM_doutb[246] in module convolution_top is either unconnected or has no load
+WARNING: [Synth 8-7129] Port kernel_BRAM_doutb[245] in module convolution_top is either unconnected or has no load
+WARNING: [Synth 8-7129] Port kernel_BRAM_doutb[244] in module convolution_top is either unconnected or has no load
+WARNING: [Synth 8-7129] Port kernel_BRAM_doutb[243] in module convolution_top is either unconnected or has no load
+WARNING: [Synth 8-7129] Port kernel_BRAM_doutb[242] in module convolution_top is either unconnected or has no load
+WARNING: [Synth 8-7129] Port kernel_BRAM_doutb[241] in module convolution_top is either unconnected or has no load
+WARNING: [Synth 8-7129] Port kernel_BRAM_doutb[240] in module convolution_top is either unconnected or has no load
+WARNING: [Synth 8-7129] Port kernel_BRAM_doutb[239] in module convolution_top is either unconnected or has no load
+WARNING: [Synth 8-7129] Port kernel_BRAM_doutb[238] in module convolution_top is either unconnected or has no load
+WARNING: [Synth 8-7129] Port kernel_BRAM_doutb[237] in module convolution_top is either unconnected or has no load
+WARNING: [Synth 8-7129] Port kernel_BRAM_doutb[236] in module convolution_top is either unconnected or has no load
+WARNING: [Synth 8-7129] Port kernel_BRAM_doutb[235] in module convolution_top is either unconnected or has no load
+WARNING: [Synth 8-7129] Port kernel_BRAM_doutb[234] in module convolution_top is either unconnected or has no load
+WARNING: [Synth 8-7129] Port kernel_BRAM_doutb[233] in module convolution_top is either unconnected or has no load
+WARNING: [Synth 8-7129] Port kernel_BRAM_doutb[232] in module convolution_top is either unconnected or has no load
+WARNING: [Synth 8-7129] Port kernel_BRAM_doutb[231] in module convolution_top is either unconnected or has no load
+WARNING: [Synth 8-7129] Port kernel_BRAM_doutb[230] in module convolution_top is either unconnected or has no load
+WARNING: [Synth 8-7129] Port kernel_BRAM_doutb[229] in module convolution_top is either unconnected or has no load
+WARNING: [Synth 8-7129] Port kernel_BRAM_doutb[228] in module convolution_top is either unconnected or has no load
+WARNING: [Synth 8-7129] Port kernel_BRAM_doutb[227] in module convolution_top is either unconnected or has no load
+WARNING: [Synth 8-7129] Port kernel_BRAM_doutb[226] in module convolution_top is either unconnected or has no load
+WARNING: [Synth 8-7129] Port kernel_BRAM_doutb[225] in module convolution_top is either unconnected or has no load
+WARNING: [Synth 8-7129] Port kernel_BRAM_doutb[224] in module convolution_top is either unconnected or has no load
+WARNING: [Synth 8-7129] Port kernel_BRAM_doutb[223] in module convolution_top is either unconnected or has no load
+WARNING: [Synth 8-7129] Port kernel_BRAM_doutb[222] in module convolution_top is either unconnected or has no load
+WARNING: [Synth 8-7129] Port kernel_BRAM_doutb[221] in module convolution_top is either unconnected or has no load
+WARNING: [Synth 8-7129] Port kernel_BRAM_doutb[220] in module convolution_top is either unconnected or has no load
+WARNING: [Synth 8-7129] Port kernel_BRAM_doutb[219] in module convolution_top is either unconnected or has no load
+WARNING: [Synth 8-7129] Port kernel_BRAM_doutb[218] in module convolution_top is either unconnected or has no load
+WARNING: [Synth 8-7129] Port kernel_BRAM_doutb[217] in module convolution_top is either unconnected or has no load
+WARNING: [Synth 8-7129] Port kernel_BRAM_doutb[216] in module convolution_top is either unconnected or has no load
+WARNING: [Synth 8-7129] Port kernel_BRAM_doutb[215] in module convolution_top is either unconnected or has no load
+WARNING: [Synth 8-7129] Port kernel_BRAM_doutb[214] in module convolution_top is either unconnected or has no load
+WARNING: [Synth 8-7129] Port kernel_BRAM_doutb[213] in module convolution_top is either unconnected or has no load
+WARNING: [Synth 8-7129] Port kernel_BRAM_doutb[212] in module convolution_top is either unconnected or has no load
+WARNING: [Synth 8-7129] Port kernel_BRAM_doutb[211] in module convolution_top is either unconnected or has no load
+WARNING: [Synth 8-7129] Port kernel_BRAM_doutb[210] in module convolution_top is either unconnected or has no load
+WARNING: [Synth 8-7129] Port kernel_BRAM_doutb[209] in module convolution_top is either unconnected or has no load
+WARNING: [Synth 8-7129] Port kernel_BRAM_doutb[208] in module convolution_top is either unconnected or has no load
+WARNING: [Synth 8-7129] Port kernel_BRAM_doutb[207] in module convolution_top is either unconnected or has no load
+WARNING: [Synth 8-7129] Port kernel_BRAM_doutb[206] in module convolution_top is either unconnected or has no load
+WARNING: [Synth 8-7129] Port kernel_BRAM_doutb[205] in module convolution_top is either unconnected or has no load
+WARNING: [Synth 8-7129] Port kernel_BRAM_doutb[204] in module convolution_top is either unconnected or has no load
+WARNING: [Synth 8-7129] Port kernel_BRAM_doutb[203] in module convolution_top is either unconnected or has no load
+WARNING: [Synth 8-7129] Port kernel_BRAM_doutb[202] in module convolution_top is either unconnected or has no load
+WARNING: [Synth 8-7129] Port kernel_BRAM_doutb[201] in module convolution_top is either unconnected or has no load
+WARNING: [Synth 8-7129] Port kernel_BRAM_doutb[200] in module convolution_top is either unconnected or has no load
+WARNING: [Synth 8-7129] Port kernel_BRAM_doutb[199] in module convolution_top is either unconnected or has no load
+WARNING: [Synth 8-7129] Port kernel_BRAM_doutb[198] in module convolution_top is either unconnected or has no load
+WARNING: [Synth 8-7129] Port kernel_BRAM_doutb[197] in module convolution_top is either unconnected or has no load
+WARNING: [Synth 8-7129] Port kernel_BRAM_doutb[196] in module convolution_top is either unconnected or has no load
+WARNING: [Synth 8-7129] Port kernel_BRAM_doutb[195] in module convolution_top is either unconnected or has no load
+WARNING: [Synth 8-7129] Port kernel_BRAM_doutb[194] in module convolution_top is either unconnected or has no load
+WARNING: [Synth 8-7129] Port kernel_BRAM_doutb[193] in module convolution_top is either unconnected or has no load
+WARNING: [Synth 8-7129] Port kernel_BRAM_doutb[192] in module convolution_top is either unconnected or has no load
+INFO: [Common 17-14] Message 'Synth 8-7129' appears 100 times and further instances of the messages will be disabled. Use the Tcl command set_msg_config to change the current settings.
+---------------------------------------------------------------------------------
+Finished Synthesize : Time (s): cpu = 00:00:09 ; elapsed = 00:00:10 . Memory (MB): peak = 1126.469 ; gain = 618.223
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Constraint Validation : Time (s): cpu = 00:00:10 ; elapsed = 00:00:11 . Memory (MB): peak = 1126.469 ; gain = 618.223
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Loading Part and Timing Information
+---------------------------------------------------------------------------------
+Loading part: xc7z020clg400-1
+---------------------------------------------------------------------------------
+INFO: [Device 21-403] Loading part xc7z020clg400-1
+Finished Loading Part and Timing Information : Time (s): cpu = 00:00:10 ; elapsed = 00:00:11 . Memory (MB): peak = 1126.469 ; gain = 618.223
+---------------------------------------------------------------------------------
+INFO: [Synth 8-802] inferred FSM for state register 'current_state_reg' in module 'convolution_top_CU'
+---------------------------------------------------------------------------------------------------
+                   State |                     New Encoding |                Previous Encoding 
+---------------------------------------------------------------------------------------------------
+                 S_Reset |                            00000 |                            00000
+                  S_Idle |                            00001 |                            00001
+   S_Loading_kernel_bram |                            00010 |                            00010
+      S_Write_kernel_reg |                            00011 |                            00011
+S_Waiting_saxis_valid_maxis_ready_first_row |                            00100 |                            00100
+S_Start_shifting_first_row |                            00101 |                            00101
+      S_Inc_row_res_coln |                            00110 |                            00110
+S_Waiting_saxis_valid_maxis_ready_baris2selanjutnya |                            00111 |                            00111
+S_Start_shifting_baris2selanjutnya |                            01000 |                            01000
+ S_Add_last_zero_padding |                            01001 |                            01001
+S_Start_shifting_last_row |                            01010 |                            01010
+S_Add_last_zero_padding_last_row |                            01011 |                            01011
+S_Increment_kernel_BRAM_addr_b |                            01100 |                            01100
+S_Write_kernel_reg_last_chan |                            01101 |                            01101
+S_Waiting_saxis_valid_maxis_ready_first_row_last_chan |                            01110 |                            01110
+S_Start_shifting_first_row_last_chan |                            01111 |                            01111
+S_Inc_row_res_col_last_chan |                            10000 |                            10000
+S_Waiting_saxis_valid_maxis_ready_baris2selanjutnya_last_chan |                            10001 |                            10001
+S_Start_streaming_baris2_selanjutnya_last_chan |                            10010 |                            10010
+S_Add_last_zero_padding_last_chan |                            10011 |                            10011
+S_Start_shifting_last_row_last_chan |                            10100 |                            10100
+     S_M_axis_tlast_high |                            10101 |                            10101
+---------------------------------------------------------------------------------------------------
+INFO: [Synth 8-3354] encoded FSM with state register 'current_state_reg' using encoding 'sequential' in module 'convolution_top_CU'
+INFO: [Synth 8-3971] The signal "true_dual_port_bram:/BRAM_reg" was recognized as a true dual port RAM template.
+INFO: [Synth 8-3971] The signal "true_dual_port_bram__parameterized0:/BRAM_reg" was recognized as a true dual port RAM template.
+---------------------------------------------------------------------------------
+Finished RTL Optimization Phase 2 : Time (s): cpu = 00:00:11 ; elapsed = 00:00:11 . Memory (MB): peak = 1126.469 ; gain = 618.223
+---------------------------------------------------------------------------------
+No constraint files found.
+---------------------------------------------------------------------------------
+Start RTL Component Statistics 
+---------------------------------------------------------------------------------
+Detailed RTL Component Info : 
++---Adders : 
+	   2 Input   48 Bit       Adders := 1     
+	   2 Input   32 Bit       Adders := 1     
+	   2 Input    9 Bit       Adders := 1     
+	   2 Input    8 Bit       Adders := 3     
+	   2 Input    7 Bit       Adders := 1     
++---Registers : 
+	               48 Bit    Registers := 2     
+	               16 Bit    Registers := 22    
+	                8 Bit    Registers := 3     
+	                7 Bit    Registers := 1     
+	                1 Bit    Registers := 3     
++---RAMs : 
+	             768K Bit	(16384 X 48 bit)          RAMs := 1     
+	               2K Bit	(128 X 16 bit)          RAMs := 2     
++---Muxes : 
+	   2 Input   48 Bit        Muxes := 1     
+	   2 Input   16 Bit        Muxes := 3     
+	  22 Input    5 Bit        Muxes := 1     
+	   2 Input    5 Bit        Muxes := 19    
+	  22 Input    1 Bit        Muxes := 27    
+	   2 Input    1 Bit        Muxes := 2     
+---------------------------------------------------------------------------------
+Finished RTL Component Statistics 
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Part Resource Summary
+---------------------------------------------------------------------------------
+Part Resources:
+DSPs: 220 (col length:60)
+BRAMs: 280 (col length: RAMB18 60 RAMB36 30)
+---------------------------------------------------------------------------------
+Finished Part Resource Summary
+---------------------------------------------------------------------------------
+No constraint files found.
+---------------------------------------------------------------------------------
+Start Cross Boundary and Area Optimization
+---------------------------------------------------------------------------------
+WARNING: [Synth 8-7080] Parallel synthesis criteria is not met
+DSP Report: Generating DSP CONV_ENGINE/mult_add_inst/p22, operation Mode is: A2*B2.
+DSP Report: register CONV_ENGINE/kernel_reg[8] is absorbed into DSP CONV_ENGINE/mult_add_inst/p22.
+DSP Report: register window/window_reg_reg[2][0] is absorbed into DSP CONV_ENGINE/mult_add_inst/p22.
+DSP Report: operator CONV_ENGINE/mult_add_inst/p22 is absorbed into DSP CONV_ENGINE/mult_add_inst/p22.
+DSP Report: Generating DSP CONV_ENGINE/mult_add_inst/result, operation Mode is: PCIN+A''*B2.
+DSP Report: register CONV_ENGINE/kernel_reg[0] is absorbed into DSP CONV_ENGINE/mult_add_inst/result.
+DSP Report: register window/window_reg_reg[0][1] is absorbed into DSP CONV_ENGINE/mult_add_inst/result.
+DSP Report: register window/window_reg_reg[0][2] is absorbed into DSP CONV_ENGINE/mult_add_inst/result.
+DSP Report: operator CONV_ENGINE/mult_add_inst/result is absorbed into DSP CONV_ENGINE/mult_add_inst/result.
+DSP Report: operator CONV_ENGINE/mult_add_inst/p00 is absorbed into DSP CONV_ENGINE/mult_add_inst/result.
+DSP Report: Generating DSP CONV_ENGINE/mult_add_inst/result, operation Mode is: PCIN+A''*B2.
+DSP Report: register CONV_ENGINE/kernel_reg[4] is absorbed into DSP CONV_ENGINE/mult_add_inst/result.
+DSP Report: register window/window_reg_reg[1][0] is absorbed into DSP CONV_ENGINE/mult_add_inst/result.
+DSP Report: register window/window_reg_reg[1][1] is absorbed into DSP CONV_ENGINE/mult_add_inst/result.
+DSP Report: operator CONV_ENGINE/mult_add_inst/result is absorbed into DSP CONV_ENGINE/mult_add_inst/result.
+DSP Report: operator CONV_ENGINE/mult_add_inst/p11 is absorbed into DSP CONV_ENGINE/mult_add_inst/result.
+DSP Report: Generating DSP CONV_ENGINE/mult_add_inst/result, operation Mode is: PCIN+A2*B2.
+DSP Report: register CONV_ENGINE/kernel_reg[2] is absorbed into DSP CONV_ENGINE/mult_add_inst/result.
+DSP Report: register window/window_reg_reg[0][0] is absorbed into DSP CONV_ENGINE/mult_add_inst/result.
+DSP Report: operator CONV_ENGINE/mult_add_inst/result is absorbed into DSP CONV_ENGINE/mult_add_inst/result.
+DSP Report: operator CONV_ENGINE/mult_add_inst/p02 is absorbed into DSP CONV_ENGINE/mult_add_inst/result.
+DSP Report: Generating DSP CONV_ENGINE/mult_add_inst/result, operation Mode is: PCIN+A''*B2.
+DSP Report: register CONV_ENGINE/kernel_reg[1] is absorbed into DSP CONV_ENGINE/mult_add_inst/result.
+DSP Report: register window/window_reg_reg[0][0] is absorbed into DSP CONV_ENGINE/mult_add_inst/result.
+DSP Report: register window/window_reg_reg[0][1] is absorbed into DSP CONV_ENGINE/mult_add_inst/result.
+DSP Report: operator CONV_ENGINE/mult_add_inst/result is absorbed into DSP CONV_ENGINE/mult_add_inst/result.
+DSP Report: operator CONV_ENGINE/mult_add_inst/p01 is absorbed into DSP CONV_ENGINE/mult_add_inst/result.
+DSP Report: Generating DSP CONV_ENGINE/mult_add_inst/result, operation Mode is: PCIN+A''*B2.
+DSP Report: register CONV_ENGINE/kernel_reg[3] is absorbed into DSP CONV_ENGINE/mult_add_inst/result.
+DSP Report: register window/window_reg_reg[1][1] is absorbed into DSP CONV_ENGINE/mult_add_inst/result.
+DSP Report: register window/window_reg_reg[1][2] is absorbed into DSP CONV_ENGINE/mult_add_inst/result.
+DSP Report: operator CONV_ENGINE/mult_add_inst/result is absorbed into DSP CONV_ENGINE/mult_add_inst/result.
+DSP Report: operator CONV_ENGINE/mult_add_inst/p10 is absorbed into DSP CONV_ENGINE/mult_add_inst/result.
+DSP Report: Generating DSP CONV_ENGINE/mult_add_inst/result, operation Mode is: PCIN+A''*B2.
+DSP Report: register CONV_ENGINE/kernel_reg[6] is absorbed into DSP CONV_ENGINE/mult_add_inst/result.
+DSP Report: register window/window_reg_reg[2][1] is absorbed into DSP CONV_ENGINE/mult_add_inst/result.
+DSP Report: register window/window_reg_reg[2][2] is absorbed into DSP CONV_ENGINE/mult_add_inst/result.
+DSP Report: operator CONV_ENGINE/mult_add_inst/result is absorbed into DSP CONV_ENGINE/mult_add_inst/result.
+DSP Report: operator CONV_ENGINE/mult_add_inst/p20 is absorbed into DSP CONV_ENGINE/mult_add_inst/result.
+DSP Report: Generating DSP CONV_ENGINE/mult_add_inst/result, operation Mode is: PCIN+A2*B2.
+DSP Report: register CONV_ENGINE/kernel_reg[5] is absorbed into DSP CONV_ENGINE/mult_add_inst/result.
+DSP Report: register window/window_reg_reg[1][0] is absorbed into DSP CONV_ENGINE/mult_add_inst/result.
+DSP Report: operator CONV_ENGINE/mult_add_inst/result is absorbed into DSP CONV_ENGINE/mult_add_inst/result.
+DSP Report: operator CONV_ENGINE/mult_add_inst/p12 is absorbed into DSP CONV_ENGINE/mult_add_inst/result.
+DSP Report: Generating DSP CONV_ENGINE/mult_add_inst/result, operation Mode is: PCIN+A''*B2.
+DSP Report: register CONV_ENGINE/kernel_reg[7] is absorbed into DSP CONV_ENGINE/mult_add_inst/result.
+DSP Report: register window/window_reg_reg[2][0] is absorbed into DSP CONV_ENGINE/mult_add_inst/result.
+DSP Report: register window/window_reg_reg[2][1] is absorbed into DSP CONV_ENGINE/mult_add_inst/result.
+DSP Report: operator CONV_ENGINE/mult_add_inst/result is absorbed into DSP CONV_ENGINE/mult_add_inst/result.
+DSP Report: operator CONV_ENGINE/mult_add_inst/p21 is absorbed into DSP CONV_ENGINE/mult_add_inst/result.
+CRITICAL WARNING: [Synth 8-5796] RAM (i_0) has conflicting writes using multiple ports with same address
+WARNING: [Synth 8-6014] Unused sequential element line_buffer_n_1/BRAM_reg was removed. 
+CRITICAL WARNING: [Synth 8-5796] RAM (i_1) has conflicting writes using multiple ports with same address
+WARNING: [Synth 8-6014] Unused sequential element line_buffer_n_2/BRAM_reg was removed. 
+WARNING: [Synth 8-6014] Unused sequential element CONV_ENGINE/output_BRAM/BRAM_reg was removed. 
+---------------------------------------------------------------------------------
+Finished Cross Boundary and Area Optimization : Time (s): cpu = 00:00:16 ; elapsed = 00:00:19 . Memory (MB): peak = 1392.211 ; gain = 883.965
+---------------------------------------------------------------------------------
+ Sort Area is  CONV_ENGINE/mult_add_inst/p22_0 : 0 0 : 1969 19089 : Used 1 time 0
+ Sort Area is  CONV_ENGINE/mult_add_inst/p22_0 : 0 1 : 2130 19089 : Used 1 time 0
+ Sort Area is  CONV_ENGINE/mult_add_inst/p22_0 : 0 2 : 2146 19089 : Used 1 time 0
+ Sort Area is  CONV_ENGINE/mult_add_inst/p22_0 : 0 3 : 2130 19089 : Used 1 time 0
+ Sort Area is  CONV_ENGINE/mult_add_inst/p22_0 : 0 4 : 2146 19089 : Used 1 time 0
+ Sort Area is  CONV_ENGINE/mult_add_inst/p22_0 : 0 5 : 2146 19089 : Used 1 time 0
+ Sort Area is  CONV_ENGINE/mult_add_inst/p22_0 : 0 6 : 2146 19089 : Used 1 time 0
+ Sort Area is  CONV_ENGINE/mult_add_inst/p22_0 : 0 7 : 2130 19089 : Used 1 time 0
+ Sort Area is  CONV_ENGINE/mult_add_inst/p22_0 : 0 8 : 2146 19089 : Used 1 time 0
+---------------------------------------------------------------------------------
+Start ROM, RAM, DSP, Shift Register and Retiming Reporting
+---------------------------------------------------------------------------------
+
+Block RAM: Preliminary Mapping Report (see note below)
++----------------+----------------------------------+------------------------+---+---+------------------------+---+---+------------------+--------+--------+
+|Module Name     | RTL Object                       | PORT A (Depth x Width) | W | R | PORT B (Depth x Width) | W | R | Ports driving FF | RAMB18 | RAMB36 | 
++----------------+----------------------------------+------------------------+---+---+------------------------+---+---+------------------+--------+--------+
+|convolution_top | line_buffer_n_1/BRAM_reg         | 128 x 16(READ_FIRST)   | W |   | 128 x 16(WRITE_FIRST)  |   | R | Port A and B     | 1      | 0      | 
+|convolution_top | line_buffer_n_2/BRAM_reg         | 128 x 16(READ_FIRST)   | W |   | 128 x 16(WRITE_FIRST)  |   | R | Port A and B     | 1      | 0      | 
+|convolution_top | CONV_ENGINE/output_BRAM/BRAM_reg | 16 K x 48(READ_FIRST)  | W | R | 16 K x 48(WRITE_FIRST) |   | R | Port A and B     | 0      | 24     | 
++----------------+----------------------------------+------------------------+---+---+------------------------+---+---+------------------+--------+--------+
+
+Note: The table above is a preliminary report that shows the Block RAMs at the current stage of the synthesis flow. Some Block RAMs may be reimplemented as non Block RAM primitives later in the synthesis flow. Multiple instantiated Block RAMs are reported only once. 
+
+DSP: Preliminary Mapping Report (see note below. The ' indicates corresponding REG is set)
++----------------+-------------+--------+--------+--------+--------+--------+------+------+------+------+-------+------+------+
+|Module Name     | DSP Mapping | A Size | B Size | C Size | D Size | P Size | AREG | BREG | CREG | DREG | ADREG | MREG | PREG | 
++----------------+-------------+--------+--------+--------+--------+--------+------+------+------+------+-------+------+------+
+|convolution_top | A2*B2       | 16     | 16     | -      | -      | 32     | 1    | 1    | -    | -    | -     | 0    | 0    | 
+|convolution_top | PCIN+A''*B2 | 16     | 16     | -      | -      | 48     | 2    | 1    | -    | -    | -     | 0    | 0    | 
+|convolution_top | PCIN+A''*B2 | 16     | 16     | -      | -      | 48     | 2    | 1    | -    | -    | -     | 0    | 0    | 
+|convolution_top | PCIN+A2*B2  | 16     | 16     | -      | -      | 48     | 1    | 1    | -    | -    | -     | 0    | 0    | 
+|convolution_top | PCIN+A''*B2 | 16     | 16     | -      | -      | 48     | 2    | 1    | -    | -    | -     | 0    | 0    | 
+|convolution_top | PCIN+A''*B2 | 16     | 16     | -      | -      | 48     | 2    | 1    | -    | -    | -     | 0    | 0    | 
+|convolution_top | PCIN+A''*B2 | 16     | 16     | -      | -      | 48     | 2    | 1    | -    | -    | -     | 0    | 0    | 
+|convolution_top | PCIN+A2*B2  | 16     | 16     | -      | -      | 48     | 1    | 1    | -    | -    | -     | 0    | 0    | 
+|convolution_top | PCIN+A''*B2 | 16     | 16     | -      | -      | 48     | 2    | 1    | -    | -    | -     | 0    | 0    | 
++----------------+-------------+--------+--------+--------+--------+--------+------+------+------+------+-------+------+------+
+
+Note: The table above is a preliminary report that shows the DSPs inferred at the current stage of the synthesis flow. Some DSP may be reimplemented as non DSP primitives later in the synthesis flow. Multiple instantiated DSPs are reported only once.
+---------------------------------------------------------------------------------
+Finished ROM, RAM, DSP, Shift Register and Retiming Reporting
+---------------------------------------------------------------------------------
+No constraint files found.
+---------------------------------------------------------------------------------
+Start Timing Optimization
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Timing Optimization : Time (s): cpu = 00:00:16 ; elapsed = 00:00:19 . Memory (MB): peak = 1392.211 ; gain = 883.965
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start ROM, RAM, DSP, Shift Register and Retiming Reporting
+---------------------------------------------------------------------------------
+
+Block RAM: Final Mapping Report
++----------------+----------------------------------+------------------------+---+---+------------------------+---+---+------------------+--------+--------+
+|Module Name     | RTL Object                       | PORT A (Depth x Width) | W | R | PORT B (Depth x Width) | W | R | Ports driving FF | RAMB18 | RAMB36 | 
++----------------+----------------------------------+------------------------+---+---+------------------------+---+---+------------------+--------+--------+
+|convolution_top | line_buffer_n_1/BRAM_reg         | 128 x 16(READ_FIRST)   | W |   | 128 x 16(WRITE_FIRST)  |   | R | Port A and B     | 1      | 0      | 
+|convolution_top | line_buffer_n_2/BRAM_reg         | 128 x 16(READ_FIRST)   | W |   | 128 x 16(WRITE_FIRST)  |   | R | Port A and B     | 1      | 0      | 
+|convolution_top | CONV_ENGINE/output_BRAM/BRAM_reg | 16 K x 48(READ_FIRST)  | W | R | 16 K x 48(WRITE_FIRST) |   | R | Port A and B     | 0      | 24     | 
++----------------+----------------------------------+------------------------+---+---+------------------------+---+---+------------------+--------+--------+
+
+---------------------------------------------------------------------------------
+Finished ROM, RAM, DSP, Shift Register and Retiming Reporting
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Technology Mapping
+---------------------------------------------------------------------------------
+INFO: [Synth 8-7052] The timing for the instance line_buffer_n_1/BRAM_reg (implemented as a Block RAM) might be sub-optimal as no optional output register could be merged into the ram block. Providing additional output register may help in improving timing.
+INFO: [Synth 8-7052] The timing for the instance line_buffer_n_2/BRAM_reg (implemented as a Block RAM) might be sub-optimal as no optional output register could be merged into the ram block. Providing additional output register may help in improving timing.
+INFO: [Synth 8-7052] The timing for the instance CONV_ENGINE/output_BRAM/BRAM_reg_0 (implemented as a Block RAM) might be sub-optimal as no optional output register could be merged into the ram block. Providing additional output register may help in improving timing.
+INFO: [Synth 8-7052] The timing for the instance CONV_ENGINE/output_BRAM/BRAM_reg_0 (implemented as a Block RAM) might be sub-optimal as no optional output register could be merged into the ram block. Providing additional output register may help in improving timing.
+INFO: [Synth 8-7052] The timing for the instance CONV_ENGINE/output_BRAM/BRAM_reg_1 (implemented as a Block RAM) might be sub-optimal as no optional output register could be merged into the ram block. Providing additional output register may help in improving timing.
+INFO: [Synth 8-7052] The timing for the instance CONV_ENGINE/output_BRAM/BRAM_reg_1 (implemented as a Block RAM) might be sub-optimal as no optional output register could be merged into the ram block. Providing additional output register may help in improving timing.
+INFO: [Synth 8-7052] The timing for the instance CONV_ENGINE/output_BRAM/BRAM_reg_2 (implemented as a Block RAM) might be sub-optimal as no optional output register could be merged into the ram block. Providing additional output register may help in improving timing.
+INFO: [Synth 8-7052] The timing for the instance CONV_ENGINE/output_BRAM/BRAM_reg_2 (implemented as a Block RAM) might be sub-optimal as no optional output register could be merged into the ram block. Providing additional output register may help in improving timing.
+INFO: [Synth 8-7052] The timing for the instance CONV_ENGINE/output_BRAM/BRAM_reg_3 (implemented as a Block RAM) might be sub-optimal as no optional output register could be merged into the ram block. Providing additional output register may help in improving timing.
+INFO: [Synth 8-7052] The timing for the instance CONV_ENGINE/output_BRAM/BRAM_reg_3 (implemented as a Block RAM) might be sub-optimal as no optional output register could be merged into the ram block. Providing additional output register may help in improving timing.
+INFO: [Synth 8-7052] The timing for the instance CONV_ENGINE/output_BRAM/BRAM_reg_4 (implemented as a Block RAM) might be sub-optimal as no optional output register could be merged into the ram block. Providing additional output register may help in improving timing.
+INFO: [Synth 8-7052] The timing for the instance CONV_ENGINE/output_BRAM/BRAM_reg_4 (implemented as a Block RAM) might be sub-optimal as no optional output register could be merged into the ram block. Providing additional output register may help in improving timing.
+INFO: [Synth 8-7052] The timing for the instance CONV_ENGINE/output_BRAM/BRAM_reg_5 (implemented as a Block RAM) might be sub-optimal as no optional output register could be merged into the ram block. Providing additional output register may help in improving timing.
+INFO: [Synth 8-7052] The timing for the instance CONV_ENGINE/output_BRAM/BRAM_reg_5 (implemented as a Block RAM) might be sub-optimal as no optional output register could be merged into the ram block. Providing additional output register may help in improving timing.
+INFO: [Synth 8-7052] The timing for the instance CONV_ENGINE/output_BRAM/BRAM_reg_6 (implemented as a Block RAM) might be sub-optimal as no optional output register could be merged into the ram block. Providing additional output register may help in improving timing.
+INFO: [Synth 8-7052] The timing for the instance CONV_ENGINE/output_BRAM/BRAM_reg_6 (implemented as a Block RAM) might be sub-optimal as no optional output register could be merged into the ram block. Providing additional output register may help in improving timing.
+INFO: [Synth 8-7052] The timing for the instance CONV_ENGINE/output_BRAM/BRAM_reg_7 (implemented as a Block RAM) might be sub-optimal as no optional output register could be merged into the ram block. Providing additional output register may help in improving timing.
+INFO: [Synth 8-7052] The timing for the instance CONV_ENGINE/output_BRAM/BRAM_reg_7 (implemented as a Block RAM) might be sub-optimal as no optional output register could be merged into the ram block. Providing additional output register may help in improving timing.
+INFO: [Synth 8-7052] The timing for the instance CONV_ENGINE/output_BRAM/BRAM_reg_8 (implemented as a Block RAM) might be sub-optimal as no optional output register could be merged into the ram block. Providing additional output register may help in improving timing.
+INFO: [Synth 8-7052] The timing for the instance CONV_ENGINE/output_BRAM/BRAM_reg_8 (implemented as a Block RAM) might be sub-optimal as no optional output register could be merged into the ram block. Providing additional output register may help in improving timing.
+INFO: [Synth 8-7052] The timing for the instance CONV_ENGINE/output_BRAM/BRAM_reg_9 (implemented as a Block RAM) might be sub-optimal as no optional output register could be merged into the ram block. Providing additional output register may help in improving timing.
+INFO: [Synth 8-7052] The timing for the instance CONV_ENGINE/output_BRAM/BRAM_reg_9 (implemented as a Block RAM) might be sub-optimal as no optional output register could be merged into the ram block. Providing additional output register may help in improving timing.
+INFO: [Synth 8-7052] The timing for the instance CONV_ENGINE/output_BRAM/BRAM_reg_10 (implemented as a Block RAM) might be sub-optimal as no optional output register could be merged into the ram block. Providing additional output register may help in improving timing.
+INFO: [Synth 8-7052] The timing for the instance CONV_ENGINE/output_BRAM/BRAM_reg_10 (implemented as a Block RAM) might be sub-optimal as no optional output register could be merged into the ram block. Providing additional output register may help in improving timing.
+INFO: [Synth 8-7052] The timing for the instance CONV_ENGINE/output_BRAM/BRAM_reg_11 (implemented as a Block RAM) might be sub-optimal as no optional output register could be merged into the ram block. Providing additional output register may help in improving timing.
+INFO: [Synth 8-7052] The timing for the instance CONV_ENGINE/output_BRAM/BRAM_reg_11 (implemented as a Block RAM) might be sub-optimal as no optional output register could be merged into the ram block. Providing additional output register may help in improving timing.
+INFO: [Synth 8-7052] The timing for the instance CONV_ENGINE/output_BRAM/BRAM_reg_12 (implemented as a Block RAM) might be sub-optimal as no optional output register could be merged into the ram block. Providing additional output register may help in improving timing.
+INFO: [Synth 8-7052] The timing for the instance CONV_ENGINE/output_BRAM/BRAM_reg_12 (implemented as a Block RAM) might be sub-optimal as no optional output register could be merged into the ram block. Providing additional output register may help in improving timing.
+INFO: [Synth 8-7052] The timing for the instance CONV_ENGINE/output_BRAM/BRAM_reg_13 (implemented as a Block RAM) might be sub-optimal as no optional output register could be merged into the ram block. Providing additional output register may help in improving timing.
+INFO: [Synth 8-7052] The timing for the instance CONV_ENGINE/output_BRAM/BRAM_reg_13 (implemented as a Block RAM) might be sub-optimal as no optional output register could be merged into the ram block. Providing additional output register may help in improving timing.
+INFO: [Synth 8-7052] The timing for the instance CONV_ENGINE/output_BRAM/BRAM_reg_14 (implemented as a Block RAM) might be sub-optimal as no optional output register could be merged into the ram block. Providing additional output register may help in improving timing.
+INFO: [Synth 8-7052] The timing for the instance CONV_ENGINE/output_BRAM/BRAM_reg_14 (implemented as a Block RAM) might be sub-optimal as no optional output register could be merged into the ram block. Providing additional output register may help in improving timing.
+INFO: [Synth 8-7052] The timing for the instance CONV_ENGINE/output_BRAM/BRAM_reg_15 (implemented as a Block RAM) might be sub-optimal as no optional output register could be merged into the ram block. Providing additional output register may help in improving timing.
+INFO: [Synth 8-7052] The timing for the instance CONV_ENGINE/output_BRAM/BRAM_reg_15 (implemented as a Block RAM) might be sub-optimal as no optional output register could be merged into the ram block. Providing additional output register may help in improving timing.
+INFO: [Synth 8-7052] The timing for the instance CONV_ENGINE/output_BRAM/BRAM_reg_16 (implemented as a Block RAM) might be sub-optimal as no optional output register could be merged into the ram block. Providing additional output register may help in improving timing.
+INFO: [Synth 8-7052] The timing for the instance CONV_ENGINE/output_BRAM/BRAM_reg_16 (implemented as a Block RAM) might be sub-optimal as no optional output register could be merged into the ram block. Providing additional output register may help in improving timing.
+INFO: [Synth 8-7052] The timing for the instance CONV_ENGINE/output_BRAM/BRAM_reg_17 (implemented as a Block RAM) might be sub-optimal as no optional output register could be merged into the ram block. Providing additional output register may help in improving timing.
+INFO: [Synth 8-7052] The timing for the instance CONV_ENGINE/output_BRAM/BRAM_reg_17 (implemented as a Block RAM) might be sub-optimal as no optional output register could be merged into the ram block. Providing additional output register may help in improving timing.
+INFO: [Synth 8-7052] The timing for the instance CONV_ENGINE/output_BRAM/BRAM_reg_18 (implemented as a Block RAM) might be sub-optimal as no optional output register could be merged into the ram block. Providing additional output register may help in improving timing.
+INFO: [Synth 8-7052] The timing for the instance CONV_ENGINE/output_BRAM/BRAM_reg_18 (implemented as a Block RAM) might be sub-optimal as no optional output register could be merged into the ram block. Providing additional output register may help in improving timing.
+INFO: [Synth 8-7052] The timing for the instance CONV_ENGINE/output_BRAM/BRAM_reg_19 (implemented as a Block RAM) might be sub-optimal as no optional output register could be merged into the ram block. Providing additional output register may help in improving timing.
+INFO: [Synth 8-7052] The timing for the instance CONV_ENGINE/output_BRAM/BRAM_reg_19 (implemented as a Block RAM) might be sub-optimal as no optional output register could be merged into the ram block. Providing additional output register may help in improving timing.
+INFO: [Synth 8-7052] The timing for the instance CONV_ENGINE/output_BRAM/BRAM_reg_20 (implemented as a Block RAM) might be sub-optimal as no optional output register could be merged into the ram block. Providing additional output register may help in improving timing.
+INFO: [Synth 8-7052] The timing for the instance CONV_ENGINE/output_BRAM/BRAM_reg_20 (implemented as a Block RAM) might be sub-optimal as no optional output register could be merged into the ram block. Providing additional output register may help in improving timing.
+INFO: [Synth 8-7052] The timing for the instance CONV_ENGINE/output_BRAM/BRAM_reg_21 (implemented as a Block RAM) might be sub-optimal as no optional output register could be merged into the ram block. Providing additional output register may help in improving timing.
+INFO: [Synth 8-7052] The timing for the instance CONV_ENGINE/output_BRAM/BRAM_reg_21 (implemented as a Block RAM) might be sub-optimal as no optional output register could be merged into the ram block. Providing additional output register may help in improving timing.
+INFO: [Synth 8-7052] The timing for the instance CONV_ENGINE/output_BRAM/BRAM_reg_22 (implemented as a Block RAM) might be sub-optimal as no optional output register could be merged into the ram block. Providing additional output register may help in improving timing.
+INFO: [Synth 8-7052] The timing for the instance CONV_ENGINE/output_BRAM/BRAM_reg_22 (implemented as a Block RAM) might be sub-optimal as no optional output register could be merged into the ram block. Providing additional output register may help in improving timing.
+INFO: [Synth 8-7052] The timing for the instance CONV_ENGINE/output_BRAM/BRAM_reg_23 (implemented as a Block RAM) might be sub-optimal as no optional output register could be merged into the ram block. Providing additional output register may help in improving timing.
+INFO: [Synth 8-7052] The timing for the instance CONV_ENGINE/output_BRAM/BRAM_reg_23 (implemented as a Block RAM) might be sub-optimal as no optional output register could be merged into the ram block. Providing additional output register may help in improving timing.
+---------------------------------------------------------------------------------
+Finished Technology Mapping : Time (s): cpu = 00:00:16 ; elapsed = 00:00:19 . Memory (MB): peak = 1392.211 ; gain = 883.965
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start IO Insertion
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Flattening Before IO Insertion
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Flattening Before IO Insertion
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Final Netlist Cleanup
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Final Netlist Cleanup
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished IO Insertion : Time (s): cpu = 00:00:21 ; elapsed = 00:00:23 . Memory (MB): peak = 1556.715 ; gain = 1048.469
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Renaming Generated Instances
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Renaming Generated Instances : Time (s): cpu = 00:00:21 ; elapsed = 00:00:23 . Memory (MB): peak = 1556.715 ; gain = 1048.469
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Rebuilding User Hierarchy
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Rebuilding User Hierarchy : Time (s): cpu = 00:00:21 ; elapsed = 00:00:23 . Memory (MB): peak = 1556.715 ; gain = 1048.469
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Renaming Generated Ports
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Renaming Generated Ports : Time (s): cpu = 00:00:21 ; elapsed = 00:00:23 . Memory (MB): peak = 1556.715 ; gain = 1048.469
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Handling Custom Attributes
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Handling Custom Attributes : Time (s): cpu = 00:00:21 ; elapsed = 00:00:23 . Memory (MB): peak = 1557.762 ; gain = 1049.516
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Renaming Generated Nets
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Renaming Generated Nets : Time (s): cpu = 00:00:21 ; elapsed = 00:00:23 . Memory (MB): peak = 1557.762 ; gain = 1049.516
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Writing Synthesis Report
+---------------------------------------------------------------------------------
+
+DSP Final Report (the ' indicates corresponding REG is set)
++----------------+-------------+--------+--------+--------+--------+--------+------+------+------+------+-------+------+------+
+|Module Name     | DSP Mapping | A Size | B Size | C Size | D Size | P Size | AREG | BREG | CREG | DREG | ADREG | MREG | PREG | 
++----------------+-------------+--------+--------+--------+--------+--------+------+------+------+------+-------+------+------+
+|convolution_top | A'*B'       | 30     | 18     | -      | -      | 0      | 1    | 1    | -    | -    | -     | 0    | 0    | 
+|convolution_top | PCIN+A''*B' | 30     | 18     | -      | -      | 0      | 2    | 1    | -    | -    | -     | 0    | 0    | 
+|convolution_top | PCIN+A''*B' | 30     | 18     | -      | -      | 0      | 2    | 1    | -    | -    | -     | 0    | 0    | 
+|convolution_top | PCIN+A'*B'  | 30     | 18     | -      | -      | 0      | 1    | 1    | -    | -    | -     | 0    | 0    | 
+|convolution_top | PCIN+A''*B' | 30     | 18     | -      | -      | 0      | 2    | 1    | -    | -    | -     | 0    | 0    | 
+|convolution_top | PCIN+A''*B' | 30     | 18     | -      | -      | 0      | 2    | 1    | -    | -    | -     | 0    | 0    | 
+|convolution_top | PCIN+A''*B' | 30     | 18     | -      | -      | 0      | 2    | 1    | -    | -    | -     | 0    | 0    | 
+|convolution_top | PCIN+A'*B'  | 30     | 18     | -      | -      | 0      | 1    | 1    | -    | -    | -     | 0    | 0    | 
+|convolution_top | PCIN+A''*B' | 30     | 18     | -      | -      | 48     | 2    | 1    | -    | -    | -     | 0    | 0    | 
++----------------+-------------+--------+--------+--------+--------+--------+------+------+------+------+-------+------+------+
+
+
+Report BlackBoxes: 
++-+--------------+----------+
+| |BlackBox name |Instances |
++-+--------------+----------+
++-+--------------+----------+
+
+Report Cell Usage: 
++------+---------+------+
+|      |Cell     |Count |
++------+---------+------+
+|1     |BUFG     |     1|
+|2     |CARRY4   |    16|
+|3     |DSP48E1  |     9|
+|4     |LUT1     |     6|
+|5     |LUT2     |    10|
+|6     |LUT3     |    17|
+|7     |LUT4     |    69|
+|8     |LUT5     |    28|
+|9     |LUT6     |    83|
+|10    |RAMB18E1 |     2|
+|11    |RAMB36E1 |    24|
+|12    |FDRE     |    83|
+|13    |IBUF     |   230|
+|14    |OBUF     |    78|
++------+---------+------+
+
+Report Instance Areas: 
++------+------------------------+------------------------------------+------+
+|      |Instance                |Module                              |Cells |
++------+------------------------+------------------------------------+------+
+|1     |top                     |                                    |   656|
+|2     |  CONV_ENGINE           |pe_with_buffers                     |    93|
+|3     |    mult_add_inst       |multiplier_adder                    |    57|
+|4     |    output_BRAM         |true_dual_port_bram__parameterized0 |    24|
+|5     |  CU                    |convolution_top_CU                  |   123|
+|6     |  a_output_BRAM_counter |counter__parameterized1             |     2|
+|7     |  b_output_BRAM_counter |counter__parameterized1_0           |     2|
+|8     |  in_col_counter        |counter                             |    31|
+|9     |  in_row_counter        |counter_1                           |    22|
+|10    |  kernel_BRAM_counter   |counter_2                           |    23|
+|11    |  line_buffer_n_1       |true_dual_port_bram                 |     1|
+|12    |  line_buffer_n_2       |true_dual_port_bram_3               |     1|
+|13    |  window                |window_reg_3x3                      |    48|
+|14    |  window_BRAM_counter   |counter__parameterized0             |     1|
++------+------------------------+------------------------------------+------+
+---------------------------------------------------------------------------------
+Finished Writing Synthesis Report : Time (s): cpu = 00:00:21 ; elapsed = 00:00:23 . Memory (MB): peak = 1557.762 ; gain = 1049.516
+---------------------------------------------------------------------------------
+Synthesis finished with 0 errors, 2 critical warnings and 295 warnings.
+Synthesis Optimization Runtime : Time (s): cpu = 00:00:21 ; elapsed = 00:00:24 . Memory (MB): peak = 1557.762 ; gain = 1049.516
+Synthesis Optimization Complete : Time (s): cpu = 00:00:21 ; elapsed = 00:00:24 . Memory (MB): peak = 1557.762 ; gain = 1049.516
+INFO: [Project 1-571] Translating synthesized netlist
+Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00.016 . Memory (MB): peak = 1572.789 ; gain = 0.000
+INFO: [Netlist 29-17] Analyzing 51 Unisim elements for replacement
+INFO: [Netlist 29-28] Unisim Transformation completed in 0 CPU seconds
+INFO: [Project 1-570] Preparing netlist for logic optimization
+INFO: [Opt 31-138] Pushed 0 inverter(s) to 0 load pin(s).
+Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00 . Memory (MB): peak = 1692.836 ; gain = 0.000
+INFO: [Project 1-111] Unisim Transformation Summary:
+No Unisim elements were transformed.
+
+Synth Design complete | Checksum: d81574e9
+INFO: [Common 17-83] Releasing license: Synthesis
+106 Infos, 134 Warnings, 2 Critical Warnings and 0 Errors encountered.
+synth_design completed successfully
+synth_design: Time (s): cpu = 00:00:23 ; elapsed = 00:00:27 . Memory (MB): peak = 1692.836 ; gain = 1190.598
+INFO: [runtcl-6] Synthesis results are not added to the cache due to CRITICAL_WARNING
+Write ShapeDB Complete: Time (s): cpu = 00:00:00 ; elapsed = 00:00:00.006 . Memory (MB): peak = 1692.836 ; gain = 0.000
+INFO: [Common 17-1381] The checkpoint 'E:/ITB/Spesialisasi IC Design/VLSI/LSI Contest Okinawa 2026/Source Code/LSI-Okinawa-2026-RasenGAN/Conv2d/Vivado/convolution_top/convolution_top.runs/synth_1/convolution_top.dcp' has been generated.
+INFO: [Vivado 12-24828] Executing command : report_utilization -file convolution_top_utilization_synth.rpt -pb convolution_top_utilization_synth.pb
+INFO: [Common 17-206] Exiting Vivado at Sun Jan 11 13:57:01 2026...

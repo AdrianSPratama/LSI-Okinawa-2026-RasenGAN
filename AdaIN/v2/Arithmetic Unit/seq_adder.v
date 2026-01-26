@@ -5,6 +5,7 @@ module seq_adder #(
 )(
     input  wire clk,
     input  wire rst,
+    input  wire en,
 
     input  wire signed [WIDTH-1:0] in1,
     input  wire signed [WIDTH-1:0] in2,
@@ -13,7 +14,7 @@ module seq_adder #(
     always @(posedge clk) begin
         if (rst) begin
             out <= 0;
-        end else begin
+        end else if (en) begin
             out <= in1 + in2;
         end
     end

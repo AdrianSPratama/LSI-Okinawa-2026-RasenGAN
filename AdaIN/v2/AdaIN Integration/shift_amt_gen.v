@@ -11,6 +11,7 @@ module shift_amt_gen #(
 )(
     input  wire clk,
     input  wire rst,
+    input  wire en,
 
     input  wire [$clog2($clog2(N_MAX+1))-1:0]   lead_zero_N,
     input  wire [$clog2(WIDTH_MAC_IN)-1:0]      lead_zero_var,
@@ -34,7 +35,7 @@ module shift_amt_gen #(
         if (rst) begin
             shift_ra1_amt <= 0;
             shift_ra2_amt <= 0;
-        end else begin
+        end else if (en) begin
             shift_ra1_amt <= {lead_zero_N, 1'b0};
             shift_ra2_amt <= 0;
             

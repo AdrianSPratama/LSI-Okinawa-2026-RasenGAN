@@ -13,6 +13,7 @@ module pe_with_buffers_CU (
     input wire Done_1row,
     input wire last_channel,
     input wire [14:0] a_output_BRAM_counter_out, // Add one bit for extending
+    input wire m_axis_tready,
 
     // Control outputs
     // Interface outputs
@@ -39,23 +40,24 @@ module pe_with_buffers_CU (
     output reg rsta_output_BRAM_counter
 );
     
-    parameter state_size = 4;
-    parameter S_Reset                                           = 4'd0,
-              S_Idle                                            = 4'd1,
-              S_Load_kernel_reg                                 = 4'd2,
-              S_PE_ready                                        = 4'd3,
-              S_Wait_output_valid_mid_row                       = 4'd4,
-              S_Writing_porta_output_BRAM_mid_row               = 4'd5,
-              S_Wait_output_valid_last_row                      = 4'd6,
-              S_Writing_porta_output_BRAM_last_row              = 4'd7,
-              S_Reset_porta_counter                             = 4'd8,
-              S_Idle_last_chan                                  = 4'd9,
-              S_PE_ready_last_chan                              = 4'd10,
-              S_Wait_output_valid_mid_row_last_chan             = 4'd11,
-              S_Writing_porta_output_BRAM_mid_row_last_chan     = 4'd12,
-              S_Wait_output_valid__last_row_last_chan           = 4'd13,
-              S_Writing_porta_output_BRAM__last_row_last_chan   = 4'd14,
-              S_Reset_porta_counter_m_axis_tlast                = 4'd15;
+    parameter state_size = 5;
+    parameter S_Reset                                           = 5'd0,
+              S_Idle                                            = 5'd1,
+              S_Load_kernel_reg                                 = 5'd2,
+              S_PE_ready                                        = 5'd3,
+              S_Wait_output_valid_mid_row                       = 5'd4,
+              S_Writing_porta_output_BRAM_mid_row               = 5'd5,
+              S_Wait_output_valid_last_row                      = 5'd6,
+              S_Writing_porta_output_BRAM_last_row              = 5'd7,
+              S_Reset_porta_counter                             = 5'd8,
+              S_Idle_last_chan                                  = 5'd9,
+              S_PE_ready_last_chan                              = 5'd10,
+              S_Wait_output_valid_mid_row_last_chan             = 5'd11,
+              S_Writing_porta_output_BRAM_mid_row_last_chan     = 5'd12,
+              S_Wait_handshake_last_pixel_mid_row               = 5'd13,
+              S_Wait_output_valid__last_row_last_chan           = 5'd14,
+              S_Writing_porta_output_BRAM__last_row_last_chan   = 5'd15,
+              S_Wait_handshake_last_pixel_last_row              = 5'd16;
 
     reg [state_size-1:0] current_state, next_state;
 
@@ -122,32 +124,48 @@ module pe_with_buffers_CU (
             S_PE_ready_last_chan: next_state <= S_Idle_last_chan;
 
             S_Wait_output_valid_mid_row_last_chan: begin
-                if (Output_valid) next_state <= S_Writing_porta_output_BRAM_mid_row_last_chan;
+                if (Output_valid) begin
+                    if (Done_1row && m_axis_tready) next_state <= S_Idle_last_chan;
+                    else if (Done_1row) next_state <= S_Wait_handshake_last_pixel_mid_row;
+                    else if (m_axis_tready) next_state <= S_Wait_output_valid_mid_row_last_chan;
+                    else next_state <= S_Writing_porta_output_BRAM_mid_row_last_chan;
+                end
                 else next_state <= S_Wait_output_valid_mid_row_last_chan;
             end
 
             S_Writing_porta_output_BRAM_mid_row_last_chan: begin
-                if (Done_1row) next_state <= S_Idle_last_chan;
-                else begin
-                    if (Output_valid) next_state <= S_Writing_porta_output_BRAM_mid_row_last_chan;
-                    else next_state <= S_Wait_output_valid_mid_row_last_chan;
-                end
+                if (Done_1row && m_axis_tready) next_state <= S_Idle_last_chan;
+                else if (Done_1row) next_state <= S_Wait_handshake_last_pixel_mid_row;
+                else if (m_axis_tready) next_state <= S_Wait_output_valid_mid_row_last_chan;
+                else next_state <= S_Writing_porta_output_BRAM_mid_row_last_chan;
+            end
+
+            S_Wait_handshake_last_pixel_mid_row: begin
+                if (m_axis_tready) next_state <= S_Idle_last_chan;
+                else next_state <= S_Wait_handshake_last_pixel_mid_row;
             end
 
             S_Wait_output_valid__last_row_last_chan: begin
-                if (Output_valid) next_state <= S_Writing_porta_output_BRAM__last_row_last_chan;
+                if (Output_valid) begin
+                    if (Done_1row && m_axis_tready) next_state <= S_Idle_last_chan;
+                    else if (Done_1row) next_state <= S_Wait_handshake_last_pixel_last_row;
+                    else if (m_axis_tready) next_state <= S_Wait_output_valid__last_row_last_chan;
+                    else next_state <= S_Writing_porta_output_BRAM__last_row_last_chan;
+                end
                 else next_state <= S_Wait_output_valid__last_row_last_chan;
             end
 
             S_Writing_porta_output_BRAM__last_row_last_chan: begin
-                if (Done_1row) next_state <= S_Reset_porta_counter_m_axis_tlast;
-                else begin
-                    if (Output_valid) next_state <= S_Writing_porta_output_BRAM__last_row_last_chan;
-                    else next_state <= S_Wait_output_valid__last_row_last_chan;
-                end
+                if (Done_1row && m_axis_tready) next_state <= S_Idle_last_chan;
+                else if (Done_1row) next_state <= S_Wait_handshake_last_pixel_last_row;
+                else if (m_axis_tready) next_state <= S_Wait_output_valid__last_row_last_chan;
+                else next_state <= S_Writing_porta_output_BRAM__last_row_last_chan;
             end
 
-            S_Reset_porta_counter_m_axis_tlast: next_state <= S_Idle_last_chan;
+            S_Wait_handshake_last_pixel_last_row: begin
+                if (m_axis_tready) next_state <= S_Idle_last_chan;
+                else next_state <= S_Wait_handshake_last_pixel_last_row;
+            end
 
             default: next_state <= S_Idle; 
         endcase
@@ -274,52 +292,65 @@ module pe_with_buffers_CU (
 
             S_Wait_output_valid_mid_row_last_chan: begin
                 if (Output_valid) begin
-                    wea_output_BRAM = 1;
-                    ena_output_BRAM_counter = 1;
                     m_axis_tvalid = 1;
+                    if (Done_1row && m_axis_tready) begin
+                        ena_output_BRAM_counter = 1;
+                    end
+                    else if (m_axis_tready) begin
+                        ena_output_BRAM_counter = 1;
+                    end
                 end
             end
 
             S_Writing_porta_output_BRAM_mid_row_last_chan: begin
-                wea_output_BRAM = 1;
-                ena_output_BRAM_counter = 1;
                 m_axis_tvalid = 1;
-                if (!Done_1row) begin
-                    if (!Output_valid) begin
-                        wea_output_BRAM = 0;
-                        ena_output_BRAM_counter = 0;
-                        m_axis_tvalid = 0;
-                    end
+                if (Done_1row && m_axis_tready) begin
+                    ena_output_BRAM_counter = 1;
+                end
+                else if (m_axis_tready) begin
+                    ena_output_BRAM_counter = 1;
+                end
+            end
+
+            S_Wait_handshake_last_pixel_mid_row: begin
+                m_axis_tvalid = 1;
+                if (m_axis_tready) begin
+                    ena_output_BRAM_counter = 1;
                 end
             end
 
             S_Wait_output_valid__last_row_last_chan: begin
                 if (Output_valid) begin
-                    wea_output_BRAM = 1;
-                    ena_output_BRAM_counter = 1;
                     m_axis_tvalid = 1;
+                    if (Done_1row && m_axis_tready) begin
+                        m_axis_tvalid = 1;
+                        m_axis_tlast = 1;
+                        rsta_output_BRAM_counter = 0;
+                    end
+                    else if (m_axis_tready) begin
+                        ena_output_BRAM_counter = 1;
+                    end
                 end
             end
 
             S_Writing_porta_output_BRAM__last_row_last_chan: begin
-                wea_output_BRAM = 1;
-                ena_output_BRAM_counter = 1;
                 m_axis_tvalid = 1;
-                if (!Done_1row) begin
-                    if (!Output_valid) begin
-                        wea_output_BRAM = 0;
-                        ena_output_BRAM_counter = 0;
-                        m_axis_tvalid = 0;
-                    end
-                end
-                else begin
+                if (Done_1row && m_axis_tready) begin
                     m_axis_tvalid = 1;
                     m_axis_tlast = 1;
+                    rsta_output_BRAM_counter = 0;
+                end
+                else if (m_axis_tready) begin
+                    ena_output_BRAM_counter = 1;
                 end
             end
 
-            S_Reset_porta_counter_m_axis_tlast: begin // m_axis_tlast moved to the previous state
-                rsta_output_BRAM_counter = 0;
+            S_Wait_handshake_last_pixel_last_row: begin
+                m_axis_tvalid = 1;
+                m_axis_tlast = 1;
+                if (m_axis_tready) begin
+                    rsta_output_BRAM_counter = 0;
+                end
             end
 
             default: begin

@@ -32,6 +32,8 @@ module pe_with_buffers #(
     input wire Done_1row,
     input wire last_channel,
 
+    input wire m_axis_tready,
+
     // Output BRAM controls
     // From inside this module
     // input wire ena_output_BRAM,
@@ -93,6 +95,7 @@ module pe_with_buffers #(
         .Done_1row(Done_1row),
         .last_channel(last_channel),
         .a_output_BRAM_counter_out(a_output_BRAM_counter_out), // Add one bit for extending
+        .m_axis_tready(m_axis_tready),
 
         // Control outputs
         // Interface outputs

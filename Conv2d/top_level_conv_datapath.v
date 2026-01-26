@@ -241,6 +241,7 @@ module top_level_conv_datapath #(
         .Output_valid(Output_valid),
         .Done_1row(Done_1row),
         .last_channel(last_channel),
+        .m_axis_tready(m_axis_tready),
 
         // Output BRAM controls
         // From inside this module

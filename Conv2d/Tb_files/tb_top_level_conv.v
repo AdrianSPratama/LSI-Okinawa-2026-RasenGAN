@@ -18,6 +18,8 @@ module tb_top_level_conv;
     integer i;
     integer errors;
 
+    integer k;
+
     // Control input reg (simulating AXI GPIO)
     reg clk;
     reg Reset_top;
@@ -132,7 +134,7 @@ module tb_top_level_conv;
         $readmemh(OUTPUT_MEM_FILE, result_reg);
 
         // Control inputs
-        Reset_top = 1;
+        Reset_top = 0;
         Load_kernel_BRAM = 0;
         CHANNEL_SIZE_choose = 0;
         IMAGE_SIZE_choose = 0;
@@ -181,11 +183,20 @@ module tb_top_level_conv;
             while (s_axis_tready == 0) begin
                 @(posedge clk);
             end 
+
+            s_axis_tvalid = 0;
+            repeat (3) @(posedge clk);
         end
 
         s_axis_tlast = 0;
         s_axis_tvalid = 0;
-        repeat (100) @(posedge clk);
+
+        for (k=0; k<20; k=k+1) begin
+           m_axis_tready = 1;
+           @(posedge clk);
+           m_axis_tready = 0;
+           repeat (5) @(posedge clk);
+        end
 
         // ... (Your existing wait delays) ...
         

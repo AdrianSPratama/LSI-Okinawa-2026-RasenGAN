@@ -161,14 +161,14 @@ module top_adain #(
         .out(add2_selected)
     );
 
-    priority_encoder #(
+    priority_encoder_lin #(
         .WIDTH(WIDTH_N)
     ) priority_encoder_N (
         .in(N),
         .out(lead_zero_N)
     );
 
-    priority_encoder #(
+    priority_encoder_lin #(
         .WIDTH(WIDTH_MAC_IN)
     ) priority_encoder_var (
         .in(var),
@@ -209,7 +209,7 @@ module top_adain #(
         .out(acc2_shifted)
     );
 
-    shifter_l #(
+    shifter_l_tree #(
         .WIDTH(WIDTH_MAC_IN),
         .MAX_SHIFT(MAX_SHIFT_L)
     ) shifter_l_unit (
@@ -316,5 +316,4 @@ module top_adain #(
         .in(acc2_shifted[WIDTH_OUT+((2*FRAC_BITS_IN)-FRAC_BITS_OUT)-1:((2*FRAC_BITS_IN)-FRAC_BITS_OUT)]),
         .out(out)
     );
-
 endmodule

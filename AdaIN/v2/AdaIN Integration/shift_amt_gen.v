@@ -37,17 +37,18 @@ module shift_amt_gen #(
         end else begin
             shift_ra1_amt <= {lead_zero_N, 1'b0};
             shift_ra2_amt <= 0;
-            case (state)
-                3'b010: begin
-                    if (l_count == 2) begin
+            
+            if (state[1:0] == l_count) begin
+                case (state)
+                    3'b010: begin
                         shift_ra2_amt <= {{($clog2(MAX_SHIFT_RA2+1)-$clog2(WIDTH_N)-1){1'b0}}, lead_zero_N, 1'b0};
                     end 
-                end
                 
-                3'b011: begin
-                    shift_ra2_amt <= INVSQRT_SHIFT_OUT + {1'b0, lead_zero_var[$clog2(WIDTH_MAC_IN)-1:1]};
-                end
-            endcase
+                    3'b011: begin
+                        shift_ra2_amt <= INVSQRT_SHIFT_OUT + {1'b0, lead_zero_var[$clog2(WIDTH_MAC_IN)-1:1]};
+                    end
+                endcase
+            end
         end
     end
 endmodule

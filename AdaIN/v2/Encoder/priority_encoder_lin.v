@@ -1,6 +1,6 @@
 `timescale 1ns/1ps
 
-module priority_encoder #(
+module priority_encoder_lin #(
     parameter WIDTH = 16
 )(
     input wire  [WIDTH-1:0]          in,

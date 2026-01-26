@@ -1,11 +1,4 @@
 `timescale 1ns/1ps
-// unregistered N-1:
-// 1159 LUT
-// WNS 2.68 clock 10
-
-// registered N_1: 
-// 1182 LUT
-// WNS 2.981 clock 10 
 
 module cu_adain #(
     parameter N_MAX = 128
@@ -53,8 +46,8 @@ module cu_adain #(
         N_1 <= N - 1;
     end
     
-    wire last_col   = (col_count == N - 1);
-    wire last_row   = (row_count == N - 1);
+    wire last_col   = (col_count == N_1);
+    wire last_row   = (row_count == N_1);
     wire last_flush = (l_count == 3);
 
 // FSM
@@ -80,9 +73,9 @@ module cu_adain #(
 
             rst_mult    <= 1;
             rst_offset  <= 1;
-            rst_acc1    <= 0;
-            rst_acc1_in <= 0;
-            rst_acc2    <= 0;
+            rst_acc1    <= 1;
+            rst_acc1_in <= 1;
+            rst_acc2    <= 1;
         end else begin 
             variance_en     <= 0;       
             inv_sigma_en    <= 0;   

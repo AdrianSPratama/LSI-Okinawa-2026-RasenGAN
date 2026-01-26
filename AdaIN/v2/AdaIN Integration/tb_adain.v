@@ -12,7 +12,7 @@ module tb_adain;
     parameter N_VAL     = 2;                       
     localparam TOTAL_PX = N_VAL * N_VAL;           
     
-    reg clk, rst;
+    reg clk, rst, en;
     reg [1:0] start;
     reg [$clog2(N_MAX+1)-1:0] N;
     reg [WIDTH_IN-1:0] in, ys, yb;
@@ -40,7 +40,7 @@ module tb_adain;
     top_adain #(
         .WIDTH_IN(WIDTH_IN), .WIDTH_OUT(WIDTH_OUT), .N_MAX(N_MAX)
     ) uut (
-        .clk(clk), .rst(rst), .start(start), .N(N), 
+        .clk(clk), .rst(rst), .en(en), .start(start), .N(N), 
         .in(in), .ys(ys), .yb(yb), .out(out), .done(done)
     );
 
@@ -67,8 +67,11 @@ module tb_adain;
             for (j = 0; j < TOTAL_PX; j = j + 1) begin
                 in <= x_mem[j];
                 @(posedge clk);
+                en <= 0;
+                @(posedge clk);
+                @(posedge clk);
+                en <= 1;
             end
-            // in <= 0; // DIHAPUS: Bus tetap memegang x_mem[3]
         end
     endtask
 
@@ -93,7 +96,7 @@ module tb_adain;
         $fdisplay(file_h, "Input_Hex_Q32_16,Output_Hex_Q8_8,ys_Hex_Q32_16,yb_Hex_Q32_16");
         
         $display(">>> Memulai Simulasi AdaIN 2x2");
-        rst = 1; start = 0; N = N_VAL; in = 0; capture_count = 0; record_csv = 1;
+        rst = 1; en = 1; start = 0; N = N_VAL; in = 0; capture_count = 0; record_csv = 1;
         @(posedge clk);
         rst <= 0;
         

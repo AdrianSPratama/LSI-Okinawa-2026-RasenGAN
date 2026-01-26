@@ -6,6 +6,7 @@ module seq_mult_add #(
 )(
     input  wire clk,
     input  wire rst,
+    input  wire en,
 
     input  wire signed [WIDTH_IN-1:0]  multiplicand,
     input  wire signed [WIDTH_IN-1:0]  multiplier,
@@ -14,7 +15,9 @@ module seq_mult_add #(
 );
     reg signed [2*WIDTH_IN-1:0] product;
     always @(posedge clk) begin
-        product <= multiplicand * multiplier;
+        if (en) begin
+            product <= multiplicand * multiplier;
+        end
     end
     
     seq_adder #(
@@ -22,6 +25,7 @@ module seq_mult_add #(
     ) adder (
         .clk(clk),
         .rst(rst),
+        .en(en),
         
         .in1({{(WIDTH_OUT-2*WIDTH_IN){product[2*WIDTH_IN-1]}}, product}),
         .in2(offset),

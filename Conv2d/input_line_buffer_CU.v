@@ -63,7 +63,9 @@ module input_line_buffer_CU (
               S_Zero_padding_edge_first_last_row_last_chan  = 5'd17,
               S_Wait_saxis_tvalid_last_row_last_chan        = 5'd18,
               S_Streaming_last_row_last_chan                = 5'd19,
-              S_Hold_latest_output                          = 5'd20;
+              S_Hold_latest_output                          = 5'd20,
+              S_Hold_latest_output_last_row                 = 5'd21,
+              S_Finish_last_row_last_chan                   = 5'd22;
 
     // State transition block
     always @(posedge clk) begin
@@ -175,8 +177,8 @@ module input_line_buffer_CU (
 
             S_Streaming_last_row_last_chan: begin
                 if (linebuff_BRAM_counter_out > IMAGE_SIZE - 1) begin
-                    if (m_axis_tready) next_state <= S_Finish_mid_row_last_chan;
-                    else next_state <= S_Hold_latest_output;
+                    if (m_axis_tready) next_state <= S_Finish_last_row_last_chan;
+                    else next_state <= S_Hold_latest_output_last_row;
                 end
                 else begin
                     if (m_axis_tready) next_state <= S_Streaming_last_row_last_chan;
@@ -187,6 +189,16 @@ module input_line_buffer_CU (
             S_Hold_latest_output: begin
                 if (m_axis_tready) next_state <= S_Finish_mid_row_last_chan;
                 else next_state <= S_Hold_latest_output;
+            end
+
+            S_Hold_latest_output_last_row: begin
+                if (m_axis_tready) next_state <= S_Finish_last_row_last_chan;
+                else next_state <= S_Hold_latest_output_last_row;
+            end
+
+            S_Finish_last_row_last_chan: begin
+                if (m_axis_tready) next_state <= S_Idle;
+                else next_state <= S_Finish_last_row_last_chan;
             end
 
             default: next_state <= S_Reset;
@@ -550,6 +562,27 @@ module input_line_buffer_CU (
                     window_row_n_mux = 0;
                     s_axis_tready = 0;
                 end
+            end
+
+            S_Hold_latest_output_last_row: begin
+                Output_valid = 1;
+                if (m_axis_tready) begin
+                    Wr_window = 1;
+                    Shift_window = 1;
+                    Output_valid = 1;
+                    wea_linebuff_BRAM = 0;
+                    rst_linebuff_BRAM_counter = 0;
+                    en_linebuff_BRAM_counter = 0;
+                    window_row_n_2_mux = 0;
+                    window_row_n_1_mux = 0;
+                    window_row_n_mux = 0;
+                    s_axis_tready = 0;
+                end
+            end
+
+            S_Finish_last_row_last_chan: begin
+                Done_1row = 1;
+                Output_valid = 1;
             end
 
             default: begin

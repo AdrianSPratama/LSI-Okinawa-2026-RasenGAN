@@ -147,7 +147,7 @@ module pe_with_buffers_CU (
 
             S_Wait_output_valid__last_row_last_chan: begin
                 if (Output_valid) begin
-                    if (Done_1row && m_axis_tready) next_state <= S_Idle_last_chan;
+                    if (Done_1row && m_axis_tready) next_state <= S_Idle;
                     else if (Done_1row) next_state <= S_Wait_handshake_last_pixel_last_row;
                     else if (m_axis_tready) next_state <= S_Wait_output_valid__last_row_last_chan;
                     else next_state <= S_Writing_porta_output_BRAM__last_row_last_chan;
@@ -156,14 +156,14 @@ module pe_with_buffers_CU (
             end
 
             S_Writing_porta_output_BRAM__last_row_last_chan: begin
-                if (Done_1row && m_axis_tready) next_state <= S_Idle_last_chan;
+                if (Done_1row && m_axis_tready) next_state <= S_Idle;
                 else if (Done_1row) next_state <= S_Wait_handshake_last_pixel_last_row;
                 else if (m_axis_tready) next_state <= S_Wait_output_valid__last_row_last_chan;
                 else next_state <= S_Writing_porta_output_BRAM__last_row_last_chan;
             end
 
             S_Wait_handshake_last_pixel_last_row: begin
-                if (m_axis_tready) next_state <= S_Idle_last_chan;
+                if (m_axis_tready) next_state <= S_Idle;
                 else next_state <= S_Wait_handshake_last_pixel_last_row;
             end
 

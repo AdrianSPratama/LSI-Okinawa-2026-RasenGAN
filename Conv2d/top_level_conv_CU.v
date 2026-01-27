@@ -157,7 +157,7 @@ module top_level_conv_CU (
 
             S_En_reg_last_chan: next_state <= S_Loading_kernel_reg;
 
-            S_Done_conv: next_state <= S_Reset;
+            S_Done_conv: next_state <= S_Idle;
 
             default: next_state <= S_Idle;
         endcase

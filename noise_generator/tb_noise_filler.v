@@ -44,7 +44,8 @@ module tb_noise_filler #(parameter DATA_WIDTH = 16, parameter ADDR_WIDTH = 14);
         #20;
         start = 0;
         // until done = 1
-        wait (done == 1);
+        // wait (done == 1);
+        #1000
         #20;    
         $finish;
     end

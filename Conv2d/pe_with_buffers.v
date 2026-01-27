@@ -48,7 +48,10 @@ module pe_with_buffers #(
 
     // Controls output interface
     output wire PE_ready,
-    output wire PE_with_buffers_IDLE
+    output wire PE_with_buffers_IDLE,
+
+    // Output BRAM address counter output for noise BRAM counter (same)
+    output wire [13:0] output_BRAM_counter_out
 );
 
     // Wires
@@ -70,6 +73,7 @@ module pe_with_buffers #(
     // Assign addra_output_BRAM and addrb_output_BRAM
     assign addra_output_BRAM = a_output_BRAM_counter_out[13:0];
     assign addrb_output_BRAM = addra_output_BRAM;
+    assign output_BRAM_counter_out = addra_output_BRAM;
 
     // Instantiate counters
     counter #(

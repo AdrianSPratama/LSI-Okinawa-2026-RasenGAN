@@ -34,7 +34,13 @@ module top_level_conv #(
 
     output wire s_axis_tready,
     output wire m_axis_tvalid,
-    output wire m_axis_tlast
+    output wire m_axis_tlast,
+
+    // Output BRAM counter output for noise address counter (same)
+    output wire [13:0] output_BRAM_counter_out,
+
+    // Noise weight BRAM counter output
+    output reg [8:0] noise_weight_BRAM_counter_out
 );
     
     // Wires
@@ -191,5 +197,23 @@ module top_level_conv #(
         .m_axis_tlast(m_axis_tlast),
         .m_axis_tready(m_axis_tready)
     );
+
+    // Noise weight BRAM addr counter
+    always @(posedge clk) begin
+        if ((!Reset_top) || (!aresetn)) begin
+            noise_weight_BRAM_counter_out <= 9'd0;
+        end
+        else begin
+            if (noise_weight_BRAM_counter_out > CHANNEL_SIZE-1) begin // Reset if already more than channel size
+                noise_weight_BRAM_counter_out <= 9'd0;
+            end
+            else if (ena_bias_BRAM_addr_counter) begin
+                noise_weight_BRAM_counter_out <= noise_weight_BRAM_counter_out + 9'd1;
+            end
+            else begin
+                noise_weight_BRAM_counter_out <= noise_weight_BRAM_counter_out;
+            end
+        end
+    end
 
 endmodule

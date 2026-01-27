@@ -67,7 +67,10 @@ module top_level_conv_datapath #(
     // Master
     output wire m_axis_tvalid,
     output wire m_axis_tlast,
-    input wire m_axis_tready
+    input wire m_axis_tready,
+
+    // Output BRAM counter for noise BRAM address (same)
+    output wire [13:0] output_BRAM_counter_out
 );
     
     // Wires
@@ -257,7 +260,9 @@ module top_level_conv_datapath #(
 
         // Controls output interface
         .PE_ready(PE_ready),
-        .PE_with_buffers_IDLE(PE_with_buffers_IDLE)
+        .PE_with_buffers_IDLE(PE_with_buffers_IDLE),
+
+        .output_BRAM_counter_out(output_BRAM_counter_out)
     );
 
 endmodule

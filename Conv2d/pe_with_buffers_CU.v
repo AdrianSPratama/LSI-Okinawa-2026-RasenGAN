@@ -350,6 +350,7 @@ module pe_with_buffers_CU (
                 m_axis_tlast = 1;
                 if (m_axis_tready) begin
                     rsta_output_BRAM_counter = 0;
+                    ena_bias_BRAM_addr_counter = 1;
                 end
             end
 

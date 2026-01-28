@@ -40,7 +40,10 @@ module top_level_conv #(
     output wire [13:0] output_BRAM_counter_out,
 
     // Noise weight BRAM counter output
-    output reg [8:0] noise_weight_BRAM_counter_out
+    output reg [8:0] noise_weight_BRAM_counter_out,
+
+    // Output control for generating (start) noise generator module
+    output wire start_noise_gen
 );
     
     // Wires
@@ -215,5 +218,8 @@ module top_level_conv #(
             end
         end
     end
+
+    // Start signal for generating noise from other module
+    assign start_noise_gen = load_BRAM_dina;
 
 endmodule

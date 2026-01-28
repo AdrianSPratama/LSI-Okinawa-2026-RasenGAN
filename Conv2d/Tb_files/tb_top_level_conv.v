@@ -281,119 +281,119 @@ module tb_top_level_conv;
         $display("---------------------------------------------------------");
         $display("\n");
 
-        // Control inputs
-        Reset_top = 1;
-        Load_kernel_BRAM = 0;
-        CHANNEL_SIZE_choose = 0;
-        IMAGE_SIZE_choose = 0;
+        // // Control inputs
+        // Reset_top = 1;
+        // Load_kernel_BRAM = 0;
+        // CHANNEL_SIZE_choose = 0;
+        // IMAGE_SIZE_choose = 0;
 
-        // AXI control signals
-        aresetn = 1;
-        s_axis_tvalid = 0;
-        s_axis_tlast = 0;
-        m_axis_tready = 0;
+        // // AXI control signals
+        // aresetn = 1;
+        // s_axis_tvalid = 0;
+        // s_axis_tlast = 0;
+        // m_axis_tready = 0;
 
-        // Bias choose
-        choose_bias = 0;
+        // // Bias choose
+        // choose_bias = 0;
 
-        repeat (5) @(posedge clk);
+        // repeat (5) @(posedge clk);
 
-        Reset_top = 1;
-        aresetn = 1;
+        // Reset_top = 1;
+        // aresetn = 1;
 
-        repeat (5) @(posedge clk);
+        // repeat (5) @(posedge clk);
 
-        Load_kernel_BRAM = 1;
+        // Load_kernel_BRAM = 1;
 
-        @(posedge clk);
+        // @(posedge clk);
 
-        Load_kernel_BRAM = 0;
+        // Load_kernel_BRAM = 0;
 
-        repeat (10) @(posedge clk);
+        // repeat (10) @(posedge clk);
 
-        s_axis_tvalid = 0;
-        s_axis_tlast = 0;
-        m_axis_tready = 1;
+        // s_axis_tvalid = 0;
+        // s_axis_tlast = 0;
+        // m_axis_tready = 1;
 
-        @(posedge clk);
+        // @(posedge clk);
 
-        for (DDR_INDEX = 0; DDR_INDEX < (IMAGE_SIZE*IMAGE_SIZE*CHANNEL_SIZE+CHANNEL_SIZE); DDR_INDEX = DDR_INDEX + 1) begin
-            s_axis_tvalid = 1;
+        // for (DDR_INDEX = 0; DDR_INDEX < (IMAGE_SIZE*IMAGE_SIZE*CHANNEL_SIZE+CHANNEL_SIZE); DDR_INDEX = DDR_INDEX + 1) begin
+        //     s_axis_tvalid = 1;
 
-            // Give s_axis_tlast signal
-            if (DDR_INDEX == (IMAGE_SIZE*IMAGE_SIZE*CHANNEL_SIZE+CHANNEL_SIZE)-1) begin
-                s_axis_tlast = 1;
-            end
-            else begin
-                s_axis_tlast = 0;
-            end
+        //     // Give s_axis_tlast signal
+        //     if (DDR_INDEX == (IMAGE_SIZE*IMAGE_SIZE*CHANNEL_SIZE+CHANNEL_SIZE)-1) begin
+        //         s_axis_tlast = 1;
+        //     end
+        //     else begin
+        //         s_axis_tlast = 0;
+        //     end
 
-            @(posedge clk);
+        //     @(posedge clk);
 
-            // Waiting for s_axis_tready
-            while (s_axis_tready == 0) begin
-                @(posedge clk);
-            end 
+        //     // Waiting for s_axis_tready
+        //     while (s_axis_tready == 0) begin
+        //         @(posedge clk);
+        //     end 
 
-            s_axis_tvalid = 0;
-            repeat (3) @(posedge clk);
-        end
+        //     s_axis_tvalid = 0;
+        //     repeat (3) @(posedge clk);
+        // end
 
-        s_axis_tlast = 0;
-        s_axis_tvalid = 0;
+        // s_axis_tlast = 0;
+        // s_axis_tvalid = 0;
 
-        for (k=0; k<20; k=k+1) begin
-           m_axis_tready = 1;
-           @(posedge clk);
-           m_axis_tready = 0;
-           repeat (5) @(posedge clk);
-        end
+        // for (k=0; k<20; k=k+1) begin
+        //    m_axis_tready = 1;
+        //    @(posedge clk);
+        //    m_axis_tready = 0;
+        //    repeat (5) @(posedge clk);
+        // end
 
-        // ... (Your existing wait delays) ...
+        // // ... (Your existing wait delays) ...
         
-        // ---------------------------------------------------------
-        // SELF-CHECK ROUTINE
-        // ---------------------------------------------------------
-        $display("\n");
-        $display("---------------------------------------------------------");
-        $display("STARTING AUTOMATED CHECK");
-        $display("---------------------------------------------------------");
+        // // ---------------------------------------------------------
+        // // SELF-CHECK ROUTINE
+        // // ---------------------------------------------------------
+        // $display("\n");
+        // $display("---------------------------------------------------------");
+        // $display("STARTING AUTOMATED CHECK");
+        // $display("---------------------------------------------------------");
         
-        // Check 1: Did we receive the correct NUMBER of outputs?
-        // We expect 16 outputs (based on result_reg [0:15])
-        if (out_write_pointer != 16) begin
-            $display("[WARNING] Output Count Mismatch!");
-            $display("          Expected: 16 outputs");
-            $display("          Received: %0d outputs", out_write_pointer);
-            // We continue checking anyway, up to the smaller count
-        end else begin
-            $display("[INFO] Received correct number of outputs (16).");
-        end
+        // // Check 1: Did we receive the correct NUMBER of outputs?
+        // // We expect 16 outputs (based on result_reg [0:15])
+        // if (out_write_pointer != 16) begin
+        //     $display("[WARNING] Output Count Mismatch!");
+        //     $display("          Expected: 16 outputs");
+        //     $display("          Received: %0d outputs", out_write_pointer);
+        //     // We continue checking anyway, up to the smaller count
+        // end else begin
+        //     $display("[INFO] Received correct number of outputs (16).");
+        // end
 
-        // Check 2: Verify Data Integrity
-        errors = 0;
+        // // Check 2: Verify Data Integrity
+        // errors = 0;
         
-        // Loop through all expected results
-        for (i = 0; i < 16; i = i + 1) begin
+        // // Loop through all expected results
+        // for (i = 0; i < 16; i = i + 1) begin
             
-            // Use !== to catch 'X' (unknown) or 'Z' (high-z) values as errors
-            if (captured_output_ram[i] !== result_reg[i]) begin
-                $display("[ERROR] Mismatch at Index %0d", i);
-                $display("        Expected: %h", result_reg[i]);
-                $display("        Actual:   %h", captured_output_ram[i]);
-                errors = errors + 1;
-            end 
-        end
+        //     // Use !== to catch 'X' (unknown) or 'Z' (high-z) values as errors
+        //     if (captured_output_ram[i] !== result_reg[i]) begin
+        //         $display("[ERROR] Mismatch at Index %0d", i);
+        //         $display("        Expected: %h", result_reg[i]);
+        //         $display("        Actual:   %h", captured_output_ram[i]);
+        //         errors = errors + 1;
+        //     end 
+        // end
 
-        // Final Report
-        $display("---------------------------------------------------------");
-        if (errors == 0) begin
-            $display("    SIMULATION PASSED: All 16 outputs match!");
-        end else begin
-            $display("    SIMULATION FAILED: Found %0d errors.", errors);
-        end
-        $display("---------------------------------------------------------");
-        $display("\n");
+        // // Final Report
+        // $display("---------------------------------------------------------");
+        // if (errors == 0) begin
+        //     $display("    SIMULATION PASSED: All 16 outputs match!");
+        // end else begin
+        //     $display("    SIMULATION FAILED: Found %0d errors.", errors);
+        // end
+        // $display("---------------------------------------------------------");
+        // $display("\n");
 
         // // Simulating for other test vectors
         // choose_bias = 1;

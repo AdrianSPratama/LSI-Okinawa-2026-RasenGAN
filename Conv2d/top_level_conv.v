@@ -198,7 +198,8 @@ module top_level_conv #(
         // Master
         .m_axis_tvalid(m_axis_tvalid),
         .m_axis_tlast(m_axis_tlast),
-        .m_axis_tready(m_axis_tready)
+        .m_axis_tready(m_axis_tready),
+        .output_BRAM_counter_out(output_BRAM_counter_out)
     );
 
     // Noise weight BRAM addr counter

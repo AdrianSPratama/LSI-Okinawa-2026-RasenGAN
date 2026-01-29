@@ -107,6 +107,29 @@ module top_level_conv_datapath #(
 
     assign m_axis_tdata = {{16{accumulator_out[47]}} ,accumulator_out};// For now assign m_axis_tdata to output_BRAM
 
+    // Pipeline reg
+    reg Done_1row_pipeline [2:0];
+    reg Output_valid_pipeline [2:0];
+
+    always @(posedge clk) begin
+        if (!Kernel_BRAM_Reset) begin
+            Done_1row_pipeline[0] <= 0;
+            Done_1row_pipeline[1] <= 0;
+            Done_1row_pipeline[2] <= 0;
+            Output_valid_pipeline[0] <= 0;
+            Output_valid_pipeline[1] <= 0;
+            Output_valid_pipeline[2] <= 0;
+        end
+        else begin
+            Done_1row_pipeline[0] <= Done_1row;
+            Done_1row_pipeline[1] <= Done_1row_pipeline[0];
+            Done_1row_pipeline[2] <= Done_1row_pipeline[1];
+            Output_valid_pipeline[0] <= Output_valid;
+            Output_valid_pipeline[1] <= Output_valid_pipeline[0];
+            Output_valid_pipeline[2] <= Output_valid_pipeline[1];
+        end
+    end
+
     // Reg_last_chan
     reg Reg_last_chan;
     always @(posedge clk) begin
@@ -241,8 +264,8 @@ module top_level_conv_datapath #(
         .Load_kernel_reg(Load_kernel_reg),
         .Stream_mid_row(Stream_mid_row),
         .Stream_last_row(Stream_last_row),
-        .Output_valid(Output_valid),
-        .Done_1row(Done_1row),
+        .Output_valid(Output_valid_pipeline[2]),
+        .Done_1row(Done_1row_pipeline[2]),
         .last_channel(last_channel),
         .m_axis_tready(m_axis_tready),
 

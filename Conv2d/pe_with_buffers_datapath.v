@@ -34,6 +34,8 @@ module pe_with_buffers_datapath #(
         .KERNEL_WIDTH(KERNEL_WIDTH),
         .RESULT_WIDTH(RESULT_WIDTH)
     ) mult_add_inst (
+        .rst(Rst_kernel),
+        .clk(clk),
         .x00(x00), .x01(x01), .x02(x02),
         .x10(x10), .x11(x11), .x12(x12),
         .x20(x20), .x21(x21), .x22(x22),

@@ -47,6 +47,8 @@ module pe_with_buffers_datapath #(
 
     // Wires
     wire signed [RESULT_WIDTH-1:0] BRAM_doutb;
+    wire signed [RESULT_WIDTH-1:0] bias_shifted;
+    assign bias_shifted = bias << 8;
 
     // Bagian kernel register
     reg signed [15:0] kernel [0:8]; // 9 kernel values of 16 bits each
@@ -79,7 +81,7 @@ module pe_with_buffers_datapath #(
     // Bagian mux pemilih jumlah bias
     wire signed [RESULT_WIDTH-1:0] BRAM_douta;
     wire signed [RESULT_WIDTH-1:0] in_2_accumulator;
-    assign in_2_accumulator = add_bias ? bias : BRAM_doutb;
+    assign in_2_accumulator = add_bias ? bias_shifted : BRAM_doutb;
 
     // Bagian depan accumulator dina (pipelined)
     always @(posedge clk) begin

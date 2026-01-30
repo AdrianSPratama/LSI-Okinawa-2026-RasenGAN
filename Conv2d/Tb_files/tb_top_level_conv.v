@@ -228,12 +228,15 @@ module tb_top_level_conv;
         s_axis_tlast = 0;
         s_axis_tvalid = 0;
 
-        for (k=0; k<20; k=k+1) begin
-           m_axis_tready = 1;
-           @(posedge clk);
-           m_axis_tready = 0;
-           repeat (5) @(posedge clk);
-        end
+        // Test for m_axis_tready clocking
+        // for (k=0; k<20; k=k+1) begin
+        //    m_axis_tready = 1;
+        //    @(posedge clk);
+        //    m_axis_tready = 0;
+        //    repeat (5) @(posedge clk);
+        // end
+
+        repeat (20) @(posedge clk);
 
         // ... (Your existing wait delays) ...
         

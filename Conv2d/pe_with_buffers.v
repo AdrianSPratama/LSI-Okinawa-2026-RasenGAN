@@ -70,10 +70,30 @@ module pe_with_buffers #(
     wire [13:0] addra_output_BRAM;
     wire [13:0] addrb_output_BRAM;
 
+    wire m_axis_tvalid_CU;
+    wire m_axis_tlast_CU;
+
     // Assign addra_output_BRAM and addrb_output_BRAM
     assign addra_output_BRAM = a_output_BRAM_counter_out[13:0];
     assign addrb_output_BRAM = addra_output_BRAM;
     assign output_BRAM_counter_out = addra_output_BRAM;
+
+    // Pipeline reg for delaying control signal
+    reg m_axis_tvalid_pipeline;
+    reg m_axis_tlast_pipeline;
+    always @(posedge clk) begin
+        if (!Rst_kernel) begin
+            m_axis_tvalid_pipeline <= 0;
+            m_axis_tlast_pipeline <= 0;
+        end
+        else begin
+            m_axis_tvalid_pipeline <= m_axis_tvalid_CU;
+            m_axis_tlast_pipeline <= m_axis_tlast_CU;
+        end
+    end
+
+    assign m_axis_tvalid = m_axis_tvalid_pipeline;
+    assign m_axis_tlast = m_axis_tlast_pipeline;
 
     // Instantiate counters
     counter #(
@@ -104,8 +124,8 @@ module pe_with_buffers #(
         // Control outputs
         // Interface outputs
         // AXI signals
-        .m_axis_tvalid(m_axis_tvalid),
-        .m_axis_tlast(m_axis_tlast),
+        .m_axis_tvalid(m_axis_tvalid_CU),
+        .m_axis_tlast(m_axis_tlast_CU),
 
         .PE_ready(PE_ready),
         .PE_with_buffers_IDLE(PE_with_buffers_IDLE),

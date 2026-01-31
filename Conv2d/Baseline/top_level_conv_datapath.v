@@ -70,11 +70,7 @@ module top_level_conv_datapath #(
     input wire m_axis_tready,
 
     // Output BRAM counter for noise BRAM address (same)
-    output wire [13:0] output_BRAM_counter_out,
-
-    // Wires for noise and noise weight input
-    input wire signed [15:0] noise_input,
-    input wire signed [15:0] noise_weight_input
+    output wire [13:0] output_BRAM_counter_out
 );
     
     // Wires
@@ -103,17 +99,6 @@ module top_level_conv_datapath #(
 
     wire signed [47:0] accumulator_out;
 
-    // Pipeline reg for noise adding and LeakyReLu
-    reg signed [47:0] noise_with_weight;
-    always @(posedge clk) begin
-        if (!Kernel_BRAM_Reset) begin
-            noise_with_weight <= 0;
-        end
-        else begin
-            noise_with_weight <= noise_input * noise_weight_input;
-        end
-    end
-
     // Assigns
     assign bias_padded = bias_in;
 
@@ -121,29 +106,6 @@ module top_level_conv_datapath #(
     assign input_line_buffer_dina = s_axis_tdata[15:0];
 
     assign m_axis_tdata = {{16{accumulator_out[47]}} ,accumulator_out};// For now assign m_axis_tdata to output_BRAM
-
-    // Pipeline reg
-    reg Done_1row_pipeline [2:0];
-    reg Output_valid_pipeline [2:0];
-
-    always @(posedge clk) begin
-        if (!Kernel_BRAM_Reset) begin
-            Done_1row_pipeline[0] <= 0;
-            Done_1row_pipeline[1] <= 0;
-            Done_1row_pipeline[2] <= 0;
-            Output_valid_pipeline[0] <= 0;
-            Output_valid_pipeline[1] <= 0;
-            Output_valid_pipeline[2] <= 0;
-        end
-        else begin
-            Done_1row_pipeline[0] <= Done_1row;
-            Done_1row_pipeline[1] <= Done_1row_pipeline[0];
-            Done_1row_pipeline[2] <= Done_1row_pipeline[1];
-            Output_valid_pipeline[0] <= Output_valid;
-            Output_valid_pipeline[1] <= Output_valid_pipeline[0];
-            Output_valid_pipeline[2] <= Output_valid_pipeline[1];
-        end
-    end
 
     // Reg_last_chan
     reg Reg_last_chan;
@@ -279,8 +241,8 @@ module top_level_conv_datapath #(
         .Load_kernel_reg(Load_kernel_reg),
         .Stream_mid_row(Stream_mid_row),
         .Stream_last_row(Stream_last_row),
-        .Output_valid(Output_valid_pipeline[2]),
-        .Done_1row(Done_1row_pipeline[2]),
+        .Output_valid(Output_valid),
+        .Done_1row(Done_1row),
         .last_channel(last_channel),
         .m_axis_tready(m_axis_tready),
 

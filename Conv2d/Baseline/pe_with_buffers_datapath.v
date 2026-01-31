@@ -11,7 +11,7 @@ module pe_with_buffers_datapath #(
     input wire signed [PIXEL_WIDTH-1:0] x20, x21, x22,
     input wire [9*KERNEL_WIDTH-1:0] kernel_flat,
     input wire signed [RESULT_WIDTH-1:0] bias,
-    output reg signed [RESULT_WIDTH-1:0] accumulator_out,
+    output wire signed [RESULT_WIDTH-1:0] accumulator_out,
 
     // Control signals
     input wire clk,
@@ -34,8 +34,6 @@ module pe_with_buffers_datapath #(
         .KERNEL_WIDTH(KERNEL_WIDTH),
         .RESULT_WIDTH(RESULT_WIDTH)
     ) mult_add_inst (
-        .rst(Rst_kernel),
-        .clk(clk),
         .x00(x00), .x01(x01), .x02(x02),
         .x10(x10), .x11(x11), .x12(x12),
         .x20(x20), .x21(x21), .x22(x22),
@@ -47,8 +45,6 @@ module pe_with_buffers_datapath #(
 
     // Wires
     wire signed [RESULT_WIDTH-1:0] BRAM_doutb;
-    wire signed [RESULT_WIDTH-1:0] bias_shifted;
-    assign bias_shifted = bias << 8;
 
     // Bagian kernel register
     reg signed [15:0] kernel [0:8]; // 9 kernel values of 16 bits each
@@ -81,31 +77,10 @@ module pe_with_buffers_datapath #(
     // Bagian mux pemilih jumlah bias
     wire signed [RESULT_WIDTH-1:0] BRAM_douta;
     wire signed [RESULT_WIDTH-1:0] in_2_accumulator;
-    assign in_2_accumulator = add_bias ? bias_shifted : BRAM_doutb;
+    assign in_2_accumulator = add_bias ? bias : BRAM_doutb;
 
-    // Bagian depan accumulator dina (pipelined)
-    always @(posedge clk) begin
-        if (!Rst_kernel) begin
-            accumulator_out <= 0;
-        end
-        else begin
-            accumulator_out <= result_mult_add + in_2_accumulator;
-        end
-    end
-
-    // Pipeline control signals
-    reg [13:0] addra_output_BRAM_pipeline;
-    reg wea_output_BRAM_pipeline;
-    always @(posedge clk) begin
-        if (!Rst_kernel) begin
-            addra_output_BRAM_pipeline <= 0;
-            wea_output_BRAM_pipeline <= 0;
-        end
-        else begin
-            addra_output_BRAM_pipeline <= addra_output_BRAM;
-            wea_output_BRAM_pipeline <= wea_output_BRAM;
-        end
-    end
+    // Bagian depan accumulator dina
+    assign accumulator_out = result_mult_add + in_2_accumulator;
 
     // Bagian output BRAM, instantiate true dual-port BRAM
     true_dual_port_bram #(
@@ -115,8 +90,8 @@ module pe_with_buffers_datapath #(
         // Port A
         .clka(clk),
         .ena(ena_output_BRAM),
-        .wea(wea_output_BRAM_pipeline), 
-        .addra(addra_output_BRAM_pipeline),
+        .wea(wea_output_BRAM), 
+        .addra(addra_output_BRAM),
         .dina(accumulator_out), 
         .douta(BRAM_douta),
 

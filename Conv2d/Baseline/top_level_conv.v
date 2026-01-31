@@ -25,10 +25,6 @@ module top_level_conv #(
     input wire [255:0] s_axis_tdata,
     output wire [63:0] m_axis_tdata,
 
-    // Noise input
-    input wire signed [15:0] noise_input,
-    input wire signed [15:0] noise_weight_input,
-
     // AXI Stream controls
     input wire aresetn,
 
@@ -202,12 +198,7 @@ module top_level_conv #(
         // Master
         .m_axis_tvalid(m_axis_tvalid),
         .m_axis_tlast(m_axis_tlast),
-        .m_axis_tready(m_axis_tready),
-        .output_BRAM_counter_out(output_BRAM_counter_out),
-
-        // Noise adding
-        .noise_input(noise_input),
-        .noise_weight_input(noise_weight_input)
+        .m_axis_tready(m_axis_tready)
     );
 
     // Noise weight BRAM addr counter

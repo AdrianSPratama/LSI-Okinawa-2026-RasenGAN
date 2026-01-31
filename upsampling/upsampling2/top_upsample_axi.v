@@ -1,11 +1,11 @@
 `timescale 1ns / 1ps
 `include "top_upsample.v"
-module axis_dma_bram_fsm #(
+module top_upsample_axi #(
     parameter DATA_WIDTH = 32,
     parameter length = 16
 )(
     input  wire                   clk,
-    input  wire                   aresetn,
+    input  wire                   reset,
     input  wire start_process,
 
     // --- Slave Interface (Input dari DDR/DMA) ---
@@ -63,7 +63,7 @@ module axis_dma_bram_fsm #(
 
 
     always @(posedge clk) begin
-        if (!aresetn) begin
+        if (!reset) begin
             current_state <= S_IDLE;
             rx_ptr <= 0;
             tx_ptr <= 0;

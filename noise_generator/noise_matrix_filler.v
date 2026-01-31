@@ -69,13 +69,12 @@ module noise_matrix_filler #(
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
             bram_addr   <= 0;
-            enable_lfsr <= 0;
+            enable_lfsr <= 1;
             done        <= 0;
             addr_limit  <= 0;
         end else begin
             // Start logic
             if (start && !enable_lfsr && !done) begin
-                enable_lfsr <= 1;
                 bram_addr   <= 0;
                 done        <= 0;
                 addr_limit  <= decoded_limit; 
@@ -84,7 +83,6 @@ module noise_matrix_filler #(
             if (enable_lfsr) begin
                 if (noise_valid) begin
                     if (bram_addr == addr_limit) begin
-                        enable_lfsr <= 0;
                         done        <= 1;
                     end else begin
                         bram_addr   <= bram_addr + 1;

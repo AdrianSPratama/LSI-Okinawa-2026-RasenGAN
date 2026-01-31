@@ -9,7 +9,6 @@ module top_upsample #(parameter length = 16) (
     input wire clk,
     input wire rst,
     input wire start,
-    input wire [2:0] mode,
     input wire [2:0] size_upsample,
     output wire done,
     // input data

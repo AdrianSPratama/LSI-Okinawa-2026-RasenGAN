@@ -70,7 +70,11 @@ module top_level_conv_datapath #(
     input wire m_axis_tready,
 
     // Output BRAM counter for noise BRAM address (same)
-    output wire [13:0] output_BRAM_counter_out
+    output wire [13:0] output_BRAM_counter_out,
+
+    // Wires for noise and noise weight input
+    input wire signed [15:0] noise_input,
+    input wire signed [15:0] noise_weight_input
 );
     
     // Wires
@@ -98,6 +102,17 @@ module top_level_conv_datapath #(
     wire signed [PIXEL_WIDTH-1:0] out_window_22;
 
     wire signed [47:0] accumulator_out;
+
+    // Pipeline reg for noise adding and LeakyReLu
+    reg signed [47:0] noise_with_weight;
+    always @(posedge clk) begin
+        if (!Kernel_BRAM_Reset) begin
+            noise_with_weight <= 0;
+        end
+        else begin
+            noise_with_weight <= noise_input * noise_weight_input;
+        end
+    end
 
     // Assigns
     assign bias_padded = bias_in;

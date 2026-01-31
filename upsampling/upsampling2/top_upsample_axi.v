@@ -1,7 +1,7 @@
 `timescale 1ns / 1ps
 `include "top_upsample.v"
 module top_upsample_axi #(
-    parameter DATA_WIDTH = 32,
+    parameter DATA_WIDTH = 16,
     parameter length = 16
 )(
     input  wire                   clk,
